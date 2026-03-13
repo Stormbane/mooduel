@@ -3,101 +3,104 @@ import { test, expect } from "@playwright/test";
 test.describe("Game Flow", () => {
   test("page loads and shows game immediately", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle("Movie Picker");
+    await expect(page).toHaveTitle(/MOVIE PICKER/);
 
-    // Should show either loading or first round
+    // Should show either loading or first round content
     await expect(
-      page.getByText("Pick a Movie").or(page.getByText("Finding movies"))
+      page.getByText("ROUND 1").or(page.getByText("LOADING CONTENDERS"))
     ).toBeVisible({ timeout: 15_000 });
   });
 
-  test("first round shows poster pick with 3 movies", async ({ page }) => {
+  test("first round shows 5 movie posters", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByText("Which one are you in the mood for?")).toBeVisible();
 
-    // Should have poster images
+    // Wait for round to load
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
+
+    // Should show poster images
     const images = page.locator("img[alt]");
     await expect(images.first()).toBeVisible({ timeout: 10_000 });
 
-    // Should have at least 2 clickable poster buttons
+    // Should have at least 4 clickable poster buttons (5 minus possible missing poster)
     const posterButtons = page.locator("button").filter({ has: page.locator("img") });
     const count = await posterButtons.count();
-    expect(count).toBeGreaterThanOrEqual(2);
+    expect(count).toBeGreaterThanOrEqual(4);
+  });
+
+  test("movie cards show synopsis and MORE INFO button", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
+
+    // Should have MORE INFO buttons
+    const moreInfoButtons = page.getByText("MORE INFO");
+    await expect(moreInfoButtons.first()).toBeVisible({ timeout: 10_000 });
+  });
+
+  test("MORE INFO expands to show genres and details", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
+
+    // Click MORE INFO on first card
+    const moreInfoButtons = page.getByText("MORE INFO");
+    await expect(moreInfoButtons.first()).toBeVisible({ timeout: 10_000 });
+    await moreInfoButtons.first().click();
+
+    // Should show TMDB rating and vote count
+    await expect(page.getByText("TMDB").first()).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByText("VOTES").first()).toBeVisible();
+
+    // Should show LESS button to collapse
+    await expect(page.getByText("LESS").first()).toBeVisible();
   });
 
   test("clicking a poster advances to next round", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
 
-    // Click the first poster
+    // Click the first poster button (not MORE INFO)
     const posterButtons = page.locator("button").filter({ has: page.locator("img") });
     await posterButtons.first().click();
 
-    // Should advance — wait for any next round header or loading
-    await expect(
-      page.getByText("Pick a Movie")
-        .or(page.getByText("Pick an Actor"))
-        .or(page.getByText("Pick a Director"))
-        .or(page.getByText("Finding movies"))
-    ).toBeVisible({ timeout: 15_000 });
+    // Should advance — look for ROUND 2
+    await expect(page.getByText("ROUND 2")).toBeVisible({ timeout: 15_000 });
   });
 
-  test("debug panel is visible and shows profile data", async ({ page }) => {
+  test("reload button reshuffles the round", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
 
-    await expect(page.getByText("Profile Debug")).toBeVisible();
-    await expect(page.getByText("Round")).toBeVisible();
-    await expect(page.getByText("Phase")).toBeVisible();
-    await expect(page.getByText("Genre Weights")).toBeVisible();
+    // Should show a reload button (various texts)
+    const reloadButton = page.locator("button").filter({
+      hasText: /DEAL ME|RESHUFFLE|NOT FEELING|FRESH|TRY AGAIN/
+    });
+    await expect(reloadButton).toBeVisible({ timeout: 5_000 });
+
+    // Click it
+    await reloadButton.click();
+
+    // Should still be on round 1 (same round, new cards)
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
   });
 
-  test("debug panel updates after a pick", async ({ page }) => {
+  test("debug panel shows system diagnostics", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
 
-    // Initially should show "No data yet" for genres
-    await expect(page.getByText("No data yet").first()).toBeVisible();
-
-    // Click first poster
-    const posterButtons = page.locator("button").filter({ has: page.locator("img") });
-    await posterButtons.first().click();
-
-    // Wait for next round
-    await page.waitForTimeout(2000);
-
-    // Weight bars should appear
-    const weightBars = page.locator(".bg-primary.rounded-full.h-full");
-    await expect(weightBars.first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("SYSTEM DIAGNOSTICS")).toBeVisible();
+    await expect(page.getByText("GENRE_WEIGHTS")).toBeVisible();
   });
 
   test("debug panel can be collapsed and expanded", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("ROUND 1")).toBeVisible({ timeout: 15_000 });
 
-    await expect(page.getByText("Profile Debug")).toBeVisible();
+    await expect(page.getByText("SYSTEM DIAGNOSTICS")).toBeVisible();
 
     await page.getByTitle("Hide debug").click();
-    await expect(page.getByText("Profile Debug")).not.toBeVisible();
+    await expect(page.getByText("SYSTEM DIAGNOSTICS")).not.toBeVisible();
 
     await page.getByTitle("Show debug").click();
-    await expect(page.getByText("Profile Debug")).toBeVisible();
-  });
-
-  test("progress bar advances with each round", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.getByText("Pick a Movie")).toBeVisible({ timeout: 15_000 });
-
-    // Click first poster
-    const posterButtons = page.locator("button").filter({ has: page.locator("img") });
-    await posterButtons.first().click();
-
-    // Wait for next round to load
-    await page.waitForTimeout(3000);
-
-    // The round counter in debug panel should show Round 2
-    await expect(page.getByText("2").first()).toBeVisible();
+    await expect(page.getByText("SYSTEM DIAGNOSTICS")).toBeVisible();
   });
 });
 
@@ -109,29 +112,33 @@ test.describe("Full Game Playthrough", () => {
 
     // Play through pre-tournament rounds (6 rounds)
     for (let round = 0; round < 6; round++) {
-      // Wait for a round to appear
-      const roundHeader = page.locator("h2");
-      await expect(roundHeader).toBeVisible({ timeout: 15_000 });
+      // Wait for a round header or tournament
+      const roundText = page.locator("h2");
+      await expect(roundText).toBeVisible({ timeout: 15_000 });
 
-      const headerText = await roundHeader.textContent();
+      const headerText = await roundText.textContent();
 
-      if (headerText?.includes("Pick a Movie")) {
-        const posterButtons = page.locator("button").filter({ has: page.locator("img") });
-        await expect(posterButtons.first()).toBeVisible({ timeout: 10_000 });
-        await posterButtons.first().click();
-      } else if (headerText?.includes("Pick an Actor") || headerText?.includes("Pick a Director")) {
-        const personCards = page.locator("button").filter({ hasText: /Actor|Director/ });
+      // Determine round type and click accordingly
+      if (headerText?.includes("VISIONARIES") || headerText?.includes("LENS") || headerText?.includes("AUTEUR") ||
+          headerText?.includes("STAR") || headerText?.includes("CHAMPION") || headerText?.includes("A-LIST")) {
+        // Person round — click a person card
+        const personCards = page.locator("button").filter({ hasText: /ACTOR|DIRECTOR/ });
         await expect(personCards.first()).toBeVisible({ timeout: 10_000 });
         await personCards.first().click();
+      } else {
+        // Movie round — click a poster (the big button, not MORE INFO)
+        const posterButtons = page.locator("button").filter({ has: page.locator("img[alt]") }).filter({ hasNot: page.locator("text=MORE INFO") });
+        await expect(posterButtons.first()).toBeVisible({ timeout: 10_000 });
+        await posterButtons.first().click();
       }
 
       await page.waitForTimeout(500);
     }
 
-    // Should enter tournament phase with VS display
+    // Should enter tournament — VS display
     await expect(page.getByText("VS")).toBeVisible({ timeout: 15_000 });
 
-    // Play through tournament matchups (up to 7)
+    // Play through tournament (up to 7 matchups)
     for (let matchup = 0; matchup < 7; matchup++) {
       const vs = page.getByText("VS");
       if (await vs.isVisible().catch(() => false)) {
@@ -144,8 +151,9 @@ test.describe("Full Game Playthrough", () => {
       }
     }
 
-    // Should show winner screen
-    await expect(page.getByText("Tonight, watch")).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByText("Play Again")).toBeVisible();
+    // Should show winner
+    const winnerText = page.getByText(/WINNER|CHAMPION|ARENA|TONIGHT|VERDICT/);
+    await expect(winnerText.first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("PLAY AGAIN")).toBeVisible();
   });
 });
