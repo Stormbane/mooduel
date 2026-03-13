@@ -31,21 +31,44 @@ export function scoreMovie(movie: TmdbMovie, profile: MovieProfile, genres: Tmdb
 }
 
 /**
- * Select candidates for a poster-pick round.
- * Returns 3 movies: 2 that match the profile + 1 exploration pick.
+ * Popularity threshold decreases as rounds progress.
+ * Early rounds = famous movies only. Later rounds = allow fringe picks.
+ *
+ * Round 0: only top-tier popular movies (popularity > 50)
+ * Round 2: mainstream (popularity > 20)
+ * Round 4+: anything goes (popularity > 5)
+ */
+function getPopularityFloor(round: number): number {
+  if (round <= 1) return 50;
+  if (round <= 3) return 20;
+  return 5;
+}
+
+/**
+ * Select 5 candidates for a poster-pick round.
+ * Mix of profile matches + exploration picks.
+ * Popularity floor decreases each round (famous → fringe).
  */
 export function selectPosterCandidates(
   allMovies: TmdbMovie[],
   profile: MovieProfile,
   genres: TmdbGenre[],
-  alreadyPicked: Set<number>,
+  alreadyShown: Set<number>,
+  round: number = 0,
 ): TmdbMovie[] {
-  // Filter out already picked/shown movies
+  const popFloor = getPopularityFloor(round);
+
   const available = allMovies.filter(
-    (m) => !alreadyPicked.has(m.id) && m.poster_path
+    (m) => !alreadyShown.has(m.id) && m.poster_path && m.popularity >= popFloor
   );
 
-  if (available.length < 3) return available;
+  if (available.length < 5) {
+    // Relax popularity filter if not enough movies
+    const relaxed = allMovies.filter(
+      (m) => !alreadyShown.has(m.id) && m.poster_path
+    );
+    return shuffleArray(relaxed).slice(0, 5);
+  }
 
   // Score and sort
   const scored = available.map((m) => ({
@@ -54,23 +77,26 @@ export function selectPosterCandidates(
   }));
   scored.sort((a, b) => b.score - a.score);
 
-  // Top 2 matches
-  const matches = scored.slice(0, 2).map((s) => s.movie);
+  // Top 3 profile matches
+  const matches = scored.slice(0, 3).map((s) => s.movie);
 
-  // 1 exploration pick from the bottom half
-  const bottomHalf = scored.slice(Math.floor(scored.length / 2));
-  const exploration = bottomHalf[Math.floor(Math.random() * bottomHalf.length)]?.movie;
+  // 2 exploration picks from the rest (avoid top quarter)
+  const explorationPool = scored.slice(Math.max(3, Math.floor(scored.length / 4)));
+  const explorations = shuffleArray(explorationPool)
+    .filter((s) => !matches.some((m) => m.id === s.movie.id))
+    .slice(0, 2)
+    .map((s) => s.movie);
 
-  if (exploration && !matches.some((m) => m.id === exploration.id)) {
-    matches.push(exploration);
-  } else {
-    // Fallback: just take the 3rd best
-    const third = scored[2]?.movie;
-    if (third) matches.push(third);
+  const result = [...matches, ...explorations];
+
+  // Fill to 5 if we don't have enough explorations
+  while (result.length < 5 && scored.length > result.length) {
+    const next = scored.find((s) => !result.some((m) => m.id === s.movie.id));
+    if (next) result.push(next.movie);
+    else break;
   }
 
-  // Shuffle so the "best" option isn't always first
-  return shuffleArray(matches);
+  return shuffleArray(result).slice(0, 5);
 }
 
 /**
@@ -80,10 +106,10 @@ export function selectTournamentCandidates(
   allMovies: TmdbMovie[],
   profile: MovieProfile,
   genres: TmdbGenre[],
-  alreadyPicked: Set<number>,
+  alreadyShown: Set<number>,
 ): TmdbMovie[] {
   const available = allMovies.filter(
-    (m) => !alreadyPicked.has(m.id) && m.poster_path
+    (m) => !alreadyShown.has(m.id) && m.poster_path
   );
 
   const scored = available.map((m) => ({
@@ -92,7 +118,6 @@ export function selectTournamentCandidates(
   }));
   scored.sort((a, b) => b.score - a.score);
 
-  // Take top 8 and shuffle
   return shuffleArray(scored.slice(0, 8).map((s) => s.movie));
 }
 
@@ -102,7 +127,6 @@ export function selectTournamentCandidates(
 export function profileToDiscoverParams(profile: MovieProfile, genres: TmdbGenre[]): Record<string, string> {
   const params: Record<string, string> = {};
 
-  // Use top genres for discovery
   const top = topGenres(profile, 2);
   if (top.length > 0) {
     const genreIds = top

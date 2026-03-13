@@ -1,20 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
+import { motion } from "framer-motion";
 import type { RoundType } from "@/lib/types";
-
-const ROUND_LABELS: Record<RoundType, string> = {
-  "poster-pick": "Pick a Movie",
-  "actor-pick": "Pick an Actor",
-  "director-pick": "Pick a Director",
-  "tournament": "Tournament",
-};
-
-const ROUND_SUBTITLES: Record<RoundType, string> = {
-  "poster-pick": "Which one are you in the mood for?",
-  "actor-pick": "Who do you want to see tonight?",
-  "director-pick": "Whose vision speaks to you?",
-  "tournament": "Head to head — only one survives",
-};
+import { ROUND_TITLES, ROUND_SUBTITLES, getRandomCopy, getProgressText } from "@/lib/copy";
+import { cn } from "@/lib/utils";
 
 interface RoundHeaderProps {
   roundType: RoundType;
@@ -25,33 +15,59 @@ interface RoundHeaderProps {
 export function RoundHeader({ roundType, roundNumber, totalRounds }: RoundHeaderProps) {
   const isTournament = roundType === "tournament";
 
+  const title = useMemo(() => getRandomCopy(ROUND_TITLES[roundType]), [roundType]);
+  const subtitle = useMemo(() => getRandomCopy(ROUND_SUBTITLES[roundType]), [roundType]);
+  const progress = getProgressText(roundNumber, totalRounds);
+
   return (
-    <div className="text-center space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="text-center space-y-2"
+    >
+      {/* Progress bar */}
       {!isTournament && (
-        <div className="flex items-center justify-center gap-2 mb-2">
-          {Array.from({ length: totalRounds + 1 }).map((_, i) => (
-            <div
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i < roundNumber
-                  ? "w-6 bg-primary"
-                  : i === roundNumber
-                    ? "w-8 bg-primary"
-                    : i === totalRounds
-                      ? "w-4 bg-muted-foreground/30"
-                      : "w-4 bg-muted"
-              }`}
-            />
-          ))}
+        <div className="flex flex-col items-center gap-2 mb-3">
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalRounds + 1 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: i * 0.05 }}
+                className={cn(
+                  "h-1 rounded-full transition-all duration-500",
+                  i < roundNumber
+                    ? "w-6 bg-[var(--color-neon-pink)]"
+                    : i === roundNumber
+                      ? "w-8 bg-[var(--color-neon-cyan)] animate-[neon-pulse_1.5s_ease-in-out_infinite]"
+                      : i === totalRounds
+                        ? "w-5 bg-[var(--color-neon-yellow)]/20"
+                        : "w-4 bg-muted",
+                )}
+              />
+            ))}
+          </div>
+          <p className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground font-bold">
+            {progress}
+          </p>
         </div>
       )}
 
-      <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-        {ROUND_LABELS[roundType]}
-      </h2>
-      <p className="text-sm text-muted-foreground">
-        {ROUND_SUBTITLES[roundType]}
+      {/* Round number */}
+      <p className="text-[10px] uppercase tracking-[0.4em] neon-text-cyan font-bold font-[family-name:var(--font-display)]">
+        ROUND {roundNumber + 1}
       </p>
-    </div>
+
+      {/* Title */}
+      <h2 className="text-2xl md:text-3xl font-black tracking-tight font-[family-name:var(--font-display)] uppercase neon-text-pink">
+        {title}
+      </h2>
+
+      {/* Subtitle */}
+      <p className="text-sm text-muted-foreground max-w-md">
+        {subtitle}
+      </p>
+    </motion.div>
   );
 }

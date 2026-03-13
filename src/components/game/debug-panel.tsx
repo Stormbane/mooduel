@@ -32,15 +32,15 @@ export function DebugPanel({ profile, genres, round, phase }: DebugPanelProps) {
   return (
     <div className={cn(
       "fixed right-0 top-0 z-50 h-full transition-all duration-300",
-      collapsed ? "w-10" : "w-72 md:w-80",
+      collapsed ? "w-8" : "w-64 md:w-72",
     )}>
-      {/* Toggle button */}
+      {/* Toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className={cn(
-          "absolute left-0 top-4 -translate-x-full rounded-l-lg px-2 py-3",
-          "bg-card border border-r-0 border-border text-xs font-mono",
-          "hover:bg-accent transition-colors",
+          "absolute left-0 top-4 -translate-x-full rounded-l-md px-1.5 py-2",
+          "glass text-[9px] font-[family-name:var(--font-display)] uppercase tracking-wider",
+          "hover:border-[var(--color-neon-cyan)] transition-colors neon-text-cyan",
         )}
         title={collapsed ? "Show debug" : "Hide debug"}
       >
@@ -48,69 +48,71 @@ export function DebugPanel({ profile, genres, round, phase }: DebugPanelProps) {
       </button>
 
       {!collapsed && (
-        <div className="h-full overflow-y-auto border-l border-border bg-card/95 backdrop-blur-sm p-4 font-mono text-xs">
-          <h3 className="text-sm font-bold mb-3 text-primary">
-            Profile Debug
+        <div className="h-full overflow-y-auto glass p-3 font-mono text-[10px]">
+          <h3 className="text-xs font-bold mb-3 neon-text-cyan font-[family-name:var(--font-display)] uppercase tracking-wider">
+            // SYSTEM DIAGNOSTICS
           </h3>
 
-          {/* Round & Phase */}
-          <div className="mb-4 flex gap-3">
-            <div className="rounded bg-muted px-2 py-1">
-              <span className="text-muted-foreground">Round </span>
-              <span className="font-bold">{round + 1}</span>
+          {/* Status */}
+          <div className="mb-3 flex gap-2">
+            <div className="rounded-sm bg-[var(--color-neon-pink)]/10 border border-[var(--color-neon-pink)]/30 px-2 py-0.5">
+              <span className="text-muted-foreground">RND </span>
+              <span className="neon-text-pink font-bold">{round + 1}</span>
             </div>
-            <div className="rounded bg-muted px-2 py-1">
-              <span className="text-muted-foreground">Phase </span>
-              <span className="font-bold capitalize">{phase}</span>
+            <div className="rounded-sm bg-[var(--color-neon-cyan)]/10 border border-[var(--color-neon-cyan)]/30 px-2 py-0.5">
+              <span className="text-muted-foreground">MODE </span>
+              <span className="neon-text-cyan font-bold uppercase">{phase}</span>
             </div>
           </div>
 
           {/* Genre Weights */}
-          <Section title="Genre Weights">
+          <Section title="GENRE_WEIGHTS">
             {sortedGenres.length === 0 ? (
-              <p className="text-muted-foreground italic">No data yet</p>
+              <p className="text-muted-foreground italic">awaiting_input...</p>
             ) : (
               sortedGenres.map(([genre, weight]) => (
-                <WeightBar key={genre} label={genre} value={weight} />
+                <WeightBar key={genre} label={genre} value={weight} color="pink" />
               ))
             )}
           </Section>
 
-          {/* Era Preference */}
-          <Section title="Era Preference">
+          {/* Era */}
+          <Section title="ERA_PREF">
             {sortedEras.length === 0 ? (
-              <p className="text-muted-foreground italic">No data yet</p>
+              <p className="text-muted-foreground italic">awaiting_input...</p>
             ) : (
               sortedEras.map(([era, weight]) => (
-                <WeightBar key={era} label={era} value={weight} />
+                <WeightBar key={era} label={era} value={weight} color="cyan" />
               ))
             )}
           </Section>
 
           {/* People */}
           {sortedActors.length > 0 && (
-            <Section title="Actor Affinity">
+            <Section title="ACTOR_AFFINITY">
               {sortedActors.map(([id, weight]) => (
-                <WeightBar key={id} label={`ID ${id}`} value={weight} max={0.5} />
+                <WeightBar key={id} label={`#${id}`} value={weight} max={0.5} color="purple" />
               ))}
             </Section>
           )}
 
           {sortedDirectors.length > 0 && (
-            <Section title="Director Affinity">
+            <Section title="DIRECTOR_AFFINITY">
               {sortedDirectors.map(([id, weight]) => (
-                <WeightBar key={id} label={`ID ${id}`} value={weight} max={0.5} />
+                <WeightBar key={id} label={`#${id}`} value={weight} max={0.5} color="purple" />
               ))}
             </Section>
           )}
 
-          {/* Pick History */}
-          <Section title={`Picks (${profile.picks.length})`}>
+          {/* Picks */}
+          <Section title={`PICK_LOG [${profile.picks.length}]`}>
             {profile.picks.slice(-5).reverse().map((pick, i) => (
-              <div key={i} className="mb-1 text-[10px] text-muted-foreground">
-                R{pick.round + 1} · {pick.roundType}
-                {pick.movieId && ` · movie:${pick.movieId}`}
-                {pick.personId && ` · person:${pick.personId}`}
+              <div key={i} className="mb-1 text-[9px] text-muted-foreground font-mono">
+                <span className="neon-text-cyan">R{pick.round + 1}</span>
+                <span className="text-muted-foreground/50"> // </span>
+                <span>{pick.roundType}</span>
+                {pick.movieId && <span className="text-foreground/60"> m:{pick.movieId}</span>}
+                {pick.personId && <span className="text-foreground/60"> p:{pick.personId}</span>}
               </div>
             ))}
           </Section>
@@ -122,8 +124,8 @@ export function DebugPanel({ profile, genres, round, phase }: DebugPanelProps) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="mb-4">
-      <h4 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2 font-bold">
+    <div className="mb-3">
+      <h4 className="text-[9px] uppercase tracking-wider text-[var(--color-neon-cyan)]/60 mb-1.5 font-bold">
         {title}
       </h4>
       {children}
@@ -131,18 +133,23 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function WeightBar({ label, value, max = 1 }: { label: string; value: number; max?: number }) {
+function WeightBar({ label, value, max = 1, color = "pink" }: { label: string; value: number; max?: number; color?: "pink" | "cyan" | "purple" }) {
   const pct = Math.min(100, (value / max) * 100);
+  const colors = {
+    pink: "bg-[var(--color-neon-pink)]",
+    cyan: "bg-[var(--color-neon-cyan)]",
+    purple: "bg-[var(--color-neon-purple)]",
+  };
 
   return (
-    <div className="mb-1.5">
+    <div className="mb-1">
       <div className="flex justify-between mb-0.5">
-        <span className="text-foreground/80">{label}</span>
+        <span className="text-foreground/70 uppercase">{label}</span>
         <span className="text-muted-foreground">{(value * 100).toFixed(0)}%</span>
       </div>
-      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+      <div className="h-1 w-full rounded-full bg-muted/50 overflow-hidden">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+          className={cn("h-full rounded-full transition-all duration-700 ease-out", colors[color])}
           style={{ width: `${pct}%` }}
         />
       </div>

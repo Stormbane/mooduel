@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { posterUrl } from "@/lib/tmdb/client";
 import type { TmdbMovieDetails, TmdbMovie } from "@/lib/types";
+import { WINNER_INTROS, getRandomCopy } from "@/lib/copy";
 import { cn } from "@/lib/utils";
 
 interface WinnerScreenProps {
@@ -16,51 +19,76 @@ function isMovieDetails(m: TmdbMovieDetails | TmdbMovie): m is TmdbMovieDetails 
 
 export function WinnerScreen({ movie, onRestart }: WinnerScreenProps) {
   const details = isMovieDetails(movie) ? movie : null;
+  const intro = useMemo(() => getRandomCopy(WINNER_INTROS), []);
 
   return (
-    <div className="flex flex-col items-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Title */}
-      <div className="text-center space-y-2">
-        <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">
-          Tonight, watch
+    <div className="flex flex-col items-center gap-6 max-w-lg mx-auto">
+      {/* Intro text with glitch */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, type: "spring" }}
+        className="text-center space-y-2"
+      >
+        <p className="text-xs uppercase tracking-[0.4em] neon-text-cyan font-bold font-[family-name:var(--font-display)]">
+          {intro}
         </p>
-        <h1 className="text-3xl md:text-5xl font-black tracking-tight">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-3xl md:text-4xl font-black tracking-tight font-[family-name:var(--font-display)] uppercase neon-text-pink"
+        >
           {movie.title}
-        </h1>
+        </motion.h1>
         {details?.tagline && (
-          <p className="text-muted-foreground italic text-lg">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-muted-foreground italic"
+          >
             &ldquo;{details.tagline}&rdquo;
-          </p>
+          </motion.p>
         )}
-      </div>
+      </motion.div>
 
-      {/* Poster */}
-      <div className={cn(
-        "relative w-64 md:w-80 aspect-[2/3] rounded-2xl overflow-hidden",
-        "shadow-2xl shadow-primary/20 ring-2 ring-primary/30",
-      )}>
+      {/* Poster with neon border */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className={cn(
+          "relative w-56 md:w-72 aspect-[2/3] rounded-xl overflow-hidden",
+          "border-2 border-[var(--color-neon-pink)]",
+          "neon-glow-pink",
+        )}
+      >
         <Image
           src={posterUrl(movie.poster_path, "w780")}
           alt={movie.title}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 256px, 320px"
+          sizes="(max-width: 768px) 224px, 288px"
           priority
         />
-      </div>
+      </motion.div>
 
       {/* Details */}
-      <div className="max-w-md text-center space-y-3">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="max-w-md text-center space-y-3"
+      >
         {/* Meta row */}
-        <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
-          <span>{movie.release_date?.slice(0, 4)}</span>
-          <span>·</span>
-          <span>★ {movie.vote_average?.toFixed(1)}</span>
+        <div className="flex items-center justify-center gap-3 text-sm">
+          <span className="text-muted-foreground">{movie.release_date?.slice(0, 4)}</span>
+          <span className="neon-text-yellow font-bold">{movie.vote_average?.toFixed(1)}</span>
           {details?.runtime && (
-            <>
-              <span>·</span>
-              <span>{Math.floor(details.runtime / 60)}h {details.runtime % 60}m</span>
-            </>
+            <span className="text-muted-foreground">
+              {Math.floor(details.runtime / 60)}h {details.runtime % 60}m
+            </span>
           )}
         </div>
 
@@ -70,7 +98,7 @@ export function WinnerScreen({ movie, onRestart }: WinnerScreenProps) {
             {details.genres.map((g) => (
               <span
                 key={g.id}
-                className="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium"
+                className="rounded px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold border border-[var(--color-neon-purple)]/40 text-[var(--color-neon-purple)] bg-[var(--color-neon-purple)]/5"
               >
                 {g.name}
               </span>
@@ -82,20 +110,24 @@ export function WinnerScreen({ movie, onRestart }: WinnerScreenProps) {
         <p className="text-sm text-muted-foreground leading-relaxed">
           {movie.overview}
         </p>
-      </div>
+      </motion.div>
 
       {/* Play again */}
-      <button
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
         onClick={onRestart}
         className={cn(
-          "rounded-full px-8 py-3 text-sm font-semibold",
-          "bg-primary text-primary-foreground",
-          "hover:bg-primary/90 transition-colors",
-          "active:scale-95",
+          "mt-4 rounded-lg px-8 py-3 text-sm font-bold uppercase tracking-wider",
+          "font-[family-name:var(--font-display)]",
+          "border border-[var(--color-neon-cyan)] text-[var(--color-neon-cyan)]",
+          "hover:bg-[var(--color-neon-cyan)]/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)]",
+          "transition-all active:scale-95",
         )}
       >
-        Play Again
-      </button>
+        PLAY AGAIN
+      </motion.button>
     </div>
   );
 }

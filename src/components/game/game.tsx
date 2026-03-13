@@ -8,6 +8,7 @@ import { TournamentRound } from "./tournament";
 import { DebugPanel } from "./debug-panel";
 import { WinnerScreen } from "./winner-screen";
 import { RoundHeader } from "./round-header";
+import { ReloadButton } from "./reload-button";
 import { GameLoading } from "./loading";
 import type { TmdbMovie } from "@/lib/types";
 
@@ -21,6 +22,7 @@ export function Game() {
     pickMovie,
     pickPerson,
     pickTournamentWinner,
+    reloadRound,
     restart,
     tournamentMovies,
   } = useGame();
@@ -28,7 +30,7 @@ export function Game() {
   const roundType = getCurrentRoundType(state);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen scanline-overlay">
       {/* Debug panel */}
       <DebugPanel
         profile={state.profile}
@@ -38,7 +40,7 @@ export function Game() {
       />
 
       {/* Main game area */}
-      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 pr-12">
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 pr-10">
         {/* Winner screen */}
         {state.phase === "winner" && (winnerMovie || state.winnerMovieId) ? (
           <WinnerScreen
@@ -48,7 +50,7 @@ export function Game() {
         ) : loading ? (
           <GameLoading />
         ) : roundOptions ? (
-          <div className="flex flex-col items-center gap-8 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex flex-col items-center gap-6 w-full max-w-4xl">
             {/* Round header */}
             <RoundHeader
               roundType={roundType}
@@ -58,38 +60,42 @@ export function Game() {
 
             {/* Round content */}
             {roundOptions.type === "poster-pick" && (
-              <div className="flex items-center justify-center gap-4 md:gap-6">
-                {roundOptions.movies.map((movie) => (
+              <div className="flex flex-wrap items-start justify-center gap-3 md:gap-4">
+                {roundOptions.movies.map((movie, i) => (
                   <PosterCard
                     key={movie.id}
                     movie={movie}
+                    genres={genres}
                     onPick={pickMovie}
+                    index={i}
                   />
                 ))}
               </div>
             )}
 
             {roundOptions.type === "actor-pick" && (
-              <div className="flex flex-wrap items-start justify-center gap-4 md:gap-6">
-                {roundOptions.people.map((person) => (
+              <div className="flex flex-wrap items-start justify-center gap-3 md:gap-4">
+                {roundOptions.people.map((person, i) => (
                   <PersonCard
                     key={person.id}
                     person={person}
                     onPick={pickPerson}
-                    label="Actor"
+                    label="ACTOR"
+                    index={i}
                   />
                 ))}
               </div>
             )}
 
             {roundOptions.type === "director-pick" && (
-              <div className="flex flex-wrap items-start justify-center gap-4 md:gap-6">
-                {roundOptions.people.map((person) => (
+              <div className="flex flex-wrap items-start justify-center gap-3 md:gap-4">
+                {roundOptions.people.map((person, i) => (
                   <PersonCard
                     key={person.id}
                     person={person}
                     onPick={pickPerson}
-                    label="Director"
+                    label="DIRECTOR"
+                    index={i}
                   />
                 ))}
               </div>
@@ -99,8 +105,14 @@ export function Game() {
               <TournamentRound
                 movies={roundOptions.movies as [TmdbMovie, TmdbMovie]}
                 tournament={state.tournament}
+                genres={genres}
                 onPick={pickTournamentWinner}
               />
+            )}
+
+            {/* Reload button (not during tournament) */}
+            {roundOptions.type !== "tournament" && (
+              <ReloadButton onReload={reloadRound} />
             )}
           </div>
         ) : null}

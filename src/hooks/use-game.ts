@@ -38,10 +38,9 @@ interface UseGameReturn {
   pickMovie: (movie: TmdbMovie) => void;
   pickPerson: (person: TmdbPersonWithMovies) => void;
   pickTournamentWinner: (movie: TmdbMovie) => void;
+  reloadRound: () => void;
   restart: () => void;
-  /** All movies we've fetched (for debug panel) */
   moviePool: TmdbMovie[];
-  /** Movies in the tournament bracket */
   tournamentMovies: TmdbMovie[];
 }
 
@@ -72,22 +71,23 @@ export function useGame(): UseGameReturn {
     async function init() {
       setLoading(true);
       try {
-        // Fetch multiple pages of popular movies for variety
-        const [page1, page2, page3] = await Promise.all([
+        // Fetch popular + top rated for a rich initial pool
+        const [pop1, pop2, pop3, top1, top2] = await Promise.all([
           fetch("/api/tmdb/popular?page=1").then((r) => r.json()),
           fetch("/api/tmdb/popular?page=2").then((r) => r.json()),
           fetch("/api/tmdb/popular?page=3").then((r) => r.json()),
+          fetch("/api/tmdb/top-rated?page=1").then((r) => r.json()),
+          fetch("/api/tmdb/top-rated?page=2").then((r) => r.json()),
         ]);
 
-        const allMovies: TmdbMovie[] = [...page1, ...page2, ...page3];
+        const allMovies: TmdbMovie[] = dedupeMovies([...pop1, ...pop2, ...pop3, ...top1, ...top2]);
         setMoviePool(allMovies);
 
-        // Fetch genres
         const genreData: TmdbGenre[] = await fetch("/api/tmdb/genres").then((r) => r.json());
         setGenres(genreData);
 
-        // Select first round candidates
-        const candidates = selectPosterCandidates(allMovies, createInitialGameState().profile, genreData, shownIds.current);
+        // Select first round — 5 candidates, round 0 = famous only
+        const candidates = selectPosterCandidates(allMovies, createInitialGameState().profile, genreData, shownIds.current, 0);
         candidates.forEach((m) => shownIds.current.add(m.id));
         setRoundOptions({ type: "poster-pick", movies: candidates });
       } catch (err) {
@@ -107,16 +107,20 @@ export function useGame(): UseGameReturn {
 
       try {
         if (roundType === "poster-pick") {
-          // Fetch more movies if pool is getting low
           let pool = moviePool;
-          if (pool.length - shownIds.current.size < 10) {
-            const page = Math.floor(moviePool.length / 20) + 1;
-            const moreMovies: TmdbMovie[] = await fetch(`/api/tmdb/popular?page=${page}`).then((r) => r.json());
-            pool = [...pool, ...moreMovies];
+
+          // Fetch more movies if pool is running low
+          if (pool.length - shownIds.current.size < 20) {
+            const page = Math.floor(pool.length / 20) + 1;
+            const [more1, more2] = await Promise.all([
+              fetch(`/api/tmdb/popular?page=${page}`).then((r) => r.json()),
+              fetch(`/api/tmdb/popular?page=${page + 1}`).then((r) => r.json()),
+            ]);
+            pool = dedupeMovies([...pool, ...more1, ...more2]);
             setMoviePool(pool);
           }
 
-          // Also try discovery based on profile
+          // Discover profile-matched movies after a few picks
           if (nextState.profile.picks.length >= 2 && genres.length > 0) {
             try {
               const topGenreEntries = Object.entries(nextState.profile.genreWeights)
@@ -127,37 +131,33 @@ export function useGame(): UseGameReturn {
                   .map(([name]) => genres.find((g) => g.name === name)?.id)
                   .filter(Boolean);
                 if (genreIds.length > 0) {
+                  const randomPage = Math.ceil(Math.random() * 3);
                   const discovered: TmdbMovie[] = await fetch(
-                    `/api/tmdb/discover?with_genres=${genreIds.join(",")}`
+                    `/api/tmdb/discover?with_genres=${genreIds.join(",")}&page=${randomPage}`
                   ).then((r) => r.json());
-                  const newMovies = discovered.filter(
-                    (m) => !pool.some((existing) => existing.id === m.id)
-                  );
-                  pool = [...pool, ...newMovies];
+                  pool = dedupeMovies([...pool, ...discovered]);
                   setMoviePool(pool);
                 }
               }
             } catch {
-              // Discovery is optional, fallback to existing pool
+              // Discovery is optional
             }
           }
 
-          const candidates = selectPosterCandidates(pool, nextState.profile, genres, shownIds.current);
+          const candidates = selectPosterCandidates(pool, nextState.profile, genres, shownIds.current, nextState.currentRound);
           candidates.forEach((m) => shownIds.current.add(m.id));
           setRoundOptions({ type: "poster-pick", movies: candidates });
         } else if (roundType === "actor-pick") {
-          const page = Math.ceil(Math.random() * 3);
           const actors: TmdbPersonWithMovies[] = await fetch(
-            `/api/tmdb/people?type=actors&page=${page}`
+            `/api/tmdb/people?type=actors`
           ).then((r) => r.json());
-          setRoundOptions({ type: "actor-pick", people: actors.slice(0, 3) });
+          setRoundOptions({ type: "actor-pick", people: actors.slice(0, 5) });
         } else if (roundType === "director-pick") {
           const directors: TmdbPersonWithMovies[] = await fetch(
             "/api/tmdb/people?type=directors"
           ).then((r) => r.json());
-          setRoundOptions({ type: "director-pick", people: directors.slice(0, 3) });
+          setRoundOptions({ type: "director-pick", people: directors.slice(0, 5) });
         } else if (roundType === "tournament") {
-          // Fetch more profile-matched movies for the tournament
           let pool = moviePool;
           if (genres.length > 0) {
             try {
@@ -172,10 +172,7 @@ export function useGame(): UseGameReturn {
                   fetch(`/api/tmdb/discover?with_genres=${genreIds.join(",")}&page=1`).then((r) => r.json()),
                   fetch(`/api/tmdb/discover?with_genres=${genreIds.slice(0, 1).join(",")}&page=2`).then((r) => r.json()),
                 ]);
-                const newMovies = [...disc1, ...disc2].filter(
-                  (m: TmdbMovie) => !pool.some((existing) => existing.id === m.id)
-                );
-                pool = [...pool, ...newMovies];
+                pool = dedupeMovies([...pool, ...disc1, ...disc2]);
                 setMoviePool(pool);
               }
             } catch {
@@ -213,11 +210,7 @@ export function useGame(): UseGameReturn {
 
       const rejected = roundOptions.movies.filter((m) => m.id !== movie.id);
       const updatedProfile = updateProfileWithMovie(
-        state.profile,
-        movie,
-        rejected,
-        genres,
-        state.currentRound,
+        state.profile, movie, rejected, genres, state.currentRound,
       );
 
       const nextState = advanceRound({ ...state, profile: updatedProfile });
@@ -233,12 +226,7 @@ export function useGame(): UseGameReturn {
 
       const rejected = roundOptions.people.filter((p) => p.id !== person.id);
       const updatedProfile = updateProfileWithPerson(
-        state.profile,
-        person,
-        rejected,
-        roundOptions.type,
-        genres,
-        state.currentRound,
+        state.profile, person, rejected, roundOptions.type, genres, state.currentRound,
       );
 
       const nextState = advanceRound({ ...state, profile: updatedProfile });
@@ -259,25 +247,20 @@ export function useGame(): UseGameReturn {
       const loser = tournamentMovies.find((m) => m.id === loserId)!;
 
       const updatedProfile = updateProfileWithTournamentPick(
-        state.profile,
-        movie,
-        loser,
-        genres,
-        state.currentRound,
+        state.profile, movie, loser, genres, state.currentRound,
       );
 
       const nextTournament = advanceTournament(state.tournament, movie.id);
 
       if (isTournamentComplete(nextTournament)) {
         const winnerId = getTournamentWinner(nextTournament);
-        // Fetch full movie details for winner
         try {
           const details: TmdbMovieDetails = await fetch(
             `/api/tmdb/movie?id=${winnerId}`
           ).then((r) => r.json());
           setWinnerMovie(details);
         } catch {
-          // Fallback: use basic movie data
+          // Fallback
         }
 
         setState({
@@ -291,7 +274,6 @@ export function useGame(): UseGameReturn {
         return;
       }
 
-      // Next matchup
       const nextMatchup = getCurrentMatchup(nextTournament);
       if (nextMatchup) {
         const [a, b] = nextMatchup;
@@ -309,6 +291,11 @@ export function useGame(): UseGameReturn {
     [state, roundOptions, genres, tournamentMovies]
   );
 
+  /** Reload the current round with fresh candidates (same round type, no profile change) */
+  const reloadRound = useCallback(() => {
+    loadNextRound(state);
+  }, [state, loadNextRound]);
+
   const restart = useCallback(() => {
     shownIds.current.clear();
     initialized.current = false;
@@ -317,8 +304,6 @@ export function useGame(): UseGameReturn {
     setWinnerMovie(null);
     setTournamentMovies([]);
     setLoading(true);
-
-    // Re-trigger init
     setTimeout(() => {
       initialized.current = false;
       window.location.reload();
@@ -334,8 +319,18 @@ export function useGame(): UseGameReturn {
     pickMovie,
     pickPerson,
     pickTournamentWinner,
+    reloadRound,
     restart,
     moviePool,
     tournamentMovies,
   };
+}
+
+function dedupeMovies(movies: TmdbMovie[]): TmdbMovie[] {
+  const seen = new Set<number>();
+  return movies.filter((m) => {
+    if (seen.has(m.id)) return false;
+    seen.add(m.id);
+    return true;
+  });
 }

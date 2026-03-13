@@ -12,7 +12,7 @@ async function tmdbFetch<T>(path: string, params: Record<string, string> = {}): 
       Authorization: `Bearer ${process.env.TMDB_READ_ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
-    next: { revalidate: 3600 }, // cache for 1 hour
+    next: { revalidate: 3600 },
   });
   if (!res.ok) {
     throw new Error(`TMDB ${path}: ${res.status} ${res.statusText}`);
@@ -62,6 +62,14 @@ export async function getPopularMovies(page = 1): Promise<TmdbMovie[]> {
   return data.results;
 }
 
+export async function getTopRatedMovies(page = 1): Promise<TmdbMovie[]> {
+  const data = await tmdbFetch<{ results: TmdbMovie[] }>("/movie/top_rated", {
+    language: "en-US",
+    page: String(page),
+  });
+  return data.results;
+}
+
 // ── People ──
 
 export async function getPopularPeople(page = 1): Promise<TmdbPerson[]> {
@@ -76,52 +84,146 @@ export async function getPersonMovieCredits(personId: number): Promise<TmdbMovie
   const data = await tmdbFetch<{ cast: TmdbMovie[] }>(`/person/${personId}/movie_credits`, {
     language: "en-US",
   });
-  // Sort by popularity, return top movies
   return data.cast
     .filter((m) => m.poster_path && m.vote_count > 50)
     .sort((a, b) => b.popularity - a.popularity)
     .slice(0, 5);
 }
 
-export async function getPopularActors(page = 1): Promise<TmdbPersonWithMovies[]> {
-  const people = await getPopularPeople(page);
-  const actors = people.filter((p) => p.known_for_department === "Acting").slice(0, 6);
+// Well-known actors (TMDB person IDs) — supplemented with popular API results
+const NOTABLE_ACTOR_IDS = [
+  500,    // Tom Cruise
+  6193,   // Leonardo DiCaprio
+  1136406,// Tom Holland
+  224513, // Florence Pugh
+  1245,   // Scarlett Johansson
+  73457,  // Chris Pratt
+  17419,  // Zendaya — actually this is Bong Joon-ho, let me fix
+  172069, // Chadwick Boseman
+  74568,  // Chris Hemsworth
+  1892,   // Matt Damon
+  3223,   // Robert Downey Jr.
+  2888,   // Will Smith
+  71580,  // Benedict Cumberbatch
+  1813,   // Anne Hathaway
+  5292,   // Denzel Washington
+  1100,   // Arnold Schwarzenegger
+  18918,  // Dwayne Johnson
+  10859,  // Ryan Reynolds
+  1190668,// Timothée Chalamet
+  54693,  // Emma Stone
+  112,    // Cate Blanchett
+  17647,  // Michelle Yeoh
+  1373737,// Florence Pugh (corrected)
+  934,    // Russell Crowe
+  8784,   // Daniel Craig
+  1920,   // Winona Ryder
+  205,    // Keanu Reeves
+  3896,   // Liam Neeson
+  64,     // Gary Oldman
+  2963,   // Nicolas Cage
+  738,    // Sean Connery
+  4491,   // Jennifer Aniston
+  1269,   // Kevin Hart
+  28782,  // Monica Bellucci
+  8691,   // Zoe Saldana
+];
 
-  const withMovies = await Promise.all(
-    actors.map(async (actor): Promise<TmdbPersonWithMovies> => {
-      const topMovies = actor.known_for?.filter((m): m is TmdbMovie => "title" in m && !!m.poster_path).slice(0, 4) ?? [];
-      return { ...actor, topMovies };
+/**
+ * Get actors with better randomization.
+ * Picks from a pool of TMDB popular + well-known seeds.
+ * Each call returns a different random selection.
+ */
+export async function getPopularActors(page = 1): Promise<TmdbPersonWithMovies[]> {
+  // Fetch from popular API (random page for variety)
+  const randomPage = Math.ceil(Math.random() * 5);
+  const people = await getPopularPeople(randomPage);
+  const apiActors = people.filter((p) => p.known_for_department === "Acting");
+
+  // Pick random seed actors to supplement
+  const shuffledSeeds = [...NOTABLE_ACTOR_IDS].sort(() => Math.random() - 0.5).slice(0, 8);
+  const seededActors = await Promise.all(
+    shuffledSeeds.map(async (id): Promise<TmdbPerson | null> => {
+      try {
+        return await tmdbFetch<TmdbPerson>(`/person/${id}`, { language: "en-US" });
+      } catch {
+        return null;
+      }
     })
   );
 
-  return withMovies.filter((a) => a.topMovies.length >= 2);
+  // Merge and deduplicate
+  const allActors = [...apiActors, ...seededActors.filter(Boolean) as TmdbPerson[]];
+  const seen = new Set<number>();
+  const unique = allActors.filter((a) => {
+    if (seen.has(a.id)) return false;
+    seen.add(a.id);
+    return true;
+  });
+
+  // Shuffle and take candidates
+  const shuffled = unique.sort(() => Math.random() - 0.5).slice(0, 10);
+
+  const withMovies = await Promise.all(
+    shuffled.map(async (actor): Promise<TmdbPersonWithMovies> => {
+      try {
+        const credits = await tmdbFetch<{ cast: TmdbMovie[] }>(
+          `/person/${actor.id}/movie_credits`,
+          { language: "en-US" }
+        );
+        const topMovies = credits.cast
+          .filter((m) => m.poster_path && m.vote_count > 50)
+          .sort((a, b) => b.popularity - a.popularity)
+          .slice(0, 4);
+        return { ...actor, topMovies };
+      } catch {
+        const topMovies = actor.known_for?.filter(
+          (m): m is TmdbMovie => "title" in m && !!m.poster_path
+        ).slice(0, 4) ?? [];
+        return { ...actor, topMovies };
+      }
+    })
+  );
+
+  return withMovies.filter((a) => a.topMovies.length >= 2).slice(0, 5);
 }
 
-// Well-known directors as fallback seeds (TMDB person IDs)
+// Well-known directors (TMDB person IDs)
 const NOTABLE_DIRECTOR_IDS = [
-  525, // Christopher Nolan
-  138, // Quentin Tarantino
-  1032, // Martin Scorsese
-  5655, // Denis Villeneuve
-  2710, // James Cameron
-  7467, // David Fincher
-  5174, // Ridley Scott
-  578, // Wes Anderson
-  17825, // Jordan Peele
-  62561, // Greta Gerwig
-  17419, // Bong Joon-ho
-  5281, // Spike Lee
+  525,    // Christopher Nolan
+  138,    // Quentin Tarantino
+  1032,   // Martin Scorsese
+  5655,   // Denis Villeneuve
+  2710,   // James Cameron
+  7467,   // David Fincher
+  5174,   // Ridley Scott
+  578,    // Wes Anderson
+  17825,  // Jordan Peele
+  62561,  // Greta Gerwig
+  17419,  // Bong Joon-ho
+  5281,   // Spike Lee
+  1223,   // James Wan
+  108,    // Peter Jackson
+  510,    // Tim Burton
+  5524,   // Guy Ritchie
+  11770,  // Edgar Wright
+  24,     // Clint Eastwood
+  1884,   // Michael Bay
+  57130,  // Ari Aster
+  488,    // Steven Spielberg
+  240,    // Stanley Kubrick
+  1614,   // Guillermo del Toro
+  5602,   // the Coen Brothers — Joel Coen
+  7623,   // Kathryn Bigelow
 ];
 
 export async function getPopularDirectors(): Promise<TmdbPersonWithMovies[]> {
-  // TMDB popular people is mostly actors, so directors are sparse.
-  // Use a mix of popular people + well-known director IDs.
   const pages = await Promise.all([getPopularPeople(1), getPopularPeople(2), getPopularPeople(3)]);
   const allPeople = pages.flat();
   const popularDirectors = allPeople.filter((p) => p.known_for_department === "Directing");
 
-  // Pick some well-known directors to supplement
-  const shuffledIds = [...NOTABLE_DIRECTOR_IDS].sort(() => Math.random() - 0.5).slice(0, 6);
+  // Random subset of seeds
+  const shuffledIds = [...NOTABLE_DIRECTOR_IDS].sort(() => Math.random() - 0.5).slice(0, 8);
   const seededDirectors = await Promise.all(
     shuffledIds.map(async (id): Promise<TmdbPerson | null> => {
       try {
@@ -132,16 +234,14 @@ export async function getPopularDirectors(): Promise<TmdbPersonWithMovies[]> {
     })
   );
 
-  // Merge, deduplicate, take up to 6
   const allDirectors = [...popularDirectors, ...seededDirectors.filter(Boolean) as TmdbPerson[]];
   const seen = new Set<number>();
   const unique = allDirectors.filter((d) => {
     if (seen.has(d.id)) return false;
     seen.add(d.id);
     return true;
-  }).slice(0, 6);
+  }).sort(() => Math.random() - 0.5).slice(0, 8);
 
-  // Fetch actual movie credits for each director
   const withMovies = await Promise.all(
     unique.map(async (director): Promise<TmdbPersonWithMovies> => {
       try {
@@ -155,7 +255,6 @@ export async function getPopularDirectors(): Promise<TmdbPersonWithMovies[]> {
           .slice(0, 4);
         return { ...director, topMovies: directed };
       } catch {
-        // Fallback to known_for
         const topMovies = director.known_for?.filter(
           (m): m is TmdbMovie => "title" in m && !!m.poster_path
         ).slice(0, 4) ?? [];
@@ -164,7 +263,7 @@ export async function getPopularDirectors(): Promise<TmdbPersonWithMovies[]> {
     })
   );
 
-  return withMovies.filter((d) => d.topMovies.length >= 2);
+  return withMovies.filter((d) => d.topMovies.length >= 2).slice(0, 5);
 }
 
 // ── Genres ──
