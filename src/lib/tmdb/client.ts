@@ -9,7 +9,7 @@ async function tmdbFetch<T>(path: string, params: Record<string, string> = {}): 
   }
   const res = await fetch(url.toString(), {
     headers: {
-      Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+      Authorization: `Bearer ${process.env.TMDB_READ_ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
     next: { revalidate: 3600 }, // cache for 1 hour
@@ -97,17 +97,70 @@ export async function getPopularActors(page = 1): Promise<TmdbPersonWithMovies[]
   return withMovies.filter((a) => a.topMovies.length >= 2);
 }
 
+// Well-known directors as fallback seeds (TMDB person IDs)
+const NOTABLE_DIRECTOR_IDS = [
+  525, // Christopher Nolan
+  138, // Quentin Tarantino
+  1032, // Martin Scorsese
+  5655, // Denis Villeneuve
+  2710, // James Cameron
+  7467, // David Fincher
+  5174, // Ridley Scott
+  578, // Wes Anderson
+  17825, // Jordan Peele
+  62561, // Greta Gerwig
+  17419, // Bong Joon-ho
+  5281, // Spike Lee
+];
+
 export async function getPopularDirectors(): Promise<TmdbPersonWithMovies[]> {
-  // TMDB doesn't have a direct "popular directors" endpoint,
-  // so we fetch popular people and filter for directing
+  // TMDB popular people is mostly actors, so directors are sparse.
+  // Use a mix of popular people + well-known director IDs.
   const pages = await Promise.all([getPopularPeople(1), getPopularPeople(2), getPopularPeople(3)]);
   const allPeople = pages.flat();
-  const directors = allPeople.filter((p) => p.known_for_department === "Directing").slice(0, 6);
+  const popularDirectors = allPeople.filter((p) => p.known_for_department === "Directing");
 
+  // Pick some well-known directors to supplement
+  const shuffledIds = [...NOTABLE_DIRECTOR_IDS].sort(() => Math.random() - 0.5).slice(0, 6);
+  const seededDirectors = await Promise.all(
+    shuffledIds.map(async (id): Promise<TmdbPerson | null> => {
+      try {
+        return await tmdbFetch<TmdbPerson>(`/person/${id}`, { language: "en-US" });
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  // Merge, deduplicate, take up to 6
+  const allDirectors = [...popularDirectors, ...seededDirectors.filter(Boolean) as TmdbPerson[]];
+  const seen = new Set<number>();
+  const unique = allDirectors.filter((d) => {
+    if (seen.has(d.id)) return false;
+    seen.add(d.id);
+    return true;
+  }).slice(0, 6);
+
+  // Fetch actual movie credits for each director
   const withMovies = await Promise.all(
-    directors.map(async (director): Promise<TmdbPersonWithMovies> => {
-      const topMovies = director.known_for?.filter((m): m is TmdbMovie => "title" in m && !!m.poster_path).slice(0, 4) ?? [];
-      return { ...director, topMovies };
+    unique.map(async (director): Promise<TmdbPersonWithMovies> => {
+      try {
+        const credits = await tmdbFetch<{ crew: (TmdbMovie & { job: string })[] }>(
+          `/person/${director.id}/movie_credits`,
+          { language: "en-US" }
+        );
+        const directed = credits.crew
+          .filter((m) => m.job === "Director" && m.poster_path && m.vote_count > 50)
+          .sort((a, b) => b.popularity - a.popularity)
+          .slice(0, 4);
+        return { ...director, topMovies: directed };
+      } catch {
+        // Fallback to known_for
+        const topMovies = director.known_for?.filter(
+          (m): m is TmdbMovie => "title" in m && !!m.poster_path
+        ).slice(0, 4) ?? [];
+        return { ...director, topMovies };
+      }
     })
   );
 
