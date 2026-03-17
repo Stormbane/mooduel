@@ -1,0 +1,45 @@
+{
+  "tmdbId": 8363,
+  "imdbId": "tt0829482",
+  "title": "Superbad",
+  "originalTitle": "Superbad",
+  "year": 2007,
+  "genres": [
+    "Comedy"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2007-08-17",
+  "runtime": 113,
+  "tmdbPopularity": 11.0177,
+  "tmdbVoteCount": 7931,
+  "tmdbRating": 7.259,
+  "tmdbUrl": "https://www.themoviedb.org/movie/8363",
+  "imdbUrl": "https://www.imdb.com/title/tt0829482",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:07:20Z",
+  "valence": 0.65,
+  "arousal": 0.7,
+  "dominance": 0.1,
+  "absorptionPotential": 0.45,
+  "hedonicValence": 0.8,
+  "eudaimonicValence": 0.45,
+  "psychologicallyRichValence": 0.25,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "joy",
+    "anticipation",
+    "trust"
+  ],
+  "moodTags": [
+    "coming-of-age",
+    "friendship",
+    "nostalgia",
+    "irreverent",
+    "chaotic"
+  ],
+  "reasoning": "Superbad is a warm, high-energy buddy comedy that pairs escalating chaos with genuine emotional stakes about friendship and separation. The pleasure is primarily hedonic—it's a well-executed comedy designed to entertain. But the core friendship arc provides real eudaimonic substance: the separation anxiety and reconciliation have actual weight beneath the humor. The characters are swept along by events (low dominance), but the comedic tone keeps this from feeling disempowering to the viewer."
+}

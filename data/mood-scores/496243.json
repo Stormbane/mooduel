@@ -1,0 +1,46 @@
+{
+  "tmdbId": 496243,
+  "imdbId": "tt6751668",
+  "title": "Parasite",
+  "originalTitle": "기생충",
+  "year": 2019,
+  "genres": [
+    "Comedy",
+    "Thriller",
+    "Drama"
+  ],
+  "originalLanguage": "ko",
+  "releaseDate": "2019-05-30",
+  "runtime": 133,
+  "tmdbPopularity": 26.9069,
+  "tmdbVoteCount": 20275,
+  "tmdbRating": 8.493,
+  "tmdbUrl": "https://www.themoviedb.org/movie/496243",
+  "imdbUrl": "https://www.imdb.com/title/tt6751668",
+  "inputSources": [
+    "tmdb"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-16T05:06:26Z",
+  "valence": -0.25,
+  "arousal": 0.6,
+  "dominance": -0.55,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.35,
+  "eudaimonicValence": 0.8,
+  "psychologicallyRichValence": 0.75,
+  "emotionalArc": "oedipus",
+  "dominantEmotions": [
+    "anger",
+    "sadness",
+    "anticipation"
+  ],
+  "moodTags": [
+    "class-struggle",
+    "dark-humor",
+    "despair",
+    "systemic-oppression",
+    "infiltration"
+  ],
+  "reasoning": "Parasite deliberately subverts pleasure with dark comedy and escalating psychological tension. The film's emotional arc is tragic—characters achieve temporary stability through deception, only to be caught in systems they cannot escape. Viewers feel mounting helplessness despite the characters' initial agency. The intellectual richness and social commentary are profound, but the viewing experience is discomfiting by design."
+}

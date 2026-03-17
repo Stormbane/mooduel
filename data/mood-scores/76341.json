@@ -1,0 +1,47 @@
+{
+  "tmdbId": 76341,
+  "imdbId": "tt1392190",
+  "title": "Mad Max: Fury Road",
+  "originalTitle": "Mad Max: Fury Road",
+  "year": 2015,
+  "genres": [
+    "Action",
+    "Adventure",
+    "Science Fiction"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2015-05-13",
+  "runtime": 121,
+  "tmdbPopularity": 13.6466,
+  "tmdbVoteCount": 23830,
+  "tmdbRating": 7.63,
+  "tmdbUrl": "https://www.themoviedb.org/movie/76341",
+  "imdbUrl": "https://www.imdb.com/title/tt1392190",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:08:05Z",
+  "valence": 0.55,
+  "arousal": 0.9,
+  "dominance": 0.7,
+  "absorptionPotential": 0.8,
+  "hedonicValence": 0.85,
+  "eudaimonicValence": 0.65,
+  "psychologicallyRichValence": 0.75,
+  "emotionalArc": "cinderella",
+  "dominantEmotions": [
+    "joy",
+    "anticipation",
+    "trust"
+  ],
+  "moodTags": [
+    "adrenaline",
+    "empowerment",
+    "catharsis",
+    "rebellion",
+    "found-family"
+  ],
+  "reasoning": "Fury Road achieves a rare feat: extreme sensory intensity paired with genuine emotional depth. Its relentless pacing and visual mastery sustain cognitive absorption while character arcs of redemption and collective resistance create meaning beneath the spectacle, producing a profoundly empowering experience despite—and through—pervasive brutality."
+}
