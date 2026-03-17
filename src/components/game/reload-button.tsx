@@ -19,11 +19,11 @@ export function ReloadButton({ onReload }: ReloadButtonProps) {
       transition={{ delay: 0.5 }}
       onClick={onReload}
       className={cn(
-        "mt-2 rounded-md px-4 py-2 text-[10px] uppercase tracking-[0.2em] font-bold",
+        "mt-2 rounded-full px-5 py-2 text-xs uppercase tracking-widest font-semibold",
         "font-[family-name:var(--font-display)]",
-        "border border-muted-foreground/30 text-muted-foreground",
-        "hover:border-[var(--color-neon-yellow)] hover:text-[var(--color-neon-yellow)]",
-        "hover:shadow-[0_0_10px_rgba(255,230,0,0.2)]",
+        "border border-border text-muted-foreground",
+        "hover:border-[var(--color-pop-purple)] hover:text-[var(--color-pop-purple)]",
+        "hover:shadow-md hover:shadow-[var(--color-pop-purple)]/10",
         "transition-all active:scale-95",
       )}
     >

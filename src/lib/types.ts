@@ -1,21 +1,46 @@
 // ── Core domain types ──
 
-export type RoundType = "poster-pick" | "actor-pick" | "director-pick" | "tournament";
+export type RoundType =
+  | "color-pick"
+  | "vibe-pick"
+  | "emotion-pick"
+  | "poster-pick"
+  | "tournament";
+
+// ── Mood detection types ──
+
+export interface ColorSwatch {
+  id: string;
+  color: string;         // single flat HSL color
+  valence: number;       // -1 to +1
+  arousal: number;       // -1 to +1
+}
+
+export interface VibeSwatch {
+  id: string;
+  imageUrl: string;
+  title: string;
+  artist: string;
+  valence: number;
+  arousal: number;
+}
+
+export interface EmotionCard {
+  id: string;
+  label: string;
+  valence: number;
+  arousal: number;
+}
 
 export interface MovieProfile {
   genreWeights: Record<string, number>;
   moodScores: Record<string, number>;
   eraPreference: Record<string, number>;
-  peoplePreferences: {
-    actors: Record<number, number>;
-    directors: Record<number, number>;
-  };
   picks: Pick[];
 }
 
 export interface Pick {
   movieId?: number;
-  personId?: number;
   roundType: RoundType;
   round: number;
   alternatives: number[];
@@ -66,19 +91,6 @@ export interface TmdbMovieDetails extends TmdbMovie {
   keywords?: { keywords: { id: number; name: string }[] };
 }
 
-export interface TmdbPerson {
-  id: number;
-  name: string;
-  profile_path: string | null;
-  popularity: number;
-  known_for_department: string;
-  known_for?: TmdbMovie[];
-}
-
-export interface TmdbPersonWithMovies extends TmdbPerson {
-  topMovies: TmdbMovie[];
-}
-
 export interface TmdbGenre {
   id: number;
   name: string;
@@ -90,12 +102,9 @@ export interface MovieOption {
   movie: TmdbMovie;
 }
 
-export interface PersonOption {
-  person: TmdbPersonWithMovies;
-}
-
 export type RoundOptions =
+  | { type: "color-pick"; swatches: ColorSwatch[] }
+  | { type: "vibe-pick"; swatches: VibeSwatch[] }
+  | { type: "emotion-pick"; cards: EmotionCard[] }
   | { type: "poster-pick"; movies: TmdbMovie[] }
-  | { type: "actor-pick"; people: TmdbPersonWithMovies[] }
-  | { type: "director-pick"; people: TmdbPersonWithMovies[] }
   | { type: "tournament"; movies: TmdbMovie[] };

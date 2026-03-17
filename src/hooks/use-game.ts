@@ -4,10 +4,12 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import type {
   GameState,
   TmdbMovie,
-  TmdbPersonWithMovies,
   TmdbGenre,
   TmdbMovieDetails,
   RoundOptions,
+  ColorSwatch,
+  VibeSwatch,
+  EmotionCard,
 } from "@/lib/types";
 import {
   createInitialGameState,
@@ -21,13 +23,20 @@ import {
 } from "@/lib/engine/game-flow";
 import {
   updateProfileWithMovie,
-  updateProfileWithPerson,
   updateProfileWithTournamentPick,
+  updateProfileWithColor,
+  updateProfileWithVibe,
+  updateProfileWithEmotion,
 } from "@/lib/engine/profile";
 import {
   selectPosterCandidates,
   selectTournamentCandidates,
 } from "@/lib/engine/candidates";
+import {
+  generateColorSwatches,
+  selectEmotionCards,
+  GENRE_VA,
+} from "@/lib/engine/mood";
 
 interface UseGameReturn {
   state: GameState;
@@ -36,8 +45,10 @@ interface UseGameReturn {
   winnerMovie: TmdbMovieDetails | null;
   genres: TmdbGenre[];
   pickMovie: (movie: TmdbMovie) => void;
-  pickPerson: (person: TmdbPersonWithMovies) => void;
   pickTournamentWinner: (movie: TmdbMovie) => void;
+  pickColor: (swatch: ColorSwatch) => void;
+  pickVibe: (swatch: VibeSwatch) => void;
+  pickEmotion: (card: EmotionCard) => void;
   reloadRound: () => void;
   restart: () => void;
   moviePool: TmdbMovie[];
@@ -53,7 +64,10 @@ export function useGame(): UseGameReturn {
   const [tournamentMovies, setTournamentMovies] = useState<TmdbMovie[]>([]);
   const [winnerMovie, setWinnerMovie] = useState<TmdbMovieDetails | null>(null);
   const shownIds = useRef<Set<number>>(new Set());
+  const shownPaintingUrls = useRef<Set<string>>(new Set());
+  const shownEmotionIds = useRef<Set<string>>(new Set());
   const initialized = useRef(false);
+  const paintingsCache = useRef<VibeSwatch[] | null>(null);
 
   // Fetch genres on mount
   useEffect(() => {
@@ -63,41 +77,56 @@ export function useGame(): UseGameReturn {
       .catch(console.error);
   }, []);
 
-  // Fetch initial movie pool and set up first round
+  // Initialize: show color-pick immediately, fetch movie pool in background
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
 
-    async function init() {
-      setLoading(true);
+    // Round 0 is color-pick — no TMDB calls needed, instant
+    setRoundOptions({ type: "color-pick", swatches: generateColorSwatches() });
+    setLoading(false);
+
+    // Fetch paintings for vibe round in background
+    fetch("/api/paintings")
+      .then((r) => r.json())
+      .then((paintings: VibeSwatch[]) => {
+        if (Array.isArray(paintings) && paintings.length > 0) {
+          paintingsCache.current = paintings;
+        }
+      })
+      .catch(console.error);
+
+    // Fetch movie pool and genres in background so they're ready by round 3
+    async function prefetchMoviePool() {
       try {
-        // Fetch popular + top rated for a rich initial pool
-        const [pop1, pop2, pop3, top1, top2] = await Promise.all([
-          fetch("/api/tmdb/popular?page=1").then((r) => r.json()),
-          fetch("/api/tmdb/popular?page=2").then((r) => r.json()),
-          fetch("/api/tmdb/popular?page=3").then((r) => r.json()),
-          fetch("/api/tmdb/top-rated?page=1").then((r) => r.json()),
-          fetch("/api/tmdb/top-rated?page=2").then((r) => r.json()),
+        const randPage = () => Math.ceil(Math.random() * 10);
+        const popPages = [randPage(), randPage(), randPage()];
+        const topPages = [randPage(), randPage()];
+
+        const [pop1, pop2, pop3, top1, top2, trending, nowPlaying, genreData] = await Promise.all([
+          fetch(`/api/tmdb/popular?page=${popPages[0]}`).then((r) => r.json()),
+          fetch(`/api/tmdb/popular?page=${popPages[1]}`).then((r) => r.json()),
+          fetch(`/api/tmdb/popular?page=${popPages[2]}`).then((r) => r.json()),
+          fetch(`/api/tmdb/top-rated?page=${topPages[0]}`).then((r) => r.json()),
+          fetch(`/api/tmdb/top-rated?page=${topPages[1]}`).then((r) => r.json()),
+          fetch("/api/tmdb/trending").then((r) => r.json()).catch(() => []),
+          fetch(`/api/tmdb/now-playing?page=${Math.ceil(Math.random() * 3)}`).then((r) => r.json()).catch(() => []),
+          fetch("/api/tmdb/genres").then((r) => r.json()),
         ]);
 
-        const allMovies: TmdbMovie[] = dedupeMovies([...pop1, ...pop2, ...pop3, ...top1, ...top2]);
+        const allMovies: TmdbMovie[] = dedupeMovies([
+          ...pop1, ...pop2, ...pop3, ...top1, ...top2,
+          ...(Array.isArray(trending) ? trending : []),
+          ...(Array.isArray(nowPlaying) ? nowPlaying : []),
+        ]);
         setMoviePool(allMovies);
-
-        const genreData: TmdbGenre[] = await fetch("/api/tmdb/genres").then((r) => r.json());
         setGenres(genreData);
-
-        // Select first round — 5 candidates, round 0 = famous only
-        const candidates = selectPosterCandidates(allMovies, createInitialGameState().profile, genreData, shownIds.current, 0);
-        candidates.forEach((m) => shownIds.current.add(m.id));
-        setRoundOptions({ type: "poster-pick", movies: candidates });
       } catch (err) {
-        console.error("Failed to initialize game:", err);
-      } finally {
-        setLoading(false);
+        console.error("Failed to prefetch movie pool:", err);
       }
     }
 
-    init();
+    prefetchMoviePool();
   }, []);
 
   const loadNextRound = useCallback(
@@ -106,6 +135,46 @@ export function useGame(): UseGameReturn {
       const roundType = getCurrentRoundType(nextState);
 
       try {
+        // Mood detection rounds are synchronous — no TMDB calls
+        if (roundType === "color-pick") {
+          setRoundOptions({ type: "color-pick", swatches: generateColorSwatches() });
+          setLoading(false);
+          return;
+        }
+        if (roundType === "vibe-pick") {
+          // Always fetch fresh paintings (API returns random picks from pool)
+          try {
+            const res = await fetch("/api/paintings");
+            const paintings: VibeSwatch[] = await res.json();
+            if (Array.isArray(paintings) && paintings.length > 0) {
+              // Filter out previously shown paintings
+              const fresh = paintings.filter((p) => !shownPaintingUrls.current.has(p.imageUrl));
+              const toShow = fresh.length >= 5 ? fresh : paintings;
+              toShow.forEach((p) => shownPaintingUrls.current.add(p.imageUrl));
+              paintingsCache.current = toShow;
+              setRoundOptions({ type: "vibe-pick", swatches: toShow });
+            }
+          } catch {
+            // Use cached paintings as fallback
+            if (paintingsCache.current && paintingsCache.current.length > 0) {
+              setRoundOptions({ type: "vibe-pick", swatches: paintingsCache.current });
+            }
+          }
+          setLoading(false);
+          return;
+        }
+        if (roundType === "emotion-pick") {
+          const currentVA = {
+            valence: nextState.profile.moodScores.valence ?? 0,
+            arousal: nextState.profile.moodScores.arousal ?? 0,
+          };
+          const cards = selectEmotionCards(currentVA, 5, shownEmotionIds.current);
+          cards.forEach((c) => shownEmotionIds.current.add(c.id));
+          setRoundOptions({ type: "emotion-pick", cards });
+          setLoading(false);
+          return;
+        }
+
         if (roundType === "poster-pick") {
           let pool = moviePool;
 
@@ -147,16 +216,6 @@ export function useGame(): UseGameReturn {
           const candidates = selectPosterCandidates(pool, nextState.profile, genres, shownIds.current, nextState.currentRound);
           candidates.forEach((m) => shownIds.current.add(m.id));
           setRoundOptions({ type: "poster-pick", movies: candidates });
-        } else if (roundType === "actor-pick") {
-          const actors: TmdbPersonWithMovies[] = await fetch(
-            `/api/tmdb/people?type=actors`
-          ).then((r) => r.json());
-          setRoundOptions({ type: "actor-pick", people: actors.slice(0, 5) });
-        } else if (roundType === "director-pick") {
-          const directors: TmdbPersonWithMovies[] = await fetch(
-            "/api/tmdb/people?type=directors"
-          ).then((r) => r.json());
-          setRoundOptions({ type: "director-pick", people: directors.slice(0, 5) });
         } else if (roundType === "tournament") {
           let pool = moviePool;
           if (genres.length > 0) {
@@ -211,22 +270,6 @@ export function useGame(): UseGameReturn {
       const rejected = roundOptions.movies.filter((m) => m.id !== movie.id);
       const updatedProfile = updateProfileWithMovie(
         state.profile, movie, rejected, genres, state.currentRound,
-      );
-
-      const nextState = advanceRound({ ...state, profile: updatedProfile });
-      setState(nextState);
-      loadNextRound(nextState);
-    },
-    [state, roundOptions, genres, loadNextRound]
-  );
-
-  const pickPerson = useCallback(
-    (person: TmdbPersonWithMovies) => {
-      if (!roundOptions || (roundOptions.type !== "actor-pick" && roundOptions.type !== "director-pick")) return;
-
-      const rejected = roundOptions.people.filter((p) => p.id !== person.id);
-      const updatedProfile = updateProfileWithPerson(
-        state.profile, person, rejected, roundOptions.type, genres, state.currentRound,
       );
 
       const nextState = advanceRound({ ...state, profile: updatedProfile });
@@ -291,9 +334,50 @@ export function useGame(): UseGameReturn {
     [state, roundOptions, genres, tournamentMovies]
   );
 
-  /** Reload the current round with fresh candidates (same round type, no profile change) */
+  const pickColor = useCallback(
+    (swatch: ColorSwatch) => {
+      if (!roundOptions || roundOptions.type !== "color-pick") return;
+      const updatedProfile = updateProfileWithColor(state.profile, swatch);
+      const nextState = advanceRound({ ...state, profile: updatedProfile });
+      setState(nextState);
+      loadNextRound(nextState);
+    },
+    [state, roundOptions, loadNextRound]
+  );
+
+  const pickVibe = useCallback(
+    (swatch: VibeSwatch) => {
+      if (!roundOptions || roundOptions.type !== "vibe-pick") return;
+      const updatedProfile = updateProfileWithVibe(state.profile, swatch);
+      const nextState = advanceRound({ ...state, profile: updatedProfile });
+      setState(nextState);
+      loadNextRound(nextState);
+    },
+    [state, roundOptions, loadNextRound]
+  );
+
+  const pickEmotion = useCallback(
+    (card: EmotionCard) => {
+      if (!roundOptions || roundOptions.type !== "emotion-pick") return;
+      const updatedProfile = updateProfileWithEmotion(state.profile, card, GENRE_VA);
+      const nextState = advanceRound({ ...state, profile: updatedProfile });
+      setState(nextState);
+      loadNextRound(nextState);
+    },
+    [state, roundOptions, loadNextRound]
+  );
+
+  /** Reload the current round with fresh candidates.
+   *  Treat as a mood-shift signal: dampen VA toward neutral by 20%. */
   const reloadRound = useCallback(() => {
-    loadNextRound(state);
+    const dampened = structuredClone(state);
+    const v = dampened.profile.moodScores.valence;
+    const a = dampened.profile.moodScores.arousal;
+    if (v !== undefined) dampened.profile.moodScores.valence = v * 0.8;
+    if (a !== undefined) dampened.profile.moodScores.arousal = a * 0.8;
+    setState(dampened);
+
+    loadNextRound(dampened);
   }, [state, loadNextRound]);
 
   const restart = useCallback(() => {
@@ -317,8 +401,10 @@ export function useGame(): UseGameReturn {
     winnerMovie,
     genres,
     pickMovie,
-    pickPerson,
     pickTournamentWinner,
+    pickColor,
+    pickVibe,
+    pickEmotion,
     reloadRound,
     restart,
     moviePool,

@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Orbitron, Rajdhani, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const orbitron = Orbitron({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const rajdhani = Rajdhani({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const geistMono = Geist_Mono({
@@ -20,8 +20,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MOVIE PICKER // THE GAME",
-  description: "Step into the arena. Pick your champion. Only one movie survives.",
+  title: "Mooduel",
+  description: "Discover what you're in the mood for — through play, not forms.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -32,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${orbitron.variable} ${rajdhani.variable} ${geistMono.variable} font-[family-name:var(--font-sans)] antialiased`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${geistMono.variable} font-[family-name:var(--font-sans)] antialiased`}
       >
         {children}
       </body>
