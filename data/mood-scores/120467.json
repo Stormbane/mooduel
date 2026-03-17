@@ -1,0 +1,46 @@
+{
+  "tmdbId": 120467,
+  "imdbId": "tt2278388",
+  "title": "The Grand Budapest Hotel",
+  "originalTitle": "The Grand Budapest Hotel",
+  "year": 2014,
+  "genres": [
+    "Comedy",
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2014-02-26",
+  "runtime": 100,
+  "tmdbPopularity": 8.9169,
+  "tmdbVoteCount": 15855,
+  "tmdbRating": 8.032,
+  "tmdbUrl": "https://www.themoviedb.org/movie/120467",
+  "imdbUrl": "https://www.imdb.com/title/tt2278388",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:11:43Z",
+  "valence": 0.25,
+  "arousal": 0.25,
+  "dominance": 0.05,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.65,
+  "eudaimonicValence": 0.8,
+  "psychologicallyRichValence": 0.7,
+  "emotionalArc": "icarus",
+  "dominantEmotions": [
+    "joy",
+    "sadness",
+    "trust"
+  ],
+  "moodTags": [
+    "nostalgia",
+    "bittersweet",
+    "found-family",
+    "elegance",
+    "grace"
+  ],
+  "reasoning": "The film rises through adventure and triumph before the tragic fall of Gustave's execution. While visually gorgeous and genuinely funny, the persistent melancholy (framed by loss, ending in death) keeps overall valence slightly positive but bittersweet. The nested narratives and dense visual composition demand full cognitive engagement (high absorption), but deliberate pacing keeps arousal low. Characters demonstrate agency through most of the film, but the fascist execution reveals the limits of individual will. Strong eudaimonic impact (meaning about beauty, mentorship, historical inevitability); moderate hedonic value (entertaining but not escapist)."
+}

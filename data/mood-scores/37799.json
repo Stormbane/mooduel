@@ -1,0 +1,45 @@
+{
+  "tmdbId": 37799,
+  "imdbId": "tt1285016",
+  "title": "The Social Network",
+  "originalTitle": "The Social Network",
+  "year": 2010,
+  "genres": [
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2010-10-01",
+  "runtime": 121,
+  "tmdbPopularity": 8.251,
+  "tmdbVoteCount": 12983,
+  "tmdbRating": 7.371,
+  "tmdbUrl": "https://www.themoviedb.org/movie/37799",
+  "imdbUrl": "https://www.imdb.com/title/tt1285016",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:14:54Z",
+  "valence": -0.35,
+  "arousal": 0.6,
+  "dominance": 0.3,
+  "absorptionPotential": 0.82,
+  "hedonicValence": 0.45,
+  "eudaimonicValence": 0.77,
+  "psychologicallyRichValence": 0.68,
+  "emotionalArc": "icarus",
+  "dominantEmotions": [
+    "sadness",
+    "anger"
+  ],
+  "moodTags": [
+    "ambition",
+    "isolation",
+    "betrayal",
+    "ruthlessness",
+    "greed",
+    "vindication"
+  ],
+  "reasoning": "Intellectually thrilling but emotionally cold—Fincher's relentless pacing and Sorkin's dense dialogue demand total cognitive absorption, but the film offers no emotional warmth, only the bitter satisfaction of watching genius corrupted by ambition. The viewer ends aligned with a brilliant protagonist who ends profoundly alone."
+}

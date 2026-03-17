@@ -1,0 +1,47 @@
+{
+  "tmdbId": 493922,
+  "imdbId": "tt7784604",
+  "title": "Hereditary",
+  "originalTitle": "Hereditary",
+  "year": 2018,
+  "genres": [
+    "Horror",
+    "Mystery",
+    "Thriller"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2018-06-07",
+  "runtime": 128,
+  "tmdbPopularity": 8.7258,
+  "tmdbVoteCount": 8401,
+  "tmdbRating": 7.292,
+  "tmdbUrl": "https://www.themoviedb.org/movie/493922",
+  "imdbUrl": "https://www.imdb.com/title/tt7784604",
+  "inputSources": [
+    "tmdb"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:08:47Z",
+  "valence": -0.85,
+  "arousal": 0.55,
+  "dominance": -0.8,
+  "absorptionPotential": 0.88,
+  "hedonicValence": 0.05,
+  "eudaimonicValence": 0.92,
+  "psychologicallyRichValence": 0.85,
+  "emotionalArc": "oedipus",
+  "dominantEmotions": [
+    "fear",
+    "sadness",
+    "disgust"
+  ],
+  "moodTags": [
+    "grief",
+    "family-trauma",
+    "dread",
+    "existential-horror",
+    "inherited-pain",
+    "descent-into-madness"
+  ],
+  "reasoning": "Ari Aster's meticulously crafted psychological horror uses sustained dread and dense visual symbolism to explore inherited trauma and the disintegration of family bonds. The film is deliberately unpleasant and cognitively demanding—it offers no entertainment value but delivers profound emotional and thematic depth about loss, grief, and the terror of losing control. The viewer experiences complete helplessness as supernatural forces beyond comprehension consume the protagonist."
+}

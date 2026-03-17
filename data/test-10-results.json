@@ -1,0 +1,464 @@
+[
+  {
+    "tmdbId": 278,
+    "imdbId": "tt0111161",
+    "title": "The Shawshank Redemption",
+    "originalTitle": "The Shawshank Redemption",
+    "year": 1994,
+    "genres": [
+      "Drama",
+      "Crime"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "1994-09-23",
+    "runtime": 142,
+    "tmdbPopularity": 43.3657,
+    "tmdbVoteCount": 29906,
+    "tmdbRating": 8.716,
+    "tmdbUrl": "https://www.themoviedb.org/movie/278",
+    "imdbUrl": "https://www.imdb.com/title/tt0111161",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:06:18Z",
+    "valence": 0.6,
+    "arousal": 0.25,
+    "dominance": 0.55,
+    "absorptionPotential": 0.75,
+    "hedonicValence": 0.4,
+    "eudaimonicValence": 0.9,
+    "psychologicallyRichValence": 0.65,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "anticipation",
+      "sadness",
+      "joy"
+    ],
+    "moodTags": [
+      "redemption",
+      "hope",
+      "friendship",
+      "institutional-corruption",
+      "wrongful-imprisonment",
+      "resilience"
+    ],
+    "reasoning": "The Shawshank Redemption is eudaemonically rich—it moves the viewer toward meaning and transcendence—but tempered by its unflinching depiction of brutality and systemic cruelty. The emotional arc is textbook man-in-a-hole: deep suffering followed by earned liberation. Absorption is high due to careful plotting and thematic density, but arousal is moderate because the film prioritizes contemplation over intensity. Dominance climbs throughout as Andy gains agency, and the ending affirms empowerment. This is serious art cinema disguised as drama—it doesn't entertain, it transforms."
+  },
+  {
+    "tmdbId": 8363,
+    "imdbId": "tt0829482",
+    "title": "Superbad",
+    "originalTitle": "Superbad",
+    "year": 2007,
+    "genres": [
+      "Comedy"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2007-08-17",
+    "runtime": 113,
+    "tmdbPopularity": 11.0177,
+    "tmdbVoteCount": 7931,
+    "tmdbRating": 7.259,
+    "tmdbUrl": "https://www.themoviedb.org/movie/8363",
+    "imdbUrl": "https://www.imdb.com/title/tt0829482",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:07:20Z",
+    "valence": 0.65,
+    "arousal": 0.7,
+    "dominance": 0.1,
+    "absorptionPotential": 0.45,
+    "hedonicValence": 0.8,
+    "eudaimonicValence": 0.45,
+    "psychologicallyRichValence": 0.25,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "joy",
+      "anticipation",
+      "trust"
+    ],
+    "moodTags": [
+      "coming-of-age",
+      "friendship",
+      "nostalgia",
+      "irreverent",
+      "chaotic"
+    ],
+    "reasoning": "Superbad is a warm, high-energy buddy comedy that pairs escalating chaos with genuine emotional stakes about friendship and separation. The pleasure is primarily hedonic—it's a well-executed comedy designed to entertain. But the core friendship arc provides real eudaimonic substance: the separation anxiety and reconciliation have actual weight beneath the humor. The characters are swept along by events (low dominance), but the comedic tone keeps this from feeling disempowering to the viewer."
+  },
+  {
+    "tmdbId": 76341,
+    "imdbId": "tt1392190",
+    "title": "Mad Max: Fury Road",
+    "originalTitle": "Mad Max: Fury Road",
+    "year": 2015,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Science Fiction"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2015-05-13",
+    "runtime": 121,
+    "tmdbPopularity": 13.6466,
+    "tmdbVoteCount": 23830,
+    "tmdbRating": 7.63,
+    "tmdbUrl": "https://www.themoviedb.org/movie/76341",
+    "imdbUrl": "https://www.imdb.com/title/tt1392190",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:08:05Z",
+    "valence": 0.55,
+    "arousal": 0.9,
+    "dominance": 0.7,
+    "absorptionPotential": 0.8,
+    "hedonicValence": 0.85,
+    "eudaimonicValence": 0.65,
+    "psychologicallyRichValence": 0.75,
+    "emotionalArc": "cinderella",
+    "dominantEmotions": [
+      "joy",
+      "anticipation",
+      "trust"
+    ],
+    "moodTags": [
+      "adrenaline",
+      "empowerment",
+      "catharsis",
+      "rebellion",
+      "found-family"
+    ],
+    "reasoning": "Fury Road achieves a rare feat: extreme sensory intensity paired with genuine emotional depth. Its relentless pacing and visual mastery sustain cognitive absorption while character arcs of redemption and collective resistance create meaning beneath the spectacle, producing a profoundly empowering experience despite—and through—pervasive brutality."
+  },
+  {
+    "tmdbId": 493922,
+    "imdbId": "tt7784604",
+    "title": "Hereditary",
+    "originalTitle": "Hereditary",
+    "year": 2018,
+    "genres": [
+      "Horror",
+      "Mystery",
+      "Thriller"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2018-06-07",
+    "runtime": 128,
+    "tmdbPopularity": 8.7258,
+    "tmdbVoteCount": 8401,
+    "tmdbRating": 7.292,
+    "tmdbUrl": "https://www.themoviedb.org/movie/493922",
+    "imdbUrl": "https://www.imdb.com/title/tt7784604",
+    "inputSources": [
+      "tmdb"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:08:47Z",
+    "valence": -0.85,
+    "arousal": 0.55,
+    "dominance": -0.8,
+    "absorptionPotential": 0.88,
+    "hedonicValence": 0.05,
+    "eudaimonicValence": 0.92,
+    "psychologicallyRichValence": 0.85,
+    "emotionalArc": "oedipus",
+    "dominantEmotions": [
+      "fear",
+      "sadness",
+      "disgust"
+    ],
+    "moodTags": [
+      "grief",
+      "family-trauma",
+      "dread",
+      "existential-horror",
+      "inherited-pain",
+      "descent-into-madness"
+    ],
+    "reasoning": "Ari Aster's meticulously crafted psychological horror uses sustained dread and dense visual symbolism to explore inherited trauma and the disintegration of family bonds. The film is deliberately unpleasant and cognitively demanding—it offers no entertainment value but delivers profound emotional and thematic depth about loss, grief, and the terror of losing control. The viewer experiences complete helplessness as supernatural forces beyond comprehension consume the protagonist."
+  },
+  {
+    "tmdbId": 376867,
+    "imdbId": "tt4975722",
+    "title": "Moonlight",
+    "originalTitle": "Moonlight",
+    "year": 2016,
+    "genres": [
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2016-10-21",
+    "runtime": 111,
+    "tmdbPopularity": 4.8695,
+    "tmdbVoteCount": 7444,
+    "tmdbRating": 7.358,
+    "tmdbUrl": "https://www.themoviedb.org/movie/376867",
+    "imdbUrl": "https://www.imdb.com/title/tt4975722",
+    "inputSources": [
+      "tmdb"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:09:37Z",
+    "valence": -0.35,
+    "arousal": -0.55,
+    "dominance": -0.65,
+    "absorptionPotential": 0.8,
+    "hedonicValence": 0.25,
+    "eudaimonicValence": 0.92,
+    "psychologicallyRichValence": 0.8,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "sadness",
+      "anticipation",
+      "trust"
+    ],
+    "moodTags": [
+      "melancholy",
+      "isolation",
+      "hidden-identity",
+      "coming-of-age",
+      "found-connection"
+    ],
+    "reasoning": "Moonlight is a meditative, eudaimonic film that prioritizes emotional depth and artistic beauty over sensory stimulation. Its deliberate pacing and visual poetry demand cognitive engagement while exploring the profound loneliness and yearning for connection in a young Black queer man's life, creating sadness tempered by fragile hope."
+  },
+  {
+    "tmdbId": 496243,
+    "imdbId": "tt6751668",
+    "title": "Parasite",
+    "originalTitle": "기생충",
+    "year": 2019,
+    "genres": [
+      "Comedy",
+      "Thriller",
+      "Drama"
+    ],
+    "originalLanguage": "ko",
+    "releaseDate": "2019-05-30",
+    "runtime": 133,
+    "tmdbPopularity": 26.9069,
+    "tmdbVoteCount": 20275,
+    "tmdbRating": 8.493,
+    "tmdbUrl": "https://www.themoviedb.org/movie/496243",
+    "imdbUrl": "https://www.imdb.com/title/tt6751668",
+    "inputSources": [
+      "tmdb"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-16T05:06:26Z",
+    "valence": -0.25,
+    "arousal": 0.6,
+    "dominance": -0.55,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.35,
+    "eudaimonicValence": 0.8,
+    "psychologicallyRichValence": 0.75,
+    "emotionalArc": "oedipus",
+    "dominantEmotions": [
+      "anger",
+      "sadness",
+      "anticipation"
+    ],
+    "moodTags": [
+      "class-struggle",
+      "dark-humor",
+      "despair",
+      "systemic-oppression",
+      "infiltration"
+    ],
+    "reasoning": "Parasite deliberately subverts pleasure with dark comedy and escalating psychological tension. The film's emotional arc is tragic—characters achieve temporary stability through deception, only to be caught in systems they cannot escape. Viewers feel mounting helplessness despite the characters' initial agency. The intellectual richness and social commentary are profound, but the viewing experience is discomfiting by design."
+  },
+  {
+    "tmdbId": 120467,
+    "imdbId": "tt2278388",
+    "title": "The Grand Budapest Hotel",
+    "originalTitle": "The Grand Budapest Hotel",
+    "year": 2014,
+    "genres": [
+      "Comedy",
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2014-02-26",
+    "runtime": 100,
+    "tmdbPopularity": 8.9169,
+    "tmdbVoteCount": 15855,
+    "tmdbRating": 8.032,
+    "tmdbUrl": "https://www.themoviedb.org/movie/120467",
+    "imdbUrl": "https://www.imdb.com/title/tt2278388",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:11:43Z",
+    "valence": 0.25,
+    "arousal": 0.25,
+    "dominance": 0.05,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.65,
+    "eudaimonicValence": 0.8,
+    "psychologicallyRichValence": 0.7,
+    "emotionalArc": "icarus",
+    "dominantEmotions": [
+      "joy",
+      "sadness",
+      "trust"
+    ],
+    "moodTags": [
+      "nostalgia",
+      "bittersweet",
+      "found-family",
+      "elegance",
+      "grace"
+    ],
+    "reasoning": "The film rises through adventure and triumph before the tragic fall of Gustave's execution. While visually gorgeous and genuinely funny, the persistent melancholy (framed by loss, ending in death) keeps overall valence slightly positive but bittersweet. The nested narratives and dense visual composition demand full cognitive engagement (high absorption), but deliberate pacing keeps arousal low. Characters demonstrate agency through most of the film, but the fascist execution reveals the limits of individual will. Strong eudaimonic impact (meaning about beauty, mentorship, historical inevitability); moderate hedonic value (entertaining but not escapist)."
+  },
+  {
+    "tmdbId": 14160,
+    "imdbId": "tt1049413",
+    "title": "Up",
+    "originalTitle": "Up",
+    "year": 2009,
+    "genres": [
+      "Animation",
+      "Comedy",
+      "Family",
+      "Adventure"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2009-05-28",
+    "runtime": 96,
+    "tmdbPopularity": 18.2959,
+    "tmdbVoteCount": 21421,
+    "tmdbRating": 7.959,
+    "tmdbUrl": "https://www.themoviedb.org/movie/14160",
+    "imdbUrl": "https://www.imdb.com/title/tt1049413",
+    "inputSources": [
+      "tmdb"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:12:59Z",
+    "valence": 0.7,
+    "arousal": 0.48,
+    "dominance": 0.7,
+    "absorptionPotential": 0.5,
+    "hedonicValence": 0.8,
+    "eudaimonicValence": 0.85,
+    "psychologicallyRichValence": 0.45,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "sadness",
+      "joy",
+      "trust"
+    ],
+    "moodTags": [
+      "redemption",
+      "found-family",
+      "bittersweet",
+      "coming-of-age",
+      "nostalgia"
+    ],
+    "reasoning": "Up contains profound sadness within a joyful framework—the opening montage is one of cinema's most devastating sequences, yet the film uses grief as foundation for a redemptive story about finding unexpected meaning through human connection and sacrifice. The viewer experiences loss integrated into hope."
+  },
+  {
+    "tmdbId": 37799,
+    "imdbId": "tt1285016",
+    "title": "The Social Network",
+    "originalTitle": "The Social Network",
+    "year": 2010,
+    "genres": [
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2010-10-01",
+    "runtime": 121,
+    "tmdbPopularity": 8.251,
+    "tmdbVoteCount": 12983,
+    "tmdbRating": 7.371,
+    "tmdbUrl": "https://www.themoviedb.org/movie/37799",
+    "imdbUrl": "https://www.imdb.com/title/tt1285016",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:14:54Z",
+    "valence": -0.35,
+    "arousal": 0.6,
+    "dominance": 0.3,
+    "absorptionPotential": 0.82,
+    "hedonicValence": 0.45,
+    "eudaimonicValence": 0.77,
+    "psychologicallyRichValence": 0.68,
+    "emotionalArc": "icarus",
+    "dominantEmotions": [
+      "sadness",
+      "anger"
+    ],
+    "moodTags": [
+      "ambition",
+      "isolation",
+      "betrayal",
+      "ruthlessness",
+      "greed",
+      "vindication"
+    ],
+    "reasoning": "Intellectually thrilling but emotionally cold—Fincher's relentless pacing and Sorkin's dense dialogue demand total cognitive absorption, but the film offers no emotional warmth, only the bitter satisfaction of watching genius corrupted by ambition. The viewer ends aligned with a brilliant protagonist who ends profoundly alone."
+  },
+  {
+    "tmdbId": 545611,
+    "imdbId": "tt6710474",
+    "title": "Everything Everywhere All at Once",
+    "originalTitle": "Everything Everywhere All at Once",
+    "year": 2022,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Science Fiction"
+    ],
+    "originalLanguage": "en",
+    "releaseDate": "2022-03-24",
+    "runtime": 140,
+    "tmdbPopularity": 11.7047,
+    "tmdbVoteCount": 7737,
+    "tmdbRating": 7.723,
+    "tmdbUrl": "https://www.themoviedb.org/movie/545611",
+    "imdbUrl": "https://www.imdb.com/title/tt6710474",
+    "inputSources": [
+      "tmdb",
+      "wikipedia"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifiedAt": "2026-03-14T18:15:51Z",
+    "valence": 0.7,
+    "arousal": 0.85,
+    "dominance": 0.6,
+    "absorptionPotential": 0.9,
+    "hedonicValence": 0.65,
+    "eudaimonicValence": 0.9,
+    "psychologicallyRichValence": 0.75,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "joy",
+      "sadness",
+      "surprise"
+    ],
+    "moodTags": [
+      "redemption",
+      "existential",
+      "absurdist",
+      "intergenerational-healing",
+      "empathy",
+      "surreal"
+    ],
+    "reasoning": "EEAAO achieves remarkably high eudaimonic (0.9) and absorption (0.9) scores despite moderate hedonic value. The film earns joy through confronting nihilism rather than avoiding it—Waymond's philosophy of kindness-as-choice in a senseless universe is profoundly moving. Arousal stays high throughout (0.85) via relentless pacing and maximalist visuals, but dominance is moderate (0.6) because empowerment comes through acceptance of limits, not conquest. Valence is positive (0.7) because the resolution is genuinely joyful and touching, yet the journey's philosophical darkness prevents it from being purely pleasant. The man-in-a-hole arc—stuck in disconnection, descending into nihilism, then choosing connection—is the emotional shape. This is a film that makes you feel *something* about what makes life worth living."
+  }
+]

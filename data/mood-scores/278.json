@@ -1,0 +1,47 @@
+{
+  "tmdbId": 278,
+  "imdbId": "tt0111161",
+  "title": "The Shawshank Redemption",
+  "originalTitle": "The Shawshank Redemption",
+  "year": 1994,
+  "genres": [
+    "Drama",
+    "Crime"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "1994-09-23",
+  "runtime": 142,
+  "tmdbPopularity": 43.3657,
+  "tmdbVoteCount": 29906,
+  "tmdbRating": 8.716,
+  "tmdbUrl": "https://www.themoviedb.org/movie/278",
+  "imdbUrl": "https://www.imdb.com/title/tt0111161",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:06:18Z",
+  "valence": 0.6,
+  "arousal": 0.25,
+  "dominance": 0.55,
+  "absorptionPotential": 0.75,
+  "hedonicValence": 0.4,
+  "eudaimonicValence": 0.9,
+  "psychologicallyRichValence": 0.65,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "anticipation",
+    "sadness",
+    "joy"
+  ],
+  "moodTags": [
+    "redemption",
+    "hope",
+    "friendship",
+    "institutional-corruption",
+    "wrongful-imprisonment",
+    "resilience"
+  ],
+  "reasoning": "The Shawshank Redemption is eudaemonically rich—it moves the viewer toward meaning and transcendence—but tempered by its unflinching depiction of brutality and systemic cruelty. The emotional arc is textbook man-in-a-hole: deep suffering followed by earned liberation. Absorption is high due to careful plotting and thematic density, but arousal is moderate because the film prioritizes contemplation over intensity. Dominance climbs throughout as Andy gains agency, and the ending affirms empowerment. This is serious art cinema disguised as drama—it doesn't entertain, it transforms."
+}

@@ -1,0 +1,48 @@
+{
+  "tmdbId": 545611,
+  "imdbId": "tt6710474",
+  "title": "Everything Everywhere All at Once",
+  "originalTitle": "Everything Everywhere All at Once",
+  "year": 2022,
+  "genres": [
+    "Action",
+    "Adventure",
+    "Science Fiction"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2022-03-24",
+  "runtime": 140,
+  "tmdbPopularity": 11.7047,
+  "tmdbVoteCount": 7737,
+  "tmdbRating": 7.723,
+  "tmdbUrl": "https://www.themoviedb.org/movie/545611",
+  "imdbUrl": "https://www.imdb.com/title/tt6710474",
+  "inputSources": [
+    "tmdb",
+    "wikipedia"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:15:51Z",
+  "valence": 0.7,
+  "arousal": 0.85,
+  "dominance": 0.6,
+  "absorptionPotential": 0.9,
+  "hedonicValence": 0.65,
+  "eudaimonicValence": 0.9,
+  "psychologicallyRichValence": 0.75,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "joy",
+    "sadness",
+    "surprise"
+  ],
+  "moodTags": [
+    "redemption",
+    "existential",
+    "absurdist",
+    "intergenerational-healing",
+    "empathy",
+    "surreal"
+  ],
+  "reasoning": "EEAAO achieves remarkably high eudaimonic (0.9) and absorption (0.9) scores despite moderate hedonic value. The film earns joy through confronting nihilism rather than avoiding it—Waymond's philosophy of kindness-as-choice in a senseless universe is profoundly moving. Arousal stays high throughout (0.85) via relentless pacing and maximalist visuals, but dominance is moderate (0.6) because empowerment comes through acceptance of limits, not conquest. Valence is positive (0.7) because the resolution is genuinely joyful and touching, yet the journey's philosophical darkness prevents it from being purely pleasant. The man-in-a-hole arc—stuck in disconnection, descending into nihilism, then choosing connection—is the emotional shape. This is a film that makes you feel *something* about what makes life worth living."
+}

@@ -1,0 +1,44 @@
+{
+  "tmdbId": 376867,
+  "imdbId": "tt4975722",
+  "title": "Moonlight",
+  "originalTitle": "Moonlight",
+  "year": 2016,
+  "genres": [
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2016-10-21",
+  "runtime": 111,
+  "tmdbPopularity": 4.8695,
+  "tmdbVoteCount": 7444,
+  "tmdbRating": 7.358,
+  "tmdbUrl": "https://www.themoviedb.org/movie/376867",
+  "imdbUrl": "https://www.imdb.com/title/tt4975722",
+  "inputSources": [
+    "tmdb"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:09:37Z",
+  "valence": -0.35,
+  "arousal": -0.55,
+  "dominance": -0.65,
+  "absorptionPotential": 0.8,
+  "hedonicValence": 0.25,
+  "eudaimonicValence": 0.92,
+  "psychologicallyRichValence": 0.8,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "sadness",
+    "anticipation",
+    "trust"
+  ],
+  "moodTags": [
+    "melancholy",
+    "isolation",
+    "hidden-identity",
+    "coming-of-age",
+    "found-connection"
+  ],
+  "reasoning": "Moonlight is a meditative, eudaimonic film that prioritizes emotional depth and artistic beauty over sensory stimulation. Its deliberate pacing and visual poetry demand cognitive engagement while exploring the profound loneliness and yearning for connection in a young Black queer man's life, creating sadness tempered by fragile hope."
+}

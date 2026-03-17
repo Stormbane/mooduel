@@ -1,0 +1,47 @@
+{
+  "tmdbId": 14160,
+  "imdbId": "tt1049413",
+  "title": "Up",
+  "originalTitle": "Up",
+  "year": 2009,
+  "genres": [
+    "Animation",
+    "Comedy",
+    "Family",
+    "Adventure"
+  ],
+  "originalLanguage": "en",
+  "releaseDate": "2009-05-28",
+  "runtime": 96,
+  "tmdbPopularity": 18.2959,
+  "tmdbVoteCount": 21421,
+  "tmdbRating": 7.959,
+  "tmdbUrl": "https://www.themoviedb.org/movie/14160",
+  "imdbUrl": "https://www.imdb.com/title/tt1049413",
+  "inputSources": [
+    "tmdb"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifiedAt": "2026-03-14T18:12:59Z",
+  "valence": 0.7,
+  "arousal": 0.48,
+  "dominance": 0.7,
+  "absorptionPotential": 0.5,
+  "hedonicValence": 0.8,
+  "eudaimonicValence": 0.85,
+  "psychologicallyRichValence": 0.45,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "sadness",
+    "joy",
+    "trust"
+  ],
+  "moodTags": [
+    "redemption",
+    "found-family",
+    "bittersweet",
+    "coming-of-age",
+    "nostalgia"
+  ],
+  "reasoning": "Up contains profound sadness within a joyful framework—the opening montage is one of cinema's most devastating sequences, yet the film uses grief as foundation for a redemptive story about finding unexpected meaning through human connection and sacrifice. The viewer experiences loss integrated into hope."
+}

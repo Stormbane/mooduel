@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "properties": {
+    "valence": {
+      "type": "number",
+      "description": "Core affect: pleasure-displeasure (-1 to +1). -1 = deeply unpleasant/disturbing, 0 = neutral, +1 = deeply pleasant/joyful"
+    },
+    "arousal": {
+      "type": "number",
+      "description": "Core affect: calm-intense (-1 to +1). -1 = deeply calming/meditative, 0 = neutral, +1 = intensely activating/thrilling"
+    },
+    "dominance": {
+      "type": "number",
+      "description": "Core affect: overwhelming-empowering (-1 to +1). -1 = viewer feels helpless/overwhelmed, 0 = neutral, +1 = viewer feels empowered/in-control"
+    },
+    "absorptionPotential": {
+      "type": "number",
+      "description": "Zillmann's absorption: how cognitively consuming (0 to 1). 0 = background-watchable, 1 = demands total attention, monopolizes mental resources"
+    },
+    "hedonicValence": {
+      "type": "number",
+      "description": "Experience type: fun/pleasure/escape/entertainment (0 to 1). How much does this film deliver pure enjoyment?"
+    },
+    "eudaimonicValence": {
+      "type": "number",
+      "description": "Experience type: meaning/insight/being-moved/reflection (0 to 1). How much does this film provoke deep thought or emotional growth?"
+    },
+    "psychologicallyRichValence": {
+      "type": "number",
+      "description": "Experience type: novelty/complexity/perspective-broadening (0 to 1). How much does this film challenge worldview or offer unusual perspectives?"
+    },
+    "emotionalArc": {
+      "type": "string",
+      "enum": ["rags-to-riches", "riches-to-rags", "man-in-a-hole", "icarus", "cinderella", "oedipus"],
+      "description": "Reagan et al.'s six story shapes. rags-to-riches=steady rise, riches-to-rags=steady fall, man-in-a-hole=fall then rise, icarus=rise then fall, cinderella=rise-fall-rise, oedipus=fall-rise-fall"
+    },
+    "dominantEmotions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2,
+      "maxItems": 3,
+      "description": "Top 2-3 emotions from Plutchik's wheel: joy, trust, fear, surprise, sadness, disgust, anger, anticipation"
+    },
+    "moodTags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Thematic mood tags for semantic affinity matching. Use lowercase single words or hyphenated phrases. e.g. redemption, isolation, coming-of-age, dark-humor"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Brief 1-2 sentence explanation of why you scored it this way"
+    }
+  },
+  "required": [
+    "valence", "arousal", "dominance",
+    "absorptionPotential",
+    "hedonicValence", "eudaimonicValence", "psychologicallyRichValence",
+    "emotionalArc", "dominantEmotions", "moodTags", "reasoning"
+  ],
+  "additionalProperties": false
+}
