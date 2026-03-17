@@ -2,14 +2,15 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { posterUrl } from "@/lib/tmdb/client";
-import type { TmdbMovieDetails, TmdbMovie } from "@/lib/types";
+import type { TmdbMovieDetails, TmdbMovie, TournamentState } from "@/lib/types";
 import { WINNER_INTROS, getRandomCopy } from "@/lib/copy";
 import { cn } from "@/lib/utils";
 
 interface WinnerScreenProps {
   movie: TmdbMovieDetails | TmdbMovie;
+  tournament: TournamentState | null;
+  allMovies: TmdbMovie[];
   onRestart: () => void;
 }
 
@@ -17,117 +18,148 @@ function isMovieDetails(m: TmdbMovieDetails | TmdbMovie): m is TmdbMovieDetails 
   return "genres" in m;
 }
 
-export function WinnerScreen({ movie, onRestart }: WinnerScreenProps) {
+export function WinnerScreen({ movie, tournament, allMovies, onRestart }: WinnerScreenProps) {
   const details = isMovieDetails(movie) ? movie : null;
   const intro = useMemo(() => getRandomCopy(WINNER_INTROS), []);
 
   return (
-    <div className="flex flex-col items-center gap-6 max-w-lg mx-auto">
-      {/* Intro text with glitch */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, type: "spring" }}
-        className="text-center space-y-2"
-      >
-        <p className="text-xs uppercase tracking-[0.4em] neon-text-cyan font-bold font-[family-name:var(--font-display)]">
+    <div className="flex flex-col items-center gap-5 w-full max-w-2xl mx-auto py-4">
+      {/* Intro text */}
+      <div className="text-center space-y-1">
+        <p className="text-sm uppercase tracking-[0.3em] text-[var(--color-pop-green)] font-semibold font-[family-name:var(--font-display)]">
           {intro}
         </p>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-3xl md:text-4xl font-black tracking-tight font-[family-name:var(--font-display)] uppercase neon-text-pink"
-        >
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight font-[family-name:var(--font-display)] gradient-text-pink">
           {movie.title}
-        </motion.h1>
+        </h1>
         {details?.tagline && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-muted-foreground italic"
-          >
+          <p className="text-muted-foreground italic text-sm">
             &ldquo;{details.tagline}&rdquo;
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
-      {/* Poster with neon border */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className={cn(
-          "relative w-56 md:w-72 aspect-[2/3] rounded-xl overflow-hidden",
-          "border-2 border-[var(--color-neon-pink)]",
-          "neon-glow-pink",
-        )}
-      >
-        <Image
-          src={posterUrl(movie.poster_path, "w780")}
-          alt={movie.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 224px, 288px"
-          priority
-        />
-      </motion.div>
-
-      {/* Details */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="max-w-md text-center space-y-3"
-      >
-        {/* Meta row */}
-        <div className="flex items-center justify-center gap-3 text-sm">
-          <span className="text-muted-foreground">{movie.release_date?.slice(0, 4)}</span>
-          <span className="neon-text-yellow font-bold">{movie.vote_average?.toFixed(1)}</span>
-          {details?.runtime && (
-            <span className="text-muted-foreground">
-              {Math.floor(details.runtime / 60)}h {details.runtime % 60}m
-            </span>
-          )}
+      {/* Poster + details row */}
+      <div className="flex items-start gap-6">
+        {/* Poster */}
+        <div className="relative w-36 md:w-44 aspect-[2/3] rounded-2xl overflow-hidden ring-4 ring-[var(--color-pop-pink)] shadow-2xl shadow-[var(--color-pop-pink)]/20 shrink-0">
+          <Image
+            src={posterUrl(movie.poster_path, "w780")}
+            alt={movie.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 144px, 176px"
+            priority
+          />
         </div>
 
-        {/* Genres */}
-        {details?.genres && (
-          <div className="flex flex-wrap justify-center gap-2">
-            {details.genres.map((g) => (
-              <span
-                key={g.id}
-                className="rounded px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold border border-[var(--color-neon-purple)]/40 text-[var(--color-neon-purple)] bg-[var(--color-neon-purple)]/5"
-              >
-                {g.name}
+        {/* Details */}
+        <div className="space-y-3 min-w-0">
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-muted-foreground">{movie.release_date?.slice(0, 4)}</span>
+            <span className="font-bold text-[var(--color-pop-yellow)]">{movie.vote_average?.toFixed(1)}</span>
+            {details?.runtime && (
+              <span className="text-muted-foreground">
+                {Math.floor(details.runtime / 60)}h {details.runtime % 60}m
               </span>
-            ))}
+            )}
           </div>
-        )}
 
-        {/* Overview */}
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {movie.overview}
-        </p>
-      </motion.div>
+          {details?.genres && (
+            <div className="flex flex-wrap gap-1.5">
+              {details.genres.map((g) => (
+                <span
+                  key={g.id}
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold bg-[var(--color-pop-purple)]/15 text-[var(--color-pop-purple)]"
+                >
+                  {g.name}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {movie.overview && (
+            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-4">
+              {movie.overview}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Tournament bracket summary */}
+      {tournament && (
+        <BracketSummary tournament={tournament} allMovies={allMovies} />
+      )}
 
       {/* Play again */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
+      <button
         onClick={onRestart}
         className={cn(
-          "mt-4 rounded-lg px-8 py-3 text-sm font-bold uppercase tracking-wider",
+          "rounded-full px-8 py-2.5 text-sm font-bold uppercase tracking-wider",
           "font-[family-name:var(--font-display)]",
-          "border border-[var(--color-neon-cyan)] text-[var(--color-neon-cyan)]",
-          "hover:bg-[var(--color-neon-cyan)]/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)]",
+          "gradient-bg-green text-black",
+          "hover:opacity-90 hover:shadow-lg hover:shadow-[var(--color-pop-green)]/30",
           "transition-all active:scale-95",
         )}
       >
-        PLAY AGAIN
-      </motion.button>
+        Play Again
+      </button>
+    </div>
+  );
+}
+
+/** Simple bracket summary — shows each round's matchups as a compact list */
+function BracketSummary({ tournament, allMovies }: { tournament: TournamentState; allMovies: TmdbMovie[] }) {
+  const numRounds = Math.ceil(Math.log2(tournament.entrants.length));
+
+  const rounds: { title: string; matchups: { winner: string; loser: string }[] }[] = [];
+  for (let r = 0; r < numRounds; r++) {
+    const sourceMovies = r === 0 ? tournament.entrants : (tournament.bracketRounds[r - 1] ?? []);
+    const winners = tournament.bracketRounds[r] ?? [];
+
+    const title = sourceMovies.length === 8 ? "Quarter-Finals"
+      : sourceMovies.length === 4 ? "Semi-Finals"
+      : sourceMovies.length === 2 ? "Final"
+      : `Round of ${sourceMovies.length}`;
+
+    const matchups = [];
+    for (let i = 0; i < sourceMovies.length; i += 2) {
+      const idA = sourceMovies[i];
+      const idB = sourceMovies[i + 1];
+      const matchIdx = Math.floor(i / 2);
+      const winnerId = winners[matchIdx];
+      const movieA = allMovies.find((m) => m.id === idA);
+      const movieB = idB != null ? allMovies.find((m) => m.id === idB) : undefined;
+
+      if (winnerId != null) {
+        matchups.push({
+          winner: winnerId === idA ? (movieA?.title ?? "?") : (movieB?.title ?? "?"),
+          loser: winnerId === idA ? (movieB?.title ?? "?") : (movieA?.title ?? "?"),
+        });
+      }
+    }
+
+    if (matchups.length > 0) {
+      rounds.push({ title, matchups });
+    }
+  }
+
+  return (
+    <div className="flex flex-wrap justify-center gap-4 text-[10px]">
+      {rounds.map((round) => (
+        <div key={round.title} className="space-y-1">
+          <p className="font-bold uppercase tracking-wider text-muted-foreground font-[family-name:var(--font-display)]">
+            {round.title}
+          </p>
+          {round.matchups.map((m, i) => (
+            <div key={i} className="flex items-center gap-1.5">
+              <span className="text-[var(--color-pop-green)] font-semibold">{m.winner}</span>
+              <span className="text-muted-foreground/50">beat</span>
+              <span className="text-muted-foreground line-through">{m.loser}</span>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }

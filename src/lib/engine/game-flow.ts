@@ -3,15 +3,19 @@ import { createEmptyProfile } from "./profile";
 
 /**
  * The round sequence before the tournament finale.
- * Rotates through different round types for variety.
+ * Phase 1: Mood detection (no TMDB calls)
+ * Phase 2: Preference discovery (mood-informed)
  */
 const ROUND_SEQUENCE: RoundType[] = [
-  "poster-pick",
-  "actor-pick",
-  "poster-pick",
-  "director-pick",
-  "poster-pick",
-  "poster-pick",
+  "color-pick",     // Round 0 — mood baseline
+  "vibe-pick",      // Round 1 — mood refinement
+  "emotion-pick",   // Round 2 — mood confirmation via emotion
+  "poster-pick",    // Round 3 — now mood-informed
+  "poster-pick",    // Round 4
+  "poster-pick",    // Round 5
+  "poster-pick",    // Round 6
+  "poster-pick",    // Round 7
+  "poster-pick",    // Round 8
 ];
 
 const TOTAL_ROUNDS = ROUND_SEQUENCE.length;
@@ -112,25 +116,23 @@ export function advanceTournament(tournament: TournamentState, winnerId: number)
 
 /**
  * Check if tournament is complete (we have a single winner).
+ *
+ * A bracket round with 1 entry is only the champion if its source
+ * round had exactly 2 movies (i.e. it was the final). Without this
+ * check, a mid-round state (e.g. first semi-final winner recorded
+ * but second match not yet played) would falsely trigger completion.
  */
 export function isTournamentComplete(tournament: TournamentState): boolean {
-  // Tournament is complete when we have a bracket round with exactly 1 winner
-  // (the final round)
-  const lastRound = tournament.bracketRounds[tournament.bracketRounds.length - 1];
-  if (!lastRound) return false;
+  for (let i = tournament.bracketRounds.length - 1; i >= 0; i--) {
+    const round = tournament.bracketRounds[i];
+    if (round.length !== 1) continue;
 
-  // Check if the previous round had exactly 2 movies (meaning this was the final)
-  const prevRoundMovies = tournament.currentBracketRound === 1
-    ? tournament.entrants
-    : tournament.bracketRounds[tournament.currentBracketRound - 2];
-
-  // If current bracket round's source had 2 movies, the single winner is our champion
-  if (prevRoundMovies?.length === 2 && lastRound.length === 1) return true;
-
-  // More general check: latest completed round has 1 entry
-  return tournament.bracketRounds.some(
-    (round, i) => round.length === 1 && i > 0
-  );
+    // The source movies that fed into this bracket round
+    const sourceMovies = i === 0 ? tournament.entrants : tournament.bracketRounds[i - 1];
+    // 1 winner from a source of 2 = the final is decided
+    if (sourceMovies?.length === 2) return true;
+  }
+  return false;
 }
 
 export function getTournamentWinner(tournament: TournamentState): number | null {

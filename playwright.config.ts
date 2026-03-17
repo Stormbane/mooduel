@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 1,
   timeout: 30_000,
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3007",
     screenshot: "only-on-failure",
   },
   projects: [
@@ -16,8 +16,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    command: "npm run dev -- --port 3007",
+    url: "http://localhost:3007",
     reuseExistingServer: true,
     timeout: 30_000,
   },

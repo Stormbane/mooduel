@@ -1,4 +1,4 @@
-import type { MovieProfile, TmdbMovie, TmdbPersonWithMovies, TmdbGenre } from "@/lib/types";
+import type { MovieProfile, TmdbMovie, TmdbGenre, ColorSwatch, VibeSwatch, EmotionCard } from "@/lib/types";
 import { genreIdsToNames } from "@/lib/tmdb/client";
 
 export function createEmptyProfile(): MovieProfile {
@@ -6,7 +6,6 @@ export function createEmptyProfile(): MovieProfile {
     genreWeights: {},
     moodScores: {},
     eraPreference: {},
-    peoplePreferences: { actors: {}, directors: {} },
     picks: [],
   };
 }
@@ -82,49 +81,6 @@ export function updateProfileWithMovie(
   return next;
 }
 
-/** Update profile after an actor or director pick */
-export function updateProfileWithPerson(
-  profile: MovieProfile,
-  picked: TmdbPersonWithMovies,
-  rejected: TmdbPersonWithMovies[],
-  roundType: "actor-pick" | "director-pick",
-  genres: TmdbGenre[],
-  round: number,
-): MovieProfile {
-  const next = structuredClone(profile);
-  const isActor = roundType === "actor-pick";
-
-  // Boost selected person
-  const peopleMap = isActor ? next.peoplePreferences.actors : next.peoplePreferences.directors;
-  peopleMap[picked.id] = (peopleMap[picked.id] ?? 0) + 0.2;
-
-  // Their movies' genres get a small boost
-  for (const movie of picked.topMovies) {
-    const movieGenres = genreIdsToNames(movie.genre_ids, genres);
-    for (const genre of movieGenres) {
-      next.genreWeights[genre] = (next.genreWeights[genre] ?? 0) + 0.05;
-    }
-  }
-
-  // Dampen rejected people
-  for (const person of rejected) {
-    peopleMap[person.id] = (peopleMap[person.id] ?? 0) - 0.05;
-  }
-
-  // Record pick
-  next.picks.push({
-    personId: picked.id,
-    roundType,
-    round,
-    alternatives: rejected.map((p) => p.id),
-  });
-
-  // Normalize
-  next.genreWeights = normalize(next.genreWeights);
-
-  return next;
-}
-
 /** Update profile after a tournament pick (lighter touch — just record) */
 export function updateProfileWithTournamentPick(
   profile: MovieProfile,
@@ -149,6 +105,99 @@ export function updateProfileWithTournamentPick(
   });
 
   next.genreWeights = normalize(next.genreWeights);
+  return next;
+}
+
+/** Update profile after a color swatch pick (Round 0 — baseline VA) */
+export function updateProfileWithColor(
+  profile: MovieProfile,
+  picked: ColorSwatch,
+): MovieProfile {
+  const next = structuredClone(profile);
+  next.moodScores.valence = picked.valence;
+  next.moodScores.arousal = picked.arousal;
+  next.picks.push({
+    roundType: "color-pick",
+    round: 0,
+    alternatives: [],
+  });
+  return next;
+}
+
+/** Update profile after a vibe swatch pick (Round 1 — refine VA) */
+export function updateProfileWithVibe(
+  profile: MovieProfile,
+  picked: VibeSwatch,
+): MovieProfile {
+  const next = structuredClone(profile);
+  const existingV = next.moodScores.valence ?? 0;
+  const existingA = next.moodScores.arousal ?? 0;
+  next.moodScores.valence = 0.5 * existingV + 0.5 * picked.valence;
+  next.moodScores.arousal = 0.5 * existingA + 0.5 * picked.arousal;
+  next.picks.push({
+    roundType: "vibe-pick",
+    round: 1,
+    alternatives: [],
+  });
+  return next;
+}
+
+/**
+ * Update profile after an emotion pick (Round 2).
+ *
+ * Uses adaptive shrinkage to resist outliers:
+ * - "surprise" = distance between predicted VA and picked emotion VA
+ * - α = 0.8 / (1 + surprise) — confirming picks get high weight, contradicting picks get low weight
+ * - At surprise=0 (perfect match): α ≈ 0.8 → strong update
+ * - At surprise=1 (moderate shift): α ≈ 0.4 → cautious update
+ * - At surprise=2 (max shift): α ≈ 0.27 → minimal update, assumes prior was better
+ *
+ * This prevents a single contradictory emotion pick from overriding
+ * two consistent prior signals (color + art).
+ *
+ * Genre weights are seeded by proximity: genres whose VA coordinates
+ * are closest to the emotion's VA get the largest boosts.
+ */
+export function updateProfileWithEmotion(
+  profile: MovieProfile,
+  picked: EmotionCard,
+  genreVA: Record<string, { valence: number; arousal: number }>,
+): MovieProfile {
+  const next = structuredClone(profile);
+  const existingV = next.moodScores.valence ?? 0;
+  const existingA = next.moodScores.arousal ?? 0;
+
+  // Adaptive shrinkage: weight by consistency with prior signals
+  const surprise = Math.sqrt(
+    (existingV - picked.valence) ** 2 + (existingA - picked.arousal) ** 2,
+  );
+  const alpha = 0.8 / (1 + surprise);
+
+  next.moodScores.valence = alpha * picked.valence + (1 - alpha) * existingV;
+  next.moodScores.arousal = alpha * picked.arousal + (1 - alpha) * existingA;
+
+  // Seed genre weights from emotion VA proximity to genre VA map
+  const genreDistances = Object.entries(genreVA).map(([name, va]) => ({
+    name,
+    dist: Math.sqrt(
+      (va.valence - picked.valence) ** 2 + (va.arousal - picked.arousal) ** 2,
+    ),
+  }));
+  genreDistances.sort((a, b) => a.dist - b.dist);
+
+  // Boost top 5 closest genres, decaying by rank
+  for (let i = 0; i < Math.min(5, genreDistances.length); i++) {
+    const boost = 0.15 * (1 - i * 0.15); // 0.15, 0.128, 0.105, 0.083, 0.06
+    next.genreWeights[genreDistances[i].name] =
+      (next.genreWeights[genreDistances[i].name] ?? 0) + boost;
+  }
+  next.genreWeights = normalize(next.genreWeights);
+
+  next.picks.push({
+    roundType: "emotion-pick",
+    round: 2,
+    alternatives: [],
+  });
   return next;
 }
 

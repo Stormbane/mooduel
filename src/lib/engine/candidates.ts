@@ -1,5 +1,6 @@
 import type { MovieProfile, TmdbMovie, TmdbGenre } from "@/lib/types";
 import { topGenres } from "./profile";
+import { movieVA, moodDistance } from "./mood";
 
 /**
  * Score a movie against the current profile.
@@ -27,20 +28,37 @@ export function scoreMovie(movie: TmdbMovie, profile: MovieProfile, genres: Tmdb
   // Small boost for well-rated movies
   score += (movie.vote_average / 10) * 0.5;
 
+  // Mood proximity boost (if mood has been detected)
+  const v = profile.moodScores.valence;
+  const a = profile.moodScores.arousal;
+  if (v !== undefined && a !== undefined) {
+    const target = { valence: v, arousal: a };
+    const va = movieVA(movie, genres);
+    const dist = moodDistance(va, target);
+    // Max distance in VA space is ~2.83. Closer = higher boost (up to +3).
+    score += 3 * (1 - dist / 2.83);
+  }
+
   return score;
 }
 
 /**
- * Popularity threshold decreases as rounds progress.
- * Early rounds = famous movies only. Later rounds = allow fringe picks.
+ * Popularity threshold decreases as poster-pick rounds progress.
+ * Early poster picks = famous movies only. Later = allow fringe picks.
  *
- * Round 0: only top-tier popular movies (popularity > 50)
- * Round 2: mainstream (popularity > 20)
- * Round 4+: anything goes (popularity > 5)
+ * The first 3 rounds are mood detection (color, vibe, genre) so
+ * poster-pick rounds start at round index 3.
+ *
+ * Poster-pick round 0 (game round 3): popularity > 50
+ * Poster-pick round 2 (game round 5): popularity > 20
+ * Poster-pick round 4+: anything goes (popularity > 5)
  */
+const MOOD_ROUNDS_OFFSET = 3;
+
 function getPopularityFloor(round: number): number {
-  if (round <= 1) return 50;
-  if (round <= 3) return 20;
+  const posterRound = Math.max(0, round - MOOD_ROUNDS_OFFSET);
+  if (posterRound <= 1) return 50;
+  if (posterRound <= 3) return 20;
   return 5;
 }
 
@@ -70,6 +88,13 @@ export function selectPosterCandidates(
     return shuffleArray(relaxed).slice(0, 5);
   }
 
+  // If profile has no picks yet, all scores are ~equal — just shuffle randomly
+  const hasProfile = profile.picks.length > 0;
+
+  if (!hasProfile) {
+    return shuffleArray(available).slice(0, 5);
+  }
+
   // Score and sort
   const scored = available.map((m) => ({
     movie: m,
@@ -77,8 +102,9 @@ export function selectPosterCandidates(
   }));
   scored.sort((a, b) => b.score - a.score);
 
-  // Top 3 profile matches
-  const matches = scored.slice(0, 3).map((s) => s.movie);
+  // Top 3 profile matches (with jitter so ties don't always resolve the same way)
+  const topPool = scored.slice(0, Math.min(10, scored.length));
+  const matches = shuffleArray(topPool).slice(0, 3).map((s) => s.movie);
 
   // 2 exploration picks from the rest (avoid top quarter)
   const explorationPool = scored.slice(Math.max(3, Math.floor(scored.length / 4)));

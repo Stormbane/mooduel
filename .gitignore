@@ -37,8 +37,18 @@ Thumbs.db
 .ai/memory/
 .ai/logs/
 
+# data pipeline (raw/intermediate files too large for git)
+data/raw/
+data/movie-input-corpus.jsonl
+
 # test results
 test-results/
+
+# screenshots
+ss/
+
+# misc files
+*.pdf
 
 # Claude Code internal
 .claude/

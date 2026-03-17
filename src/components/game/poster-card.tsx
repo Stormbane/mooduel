@@ -34,78 +34,59 @@ export function PosterCard({ movie, genres, onPick, size = "normal", index = 0 }
   };
 
   const year = movie.release_date?.slice(0, 4);
-  const synopsis = movie.overview?.length > 120
-    ? movie.overview.slice(0, 120) + "..."
-    : movie.overview;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: index * 0.08, duration: 0.3, ease: "easeOut" }}
+      transition={{ delay: index * 0.07, duration: 0.35, ease: "easeOut" }}
       className={cn(
         "group relative flex flex-col",
-        size === "large" ? "w-44 md:w-52" : "w-32 md:w-40",
+        size === "large" ? "w-44 md:w-56" : "w-36 md:w-44",
       )}
     >
-      {/* Main poster button */}
+      {/* Poster button */}
       <button
         onClick={handlePick}
         className={cn(
-          "relative overflow-hidden rounded-lg transition-all duration-300",
-          "border border-transparent",
-          "hover:border-[var(--color-neon-cyan)] hover:shadow-[0_0_15px_rgba(0,240,255,0.3)]",
-          "focus-visible:outline-none focus-visible:border-[var(--color-neon-pink)]",
-          "active:scale-95",
-          picked && "border-[var(--color-neon-pink)] neon-glow-pink scale-105",
+          "relative overflow-hidden rounded-2xl transition-all duration-300",
+          "ring-2 ring-transparent",
+          "hover:ring-[var(--color-pop-pink)] hover:shadow-lg hover:shadow-[var(--color-pop-pink)]/20",
+          "hover:-translate-y-1",
+          "focus-visible:outline-none focus-visible:ring-[var(--color-pop-purple)]",
+          "active:scale-[0.97]",
+          picked && "ring-[var(--color-pop-green)] shadow-lg shadow-[var(--color-pop-green)]/30 scale-105",
         )}
       >
-        <div className={cn(
-          "relative w-full overflow-hidden rounded-lg bg-muted",
-          size === "large" ? "aspect-[2/3]" : "aspect-[2/3]",
-        )}>
+        <div className="relative w-full aspect-[2/3] overflow-hidden rounded-2xl bg-secondary">
           <Image
             src={posterUrl(movie.poster_path)}
             alt={movie.title}
             fill
             className={cn(
               "object-cover transition-all duration-300",
-              "group-hover:brightness-110 group-hover:scale-105",
-              picked && "brightness-125 scale-110",
+              "group-hover:scale-105",
+              picked && "scale-110 brightness-110",
             )}
-            sizes={size === "large" ? "(max-width: 768px) 176px, 208px" : "(max-width: 768px) 128px, 160px"}
+            sizes={size === "large" ? "(max-width: 768px) 176px, 224px" : "(max-width: 768px) 144px, 176px"}
           />
-
-          {/* Neon corner accents */}
-          <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
-
-          {/* Bottom gradient with title */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-2 pt-10">
-            <p className="text-xs font-bold text-white leading-tight line-clamp-2 font-[family-name:var(--font-display)] uppercase tracking-wide">
-              {movie.title}
-            </p>
-            <div className="flex items-center gap-2 mt-0.5 text-[10px]">
-              <span className="text-white/60">{year}</span>
-              <span className="neon-text-yellow font-bold">{movie.vote_average?.toFixed(1)}</span>
-            </div>
-          </div>
         </div>
       </button>
 
-      {/* Synopsis below the poster */}
-      <p className="mt-1.5 text-[10px] text-muted-foreground leading-tight line-clamp-2 px-0.5">
-        {synopsis}
-      </p>
+      {/* Movie info below poster — title + year only */}
+      <div className="mt-2 px-1">
+        <h3 className="text-xs font-bold leading-tight line-clamp-2 font-[family-name:var(--font-display)]">
+          {movie.title}
+        </h3>
+        <span className="text-[11px] text-muted-foreground">{year}</span>
+      </div>
 
-      {/* Expand button for more details */}
+      {/* Expand toggle */}
       <button
         onClick={handleExpand}
-        className="mt-1 text-[9px] uppercase tracking-widest text-[var(--color-neon-cyan)] hover:text-[var(--color-neon-pink)] transition-colors font-bold px-0.5"
+        className="mt-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-pop-purple)] hover:text-[var(--color-pop-pink)] transition-colors"
       >
-        {expanded ? "LESS" : "MORE INFO"}
+        {expanded ? "Less" : "More info"}
       </button>
 
       {/* Expanded details */}
@@ -118,14 +99,14 @@ export function PosterCard({ movie, genres, onPick, size = "normal", index = 0 }
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="mt-1 p-2 rounded glass text-[10px] space-y-1.5">
+            <div className="mt-1 p-2 rounded-xl bg-secondary text-xs space-y-1.5">
               {/* Genres */}
               {movieGenres.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {movieGenres.map((g) => (
                     <span
                       key={g}
-                      className="px-1.5 py-0.5 rounded-sm bg-[var(--color-neon-purple)]/10 text-[var(--color-neon-purple)] border border-[var(--color-neon-purple)]/30 text-[8px] uppercase tracking-wider"
+                      className="px-1.5 py-0.5 rounded-full bg-[var(--color-pop-purple)]/15 text-[var(--color-pop-purple)] text-[10px] font-semibold"
                     >
                       {g}
                     </span>
@@ -137,7 +118,7 @@ export function PosterCard({ movie, genres, onPick, size = "normal", index = 0 }
               <div className="flex items-center gap-3">
                 <div>
                   <span className="text-muted-foreground">TMDB </span>
-                  <span className="neon-text-yellow font-bold">{movie.vote_average?.toFixed(1)}</span>
+                  <span className="font-bold text-[var(--color-pop-yellow)]">{movie.vote_average?.toFixed(1)}</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">VOTES </span>
@@ -145,8 +126,8 @@ export function PosterCard({ movie, genres, onPick, size = "normal", index = 0 }
                 </div>
               </div>
 
-              {/* Full synopsis */}
-              <p className="text-muted-foreground leading-relaxed">
+              {/* Synopsis */}
+              <p className="text-muted-foreground leading-relaxed line-clamp-3">
                 {movie.overview}
               </p>
             </div>

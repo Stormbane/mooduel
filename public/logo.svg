@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 72" fill="none">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E91E8C"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon mark — two overlapping cards -->
+  <g transform="translate(2, 8)">
+    <rect x="4" y="8" width="22" height="30" rx="5" fill="url(#g1)" opacity="0.9" transform="rotate(-8, 15, 23)"/>
+    <rect x="22" y="8" width="22" height="30" rx="5" fill="url(#g2)" opacity="0.9" transform="rotate(8, 33, 23)"/>
+    <circle cx="24" cy="23" r="4.5" fill="#0d0d0d"/>
+    <circle cx="24" cy="23" r="2.5" fill="white"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="62" y="50" font-family="'Inter', 'Helvetica Neue', sans-serif" font-weight="800" font-size="40" letter-spacing="-1" fill="url(#g1)">
+    mooduel
+  </text>
+</svg>
