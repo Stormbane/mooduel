@@ -29,26 +29,9 @@ Round 3-8: poster-pick    (6 rounds, mood-guided, Zillmann mix)
 Tournament: 8-movie bracket
 ```
 
-### Phase 1: Remove Actor/Director Rounds
-Strip all person-related code, replace with 6 poster-pick rounds.
-
-- [ ] `src/lib/types.ts` — remove `actor-pick`, `director-pick` from RoundType, remove
-      actor/director variants from RoundOptions, remove `peoplePreferences` from MovieProfile,
-      remove `personId` from Pick, remove `TmdbPersonWithMovies`
-- [ ] `src/lib/engine/game-flow.ts` — ROUND_SEQUENCE: 3 mood + 6 poster-pick
-- [ ] `src/lib/engine/profile.ts` — delete `updateProfileWithPerson()`, remove
-      `peoplePreferences` from `createEmptyProfile()`
-- [ ] `src/hooks/use-game.ts` — remove `pickPerson` handler, actor/director branches
-      in `loadNextRound`, remove from return interface
-- [ ] `src/components/game/game.tsx` — remove PersonCard import, actor/director render blocks
-- [ ] `src/lib/copy.ts` — remove actor-pick/director-pick entries
-- [ ] `src/components/game/debug-panel.tsx` — remove ACTOR/DIRECTOR_AFFINITY sections
-- [ ] `src/lib/tmdb/client.ts` — remove NOTABLE_ACTOR_IDS, NOTABLE_DIRECTOR_IDS,
-      getPopularActors, getPopularDirectors, getPopularPeople, getPersonMovieCredits, profileUrl
-- [ ] Delete `src/components/game/person-card.tsx`
-- [ ] Delete `src/app/api/tmdb/people/route.ts`
-- [ ] `tests/game.spec.ts` — simplify: 6 poster-click rounds, no actor/director detection
-- [ ] Verify: `npm run build` + Playwright tests pass
+### Phase 1: Remove Actor/Director Rounds ✅
+All person-related code stripped. 3 mood rounds + 6 poster-pick rounds.
+Build passes, 19/19 Playwright tests passing.
 
 ### Phase 2: Movie Mood Dataset (LLM Classification)
 

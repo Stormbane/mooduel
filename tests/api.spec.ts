@@ -25,30 +25,6 @@ test.describe("TMDB API Routes", () => {
     expect(movies[0]).toHaveProperty("genre_ids");
   });
 
-  test("GET /api/tmdb/people?type=actors returns actors with movies", async ({ request }) => {
-    const res = await request.get("/api/tmdb/people?type=actors&page=1");
-    expect(res.ok()).toBe(true);
-
-    const actors = await res.json();
-    expect(Array.isArray(actors)).toBe(true);
-    expect(actors.length).toBeGreaterThan(0);
-    expect(actors[0]).toHaveProperty("id");
-    expect(actors[0]).toHaveProperty("name");
-    expect(actors[0]).toHaveProperty("topMovies");
-    expect(Array.isArray(actors[0].topMovies)).toBe(true);
-  });
-
-  test("GET /api/tmdb/people?type=directors returns directors", async ({ request }) => {
-    const res = await request.get("/api/tmdb/people?type=directors");
-    expect(res.ok()).toBe(true);
-
-    const directors = await res.json();
-    expect(Array.isArray(directors)).toBe(true);
-    expect(directors.length).toBeGreaterThan(0);
-    expect(directors[0]).toHaveProperty("name");
-    expect(directors[0]).toHaveProperty("topMovies");
-  });
-
   test("GET /api/tmdb/discover returns discovered movies", async ({ request }) => {
     const res = await request.get("/api/tmdb/discover?with_genres=28");
     expect(res.ok()).toBe(true);
