@@ -72,6 +72,18 @@ function buildUserPrompt(movie) {
     parts.push(`\nWIKIPEDIA PLOT SUMMARY:\n${plot}`);
   }
 
+  // Add critic/user reviews (up to 3)
+  if (movie.reviews?.length > 0) {
+    const reviewTexts = movie.reviews
+      .slice(0, 3)
+      .map((r) => {
+        const label = r.source === "rt" ? `[RT${r.isTopCritic ? " Top Critic" : ""}]` : "[TMDB User]";
+        const sent = r.sentiment ? ` (${r.sentiment})` : "";
+        return `${label}${sent} ${r.text.slice(0, 500)}`;
+      });
+    parts.push(`\nCRITIC/USER REVIEWS:\n${reviewTexts.join("\n\n")}`);
+  }
+
   parts.push(`\nScore this movie on all dimensions. Use the full range of each scale.`);
   return parts.join("\n");
 }
