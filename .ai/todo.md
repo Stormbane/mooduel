@@ -5,7 +5,6 @@
 - [x] TMDB API client
 - [x] Core types, MovieProfile, game state
 - [x] Poster Pick rounds (5 per round, synopsis, expandable info)
-- [x] Actor/Director rounds (to be removed in M2)
 - [x] Tournament bracket (8→4→2→1)
 - [x] Game loop orchestrator
 - [x] Debug panel (real-time profile visualization)
@@ -14,267 +13,159 @@
 - [x] Framer-motion animations
 - [x] Reload round button
 - [x] Popularity curve (famous→fringe across rounds)
-- [x] Playwright test suite (16/16 passing)
+- [x] Playwright test suite (19/19 passing)
 
 ---
 
 ## M2: Mooduel — Mood Engine + Zillmann MMT
 
-### New Game Flow
-```
-Round 0: color-pick       (VA baseline)
-Round 1: vibe-pick        (VA refinement)
-Round 2: emotion-pick     (VA confirmation)
-Round 3-8: poster-pick    (6 rounds, mood-guided, Zillmann mix)
-Tournament: 8-movie bracket
-```
-
 ### Phase 1: Remove Actor/Director Rounds ✅
-All person-related code stripped. 3 mood rounds + 6 poster-pick rounds.
-Build passes, 19/19 Playwright tests passing.
 
-### Phase 2: Movie Mood Dataset (LLM Classification)
+### Phase 2: Movie Mood Dataset ✅ (corpus + classifier ready)
+- [x] Data pipeline: TMDB → enrich → top 30K → Wikipedia plots → corpus
+- [x] RT critic reviews joined (12,656 movies, 41.3%)
+- [x] MovieLens Tag Genome joined (8,815 movies, 28.8%)
+- [x] TMDB user reviews (fetching, ~58% hit rate on remaining)
+- [x] TMDB certifications (fetching, ~99.8% hit rate)
+- [x] Classifier v2 prompt + schema (18 dimensions)
+- [x] test-10-v2 validated (10/10 passed, all dimensions sensible)
+- [x] Batch classifier script ready (`batch-classify.mjs`)
+- [ ] **Top up Anthropic API credits**
+- [ ] Run batch classification (30K movies via Haiku, ~$15-40)
+- [ ] Validate: spot-check 100 random scores, distribution sanity
+- [ ] Quality report: histograms per dimension, outlier detection
 
-Build an open movie mood dataset — per-movie emotional/experiential classification using
-LLM analysis of plot summaries and critic reviews. **This is the first open dataset of its
-kind.** No one has published structured mood scores for movies at scale.
-
-#### 2a: Data Pipeline — Assemble Input Corpus
-
-**Goal:** 50K most relevant movies with rich text for classification.
-
-**Determining the 50K:**
-1. Download Kaggle TMDB 1M dataset (bulk metadata with popularity, vote_count, vote_avg)
-2. Filter: `has_overview AND vote_count >= 10 AND NOT adult`
-3. Rank by composite relevance: `0.4 * log(vote_count) + 0.3 * log(popularity) + 0.3 * vote_average/10`
-4. Take top 50,000 by this score
-5. This captures: all well-known films, critically acclaimed obscure films, and sufficiently-
-   reviewed recent releases. The vote_count floor of 10 excludes junk entries while keeping
-   cult films.
-
-**Input sources per movie:**
-
-| Source | What it provides | Coverage |
-|---|---|---|
-| Kaggle TMDB 1M | genres, overview, ratings, popularity, keywords, language, release_date | ~1.3M movies |
-| CMU Movie Summary Corpus | Wikipedia plot summaries (300-1000 words) | 42,306 movies |
-| WikiPlots corpus | Extended Wikipedia plots | 112,936 movies |
-| Kaggle Rotten Tomatoes | Full critic reviews + critics consensus | 17,000 movies |
-| MovieLens Tag Genome | 1,128 tags with 0-1 relevance scores | 9,734 movies |
-
-**Join strategy:**
-- Primary key: TMDB ID
-- TMDB → IMDb via TMDB `/external_ids` endpoint (or Kaggle dataset includes `imdb_id`)
-- IMDb → CMU/WikiPlots via title+year fuzzy match + IMDb ID where available
-- IMDb → RT Kaggle via title+year match
-- TMDB → Wikidata via TMDB `/external_ids` (returns `wikidata_id`)
-- Wikidata → Wikipedia URL via sitelink
-
-**Output:** `data/movie-input-corpus.jsonl` — one line per movie with all joined text.
-
-- [ ] Download and parse Kaggle TMDB 1M dataset
-- [ ] Compute relevance score and select top 50K
-- [ ] Download and parse CMU Movie Summary Corpus + WikiPlots
-- [ ] Download and parse Kaggle RT reviews dataset
-- [ ] Join datasets on TMDB ID / IMDb ID / title+year
-- [ ] Fetch external IDs (IMDb, Wikidata) from TMDB API for all 50K
-- [ ] Resolve Wikipedia URLs from Wikidata IDs
-- [ ] Build `movie-input-corpus.jsonl`
-
-#### 2b: Classifier Prompt + Prototype
-
-**Schema per movie:**
-
-```typescript
-interface MovieMoodScore {
-  // === Identifiers ===
-  tmdbId: number;
-  imdbId: string | null;          // "tt0111161"
-  wikidataId: string | null;      // "Q25188"
-  title: string;
-  originalTitle: string;
-  year: number;
-
-  // === URLs (for consumers of the dataset) ===
-  tmdbUrl: string;                // "https://www.themoviedb.org/movie/278"
-  imdbUrl: string | null;         // "https://www.imdb.com/title/tt0111161"
-  wikipediaUrl: string | null;    // "https://en.wikipedia.org/wiki/The_Shawshank_Redemption"
-  letterboxdUrl: string | null;   // "https://letterboxd.com/film/the-shawshank-redemption"
-  rottenTomatoesUrl: string | null;
-
-  // === Movie Metadata (for filtering/context) ===
-  genres: string[];               // ["Drama", "Crime"]
-  originalLanguage: string;       // "en"
-  releaseDate: string;            // "1994-09-23"
-  runtime: number | null;         // minutes
-  tmdbPopularity: number;
-  tmdbVoteCount: number;
-
-  // === Ratings (per-source) ===
-  imdbRating: number | null;      // 0-10
-  imdbVotes: number | null;
-  rottenTomatoesRating: number | null;  // 0-100 (critics score)
-  rottenTomatoesAudience: number | null; // 0-100
-  tmdbRating: number | null;      // 0-10
-
-  // === Core Affect (continuous) ===
-  valence: number;                // -1 to +1 (displeasure ↔ pleasure)
-  arousal: number;                // -1 to +1 (calm ↔ intense)
-  dominance: number;              // -1 to +1 (overwhelming ↔ empowering)
-
-  // === Zillmann's Absorption (continuous) ===
-  absorptionPotential: number;    // 0 to 1 (how cognitively consuming)
-
-  // === Three Experience Valences (continuous) ===
-  hedonicValence: number;         // 0 to 1 (fun, pleasure, escape)
-  eudaimonicValence: number;      // 0 to 1 (meaning, insight, being moved)
-  psychologicallyRichValence: number; // 0 to 1 (novelty, complexity, perspective)
-
-  // === Emotional Arc ===
-  emotionalArc: "rags-to-riches" | "riches-to-rags" | "man-in-a-hole"
-              | "icarus" | "cinderella" | "oedipus";
-
-  // === Discrete Emotions ===
-  dominantEmotions: string[];     // top 2-3 from Plutchik's wheel
-
-  // === Thematic Tags (for semantic affinity matching) ===
-  moodTags: string[];             // ["redemption", "isolation", "friendship"]
-
-  // === Watch Experience (novel — no existing dataset has these) ===
-  watchContext: ("solo" | "date" | "friends" | "family")[];  // best viewing contexts
-  vibeSentence: string;           // "Rainy Sunday with tea and a heavy heart"
-  pacing: "slow-burn" | "building" | "steady" | "relentless" | "episodic";
-  endingType: "triumphant" | "bittersweet" | "devastating" | "ambiguous"
-            | "twist" | "uplifting" | "unsettling";
-  comfortLevel: number;           // 0 to 1 (transgressive ↔ cozy)
-  emotionalSafetyWarnings: string[];  // sparse — only surprising content
-  conversationPotential: number;  // 0 to 1 (how much people want to discuss it)
-
-  // === Classification Meta ===
-  inputSources: string[];         // ["tmdb", "wikipedia"]
-  classifierModel: string;        // "claude-haiku-4-5"
-  classifiedAt: string;           // ISO timestamp
-  classifierVersion: string;      // "2.0.0" — added watch experience fields
-}
-```
-
-**Prompt design:**
-- System prompt: explain circumplex model, Zillmann's MMT, three experience types,
-  emotional arc shapes, Plutchik's wheel. Define each dimension with anchoring examples.
-- User prompt: movie title + genres + TMDB overview + Wikipedia plot + 2-3 critic review
-  excerpts (when available). Ask for structured JSON output.
-- Few-shot examples: 5-8 well-known movies spanning all quadrants and arc types.
-
-**Prototype with `claude -p`:**
-- Use `--json-schema` for structured output validation
-- Use `--model haiku` for cost efficiency
-- Test on ~50 diverse movies, manually validate scores
-- Compare LLM scores to MovieLens Tag Genome where overlap exists
-
-- [ ] Design classifier system prompt with theory + examples
-- [ ] Build few-shot example set (8 movies across all quadrants)
-- [ ] Write `scripts/classify-movie.sh` — single movie via `claude -p`
-- [ ] Write `scripts/classify-batch-prototype.sh` — 50 movies via `claude -p`
-- [ ] Validate against MovieLens Tag Genome overlap
-- [ ] Iterate on prompt until scores are sensible
-
-#### 2c: Production Batch Classification
-
-- [ ] Write `scripts/batch-classify.py` — Anthropic Message Batches API
-  - Reads `movie-input-corpus.jsonl`
-  - Builds batch request (up to 100K per batch)
-  - Submits to `POST /v1/messages/batches`
-  - Polls for completion, downloads results
-  - Writes `data/movie-mood-scores.json`
-- [ ] Run batch: 50K movies via Haiku 4.5 (~$11-35, ~1 hour)
-- [ ] Validate: spot-check 100 random scores, check distribution sanity
-- [ ] Build quality report: distribution histograms per dimension,
-      outlier detection, coverage stats
-
-#### 2d: Integration with Mooduel
-
-- [ ] `src/lib/mood-api/cache.ts` — load scores from static JSON or fetch API
-- [ ] `src/app/api/mood/route.ts` — GET by movieId, POST batch
-- [ ] `src/lib/engine/candidates.ts` — scoreMovie uses LLM VA when available,
-      genre fallback when not
+### Phase 3: Integration with Mooduel Game
+- [ ] `src/lib/mood-data/` — load mood scores from static JSON
+- [ ] `src/lib/engine/candidates.ts` — score movies using VA when available
 - [ ] `src/hooks/use-game.ts` — load mood scores, pass to scoring
+- [ ] Winner screen: show mood profile card for winning movie
 - [ ] Verify: game works without mood data (genre fallback), improves with it
 
-#### 2e: Open Data Release
-
-- [ ] `data/movie-mood-scores.json` — the full 50K dataset
-- [ ] `data/README.md` — schema docs, methodology, citation info, license
-- [ ] Publish to GitHub releases / HuggingFace datasets
-- [ ] `.gitignore` — add `data/movie-input-corpus.jsonl` (too large), keep scores
-
-### Phase 3: Broader Movie Pool
-
-Expand in-game pool using mood-guided TMDB discover.
-
-- [ ] `src/lib/tmdb/client.ts` — `discoverByMoodQuadrant(quadrant, page)`:
-  - Q1 happy/excited: Comedy, Adventure, Animation, Music
-  - Q2 tense/anxious: Horror, Thriller, Crime, War
-  - Q3 sad/melancholy: Drama, History, Documentary
-  - Q4 calm/content: Romance, Family, Fantasy
-- [ ] `src/lib/tmdb/client.ts` — `discoverDiverse(page)` for variety
-- [ ] `src/hooks/use-game.ts` — Stage 1: same prefetch on mount.
-      Stage 2: after mood detection (round 3), fetch mood-quadrant movies.
-      Between poster rounds, keep pool > 30 unseen.
-- [ ] `src/lib/engine/candidates.ts` — popularity floor per round:
-  - Rounds 3-4: > 40, Rounds 5-6: > 15, Rounds 7-8: > 3
-- [ ] Verify: pool grows after mood detection, later rounds more diverse
-
 ### Phase 4: Zillmann's Mood Management Theory
+- [ ] Mood regulation tracking (deepening vs reversing detection)
+- [ ] Adaptive movie mix per regulation mode
+- [ ] Debug panel: regulation mode, matching/contrasting counts
 
-Implement mood regulation tracking and adaptive movie mix.
-
-- [ ] `src/lib/types.ts` — add `MoodRegulationMode`, `MoodRegulation` types
-      ```typescript
-      type MoodRegulationMode = "deepening" | "reversing" | "undetermined";
-      interface MoodRegulation {
-        mode: MoodRegulationMode;
-        matchingPicks: number;
-        contrastingPicks: number;
-        confidence: number;        // 0-1
-        targetVA: { valence: number; arousal: number };
-      }
-      ```
-      Add `moodRegulation: MoodRegulation` to `MovieProfile`.
-- [ ] `src/lib/engine/mood.ts` — quadrant helpers: `getVAQuadrant()`,
-      `getOppositeQuadrant()`, `getAdjacentQuadrants()`
-- [ ] `src/lib/engine/profile.ts` — after each poster-pick, compare movie VA to
-      detected mood VA. Same quadrant → matchingPicks++, opposite → contrastingPicks++.
-      Derive mode: matching > contrasting×1.5 → deepening, vice versa → reversing.
-      Update targetVA accordingly.
-- [ ] `src/lib/engine/candidates.ts` — Zillmann mix in `selectPosterCandidates`:
-  - Default: 3 matching (60%), 1 adjacent (20%), 1 contrasting (20%)
-  - Deepening: 4 matching, 1 adjacent
-  - Reversing: 2 matching, 1 adjacent, 2 contrasting
-- [ ] `src/components/game/debug-panel.tsx` — MOOD_MGMT section:
-      regulation mode badge, matching/contrasting counts, target VA, confidence
-- [ ] Verify: debug panel shows mode shifting, movie mix adapts
-
-### Phase 5: Landing Page + Open Source Prep
-
-- [ ] `src/components/splash-screen.tsx` — rebuild with cyberpunk aesthetic:
-  - Logo + tagline "Science-backed mood discovery for movies"
-  - Three info cards (staggered): Mood Detection, Mood Management, Tournament
-  - Science footer (circumplex, Zillmann, visual affect research)
-  - Play button + "~2 min · no account needed"
-- [ ] `.env.local.example` — document all env vars
-- [ ] `.gitignore` — ensure data files handled correctly
-- [ ] Verify: landing page renders, `npm run build` passes, no circular deps
+### Phase 5: Broader Movie Pool
+- [ ] Mood-guided TMDB discover by VA quadrant
+- [ ] Pool replenishment between rounds
+- [ ] Popularity floor curve per round
 
 ---
 
-## M3: Smart Recommendations
-- [ ] Active learning (pick most informative candidates per round)
-- [ ] Long-term taste profile (aggregate across sessions)
-- [ ] Social: share bracket, taste match with friends
-- [ ] "Play again" with session memory
+## M3: Release — Landing + Explore + About
 
-## M4: Ship It
+### Landing Page (`/`)
+- [ ] Hero: tagline + Play CTA + Explore Dataset CTA
+- [ ] Animated demo loop of game flow
+- [ ] "How It Works" — 3-step visual (vibes → movies → tournament)
+- [ ] "The Science" — circumplex diagram, Zillmann, 18 dimensions
+- [ ] "The Dataset" — stats bar + scrolling vibe sentences
+- [ ] Trust block: GitHub stars, movie count, open source badge
+
+### Explore Page (`/explore`) — Mooduel Movie DB
+- [ ] Search by title (instant, client-side over static JSON)
+- [ ] Filter by mood (VA sliders, comfort level, pacing, ending type)
+- [ ] Filter by watch context (solo / date / friends / family)
+- [ ] Browse by vibe (scrollable vibe sentences, click to explore similar)
+- [ ] Mood map: interactive 2D scatter (valence × arousal), all movies as dots
+- [ ] Full mood card: all 18 dimensions visualised for a single movie
+- [ ] Mobile responsive
+
+### About Page (`/about`)
+- [ ] What is Mooduel — game + dataset overview
+- [ ] The Mood Model — circumplex diagram, explain all dimensions
+- [ ] Methodology — data pipeline, classifier design, validation
+- [ ] Dataset docs (`/about/dataset`) — schema, downloads, HuggingFace, BibTeX
+- [ ] Open Source — GitHub link, tech stack, contributing
+- [ ] Team / credits
+
+### Open Data Release
+- [ ] Export: `mooduel-v1.0.json`, `.csv`, `.parquet`
+- [ ] HuggingFace dataset card + upload
+- [ ] GitHub Releases backup
+- [ ] License: CC-BY-NC-4.0
+- [ ] CITATION.cff in repo root
+- [ ] README.md — banner, badges, demo GIF, quick start, schema, citation
+
+### Monetisation
+- [ ] Streaming affiliate links on winner screen (JustWatch deeplinks)
+- [ ] GitHub Sponsors — FUNDING.yml, tiered ($5/$15/$50)
+- [ ] Buy Me a Coffee — button on landing page + `/donate` page
+- [ ] Commercial license page (email-based, $500-2K)
+
+---
+
+## M4: More Games
+
+### Mood Drift (Daily Game — Wordle for Movies)
+- [ ] Daily target mood profile (hidden VA + arc)
+- [ ] 6 guesses: name a movie, see distance to target
+- [ ] Shareable results grid ("Hereditary → Paddington in 4 moves")
+- [ ] Daily reset, streak tracking
+
+### Blind Taste Test (Vibe Sentences Only)
+- [ ] Show 5 vibe sentences, no titles/posters/metadata
+- [ ] User picks which movie they'd watch
+- [ ] Reveal movie after choice
+- [ ] Track hit rate: does vibe language predict satisfaction?
+
+### Mood Roulette
+- [ ] Slot machine: 3 reels (emotional arc × watch context × wild card)
+- [ ] Pull lever, see matching movies
+- [ ] Shareable: "I got icarus + solo + devastating"
+
+### Emotional Journey Planner (Movie Marathon Builder)
+- [ ] Draw emotional arc on VA graph
+- [ ] App sequences 3-5 movies along that trajectory
+- [ ] Presets: "Rainy Weekend", "Halloween Night", "Date Night Arc"
+- [ ] Respects pacing transitions between films
+
+### Couples Movie Mediator
+- [ ] Two players input mood independently (same color/vibe/emotion flow)
+- [ ] App finds movie at intersection of both mood profiles
+- [ ] Filtered by "date" watch context, comfort level, conversation potential
+
+### Vibe Search Engine
+- [ ] Natural language input: "something that feels like a rainy Sunday"
+- [ ] Semantic similarity against vibe sentences + mood tags
+- [ ] Embedding model (transformers.js client-side or server-side)
+- [ ] Ranked results with mood cards
+
+---
+
+## M5: Growth & Ecosystem
+
+### Streaming Browser Extension
+- [ ] Chrome extension overlaying mood data on Netflix/Prime/Disney+
+- [ ] Hover: vibe sentence, comfort level, watch context, safety warnings
+
+### Music-to-Movie Bridge
+- [ ] Spotify OAuth: analyze recent listening mood
+- [ ] Map Spotify valence/energy to movie VA space
+- [ ] "Your music says you'd love these movies right now"
+
+### Therapeutic Movie Guide
+- [ ] Input: emotional goal ("processing grief", "need distraction")
+- [ ] Filter by comfort level, safety warnings, eudaimonic valence, absorption
+- [ ] Careful framing: "for self-care, not therapy"
+
+### Movie Mood Embeddings (Developer Tool)
+- [ ] Export 18-dim mood vectors as numpy/PyTorch tensors
+- [ ] ML-ready format for recommendation models and research
+
+### Mood Journal + Watch Tracker
+- [ ] Daily mood logging (quick VA tap)
+- [ ] Track movies watched, correlate with mood
+- [ ] Reveal patterns: "You watch high-arousal content when stressed"
+- [ ] Needs user accounts + persistent storage
+
+---
+
+## M6: Ship & Scale
 - [ ] Vercel production deployment
-- [ ] Custom domain
-- [ ] Open source prep (LICENSE, README, clean secrets)
-- [ ] SEO + social sharing (share winner movie card)
+- [ ] Custom domain (mooduel.com)
+- [ ] SEO + social sharing (share winner movie card, mood profile card)
+- [ ] Analytics (privacy-respecting: Plausible or Umami)
+- [ ] Consulting offering page for streaming platforms
