@@ -15,24 +15,24 @@
     },
     "absorptionPotential": {
       "type": "number",
-      "description": "Zillmann's absorption: how cognitively consuming (0 to 1). 0 = background-watchable, 1 = demands total attention, monopolizes mental resources"
+      "description": "Zillmann's absorption: how cognitively consuming (0 to 1). 0 = background-watchable, 1 = demands total attention"
     },
     "hedonicValence": {
       "type": "number",
-      "description": "Experience type: fun/pleasure/escape/entertainment (0 to 1). How much does this film deliver pure enjoyment?"
+      "description": "Experience type: fun/pleasure/escape/entertainment (0 to 1)"
     },
     "eudaimonicValence": {
       "type": "number",
-      "description": "Experience type: meaning/insight/being-moved/reflection (0 to 1). How much does this film provoke deep thought or emotional growth?"
+      "description": "Experience type: meaning/insight/being-moved/reflection (0 to 1)"
     },
     "psychologicallyRichValence": {
       "type": "number",
-      "description": "Experience type: novelty/complexity/perspective-broadening (0 to 1). How much does this film challenge worldview or offer unusual perspectives?"
+      "description": "Experience type: novelty/complexity/perspective-broadening (0 to 1)"
     },
     "emotionalArc": {
       "type": "string",
       "enum": ["rags-to-riches", "riches-to-rags", "man-in-a-hole", "icarus", "cinderella", "oedipus"],
-      "description": "Reagan et al.'s six story shapes. rags-to-riches=steady rise, riches-to-rags=steady fall, man-in-a-hole=fall then rise, icarus=rise then fall, cinderella=rise-fall-rise, oedipus=fall-rise-fall"
+      "description": "Reagan et al.'s six story shapes"
     },
     "dominantEmotions": {
       "type": "array",
@@ -46,18 +46,62 @@
       "items": { "type": "string" },
       "minItems": 3,
       "maxItems": 6,
-      "description": "Thematic mood tags for semantic affinity matching. Use lowercase single words or hyphenated phrases. e.g. redemption, isolation, coming-of-age, dark-humor"
+      "description": "Thematic mood tags for semantic affinity matching. Lowercase, hyphenated. e.g. redemption, isolation, coming-of-age"
+    },
+    "watchContext": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["solo", "date", "friends", "family"]
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "description": "Best viewing contexts: solo (introspective/intense), date (charming/conversation-starting), friends (fun/collectively thrilling), family (accessible across ages)"
+    },
+    "vibeSentence": {
+      "type": "string",
+      "description": "Max 12-word evocative fragment capturing what watching this feels like. Not a plot summary — a sensory/emotional descriptor."
+    },
+    "pacing": {
+      "type": "string",
+      "enum": ["slow-burn", "building", "steady", "relentless", "episodic"],
+      "description": "Rhythm of the viewing experience"
+    },
+    "endingType": {
+      "type": "string",
+      "enum": ["triumphant", "bittersweet", "devastating", "ambiguous", "twist", "uplifting", "unsettling"],
+      "description": "How the film resolves emotionally"
+    },
+    "comfortLevel": {
+      "type": "number",
+      "description": "Emotional safety of viewing experience (0 to 1). 1 = cozy and predictable, 0 = challenging and transgressive"
+    },
+    "emotionalSafetyWarnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["sudden-grief", "sexual-assault", "self-harm", "child-harm", "animal-harm", "suicide", "graphic-violence", "domestic-abuse", "psychological-manipulation"]
+      },
+      "maxItems": 3,
+      "description": "Content that could blindside a vulnerable viewer. Only flag what is SURPRISING relative to genre/marketing. Most films = empty array."
+    },
+    "conversationPotential": {
+      "type": "number",
+      "description": "How much this film makes people want to discuss it afterward (0 to 1). High = 'we need to talk about this'"
     },
     "reasoning": {
       "type": "string",
-      "description": "Brief 1-2 sentence explanation of why you scored it this way"
+      "description": "Brief 2-3 sentence explanation of key scoring decisions"
     }
   },
   "required": [
     "valence", "arousal", "dominance",
     "absorptionPotential",
     "hedonicValence", "eudaimonicValence", "psychologicallyRichValence",
-    "emotionalArc", "dominantEmotions", "moodTags", "reasoning"
+    "emotionalArc", "dominantEmotions", "moodTags",
+    "watchContext", "vibeSentence", "pacing", "endingType",
+    "comfortLevel", "emotionalSafetyWarnings", "conversationPotential",
+    "reasoning"
   ],
   "additionalProperties": false
 }
