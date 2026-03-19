@@ -1,0 +1,56 @@
+{
+  "tmdbId": 8363,
+  "imdbId": "tt0829482",
+  "title": "Superbad",
+  "year": 2007,
+  "genres": [
+    "Comedy"
+  ],
+  "originalLanguage": "en",
+  "runtime": 113,
+  "tmdbPopularity": 10.4748,
+  "tmdbVoteCount": 7931,
+  "tmdbRating": 7.259,
+  "tmdbUrl": "https://www.themoviedb.org/movie/8363",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:02:33Z",
+  "valence": 0.65,
+  "arousal": 0.45,
+  "dominance": 0.35,
+  "absorptionPotential": 0.55,
+  "hedonicValence": 0.8,
+  "eudaimonicValence": 0.65,
+  "psychologicallyRichValence": 0.35,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "joy",
+    "anticipation",
+    "surprise"
+  ],
+  "moodTags": [
+    "friendship",
+    "coming-of-age",
+    "awkward-humor",
+    "separation-anxiety",
+    "social-underdog"
+  ],
+  "watchContext": [
+    "friends",
+    "solo"
+  ],
+  "vibeSentence": "Sweaty panic and laughter wrapping around the ache of growing apart.",
+  "pacing": "building",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.65,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.6,
+  "reasoning": "Superbad succeeds as comedy (high hedonic) but derives real emotional power from its separation-anxiety core (solid eudaimonic). The viewing experience is net-positive due to effective humor and moments of genuine connection, tempered by cringe comedy and the ache of the boys' conflict. The arc falls into man-in-a-hole: they start inadequate, descend into painful conflict when Evan tells Seth he's been holding him back, and climb back to acceptance of each other—but not conquest of their goals. Dominant arousal is moderate: building momentum through the night, not relentless. Dominance skews low because Seth and Evan are buffeted by events (car hit, police confusion, party chaos), though they do drive the narrative. Watch context is friends (quotable, fun, reactive) and solo (the friendship dynamics are introspectively engaging). Bittersweet ending because they don't achieve explicit goals (hooking up, staying together) but achieve something deeper (mutual understanding as they separate)."
+}

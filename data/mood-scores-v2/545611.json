@@ -1,0 +1,58 @@
+{
+  "tmdbId": 545611,
+  "imdbId": "tt6710474",
+  "title": "Everything Everywhere All at Once",
+  "year": 2022,
+  "genres": [
+    "Action",
+    "Adventure",
+    "Science Fiction"
+  ],
+  "originalLanguage": "en",
+  "runtime": 140,
+  "tmdbPopularity": 14.1097,
+  "tmdbVoteCount": 7743,
+  "tmdbRating": 7.722,
+  "tmdbUrl": "https://www.themoviedb.org/movie/545611",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "rt"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:10:59Z",
+  "valence": 0.65,
+  "arousal": 0.85,
+  "dominance": 0.55,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.75,
+  "eudaimonicValence": 0.9,
+  "psychologicallyRichValence": 0.85,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "sadness",
+    "joy",
+    "surprise"
+  ],
+  "moodTags": [
+    "intergenerational-healing",
+    "immigrant-grief",
+    "absurdist-wonder",
+    "chosen-love"
+  ],
+  "watchContext": [
+    "solo",
+    "friends"
+  ],
+  "vibeSentence": "Sensory overload collapsing into quiet, hard-won grace.",
+  "pacing": "building",
+  "endingType": "uplifting",
+  "comfortLevel": 0.5,
+  "emotionalSafetyWarnings": [
+    "self-harm",
+    "sudden-grief"
+  ],
+  "conversationPotential": 0.95,
+  "reasoning": "This film operates simultaneously as kinetic spectacle and philosophical meditation on family, identity, and meaning-making. Evelyn's journey from exhaustion and regret to agency and love is earned through relentless sensory and narrative complexity that demands total absorption. The result: emotionally devastating and ultimately transcendent."
+}

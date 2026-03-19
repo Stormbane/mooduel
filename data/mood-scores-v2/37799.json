@@ -1,0 +1,55 @@
+{
+  "tmdbId": 37799,
+  "imdbId": "tt1285016",
+  "title": "The Social Network",
+  "year": 2010,
+  "genres": [
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "runtime": 121,
+  "tmdbPopularity": 8.3951,
+  "tmdbVoteCount": 12984,
+  "tmdbRating": 7.371,
+  "tmdbUrl": "https://www.themoviedb.org/movie/37799",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:10:11Z",
+  "valence": 0.35,
+  "arousal": 0.7,
+  "dominance": 0.45,
+  "absorptionPotential": 0.9,
+  "hedonicValence": 0.65,
+  "eudaimonicValence": 0.78,
+  "psychologicallyRichValence": 0.65,
+  "emotionalArc": "icarus",
+  "dominantEmotions": [
+    "anger",
+    "sadness",
+    "disgust"
+  ],
+  "moodTags": [
+    "ambition",
+    "isolation",
+    "betrayal",
+    "intellectual",
+    "cynicism"
+  ],
+  "watchContext": [
+    "solo"
+  ],
+  "vibeSentence": "Genius without conscience, success without satisfaction.",
+  "pacing": "building",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.3,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.88,
+  "reasoning": "The Social Network pairs kinetic entertainment (Sorkin's razor-sharp dialogue, Fincher's rapid-cut editing) with fundamentally cynical emotional content. Valence stays modest—the film entertains but doesn't leave you feeling good; it's a meditation on how ambition can hollow out the human connections that make success meaningful. Arousal is high due to sustained narrative momentum and overlapping dialogue. Dominance is moderate because while Mark has agency, his choices are presented as self-destructive pathology, not triumphs we're invited to celebrate. Absorption is very high—this film will not let your attention waver. The three experience valences show the split: hedonic pleasure in clever entertainment, eudaimonic depth in genuine questions about what success costs, psychologically rich execution (though not conceptually revolutionary). The emotional arc is Icarus: rise to billionaire status, fall into isolation and moral emptiness. Best watched alone—it's introspective and unsettling, asking you to sit with moral discomfort and complicity. But it generates tremendous conversation potential because the questions it raises (Is Mark genius or sociopath? What does Facebook owe its founders? What is the cost of ambition?) don't resolve within the frame.\""
+}

@@ -1,0 +1,59 @@
+{
+  "tmdbId": 76341,
+  "imdbId": "tt1392190",
+  "title": "Mad Max: Fury Road",
+  "year": 2015,
+  "genres": [
+    "Action",
+    "Adventure",
+    "Science Fiction"
+  ],
+  "originalLanguage": "en",
+  "runtime": 121,
+  "tmdbPopularity": 10.723,
+  "tmdbVoteCount": 23835,
+  "tmdbRating": 7.63,
+  "tmdbUrl": "https://www.themoviedb.org/movie/76341",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:03:37Z",
+  "valence": -0.12,
+  "arousal": 0.88,
+  "dominance": 0.42,
+  "absorptionPotential": 0.71,
+  "hedonicValence": 0.81,
+  "eudaimonicValence": 0.54,
+  "psychologicallyRichValence": 0.59,
+  "emotionalArc": "cinderella",
+  "dominantEmotions": [
+    "fear",
+    "anticipation",
+    "anger"
+  ],
+  "moodTags": [
+    "survival",
+    "dystopia",
+    "redemption",
+    "adrenaline",
+    "female-agency",
+    "dark-spectacle"
+  ],
+  "watchContext": [
+    "friends",
+    "solo"
+  ],
+  "vibeSentence": "Two hours of white-knuckle momentum through apocalyptic desert fury.",
+  "pacing": "relentless",
+  "endingType": "triumphant",
+  "comfortLevel": 0.43,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.67,
+  "reasoning": "Mad Max: Fury Road is peak action spectacle—visually innovative and relentlessly thrilling, but emotionally more exhilarating than moving. The film's core strength is hedonic (pure visceral pleasure, escape) and technical (visual choreography, cinematography), not eudaimonic depth. Viewers are passengers on a momentum machine, not witnesses to revelation. The triumph lands cleanly, but the dystopia and constant threat keep valence slightly negative. Conversation orbits filmmaking craft rather than thematic interrogation."
+}

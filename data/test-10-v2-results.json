@@ -1,0 +1,586 @@
+[
+  {
+    "tmdbId": 278,
+    "imdbId": "tt0111161",
+    "title": "The Shawshank Redemption",
+    "year": 1994,
+    "genres": [
+      "Drama",
+      "Crime"
+    ],
+    "originalLanguage": "en",
+    "runtime": 142,
+    "tmdbPopularity": 48.1172,
+    "tmdbVoteCount": 29916,
+    "tmdbRating": 8.716,
+    "tmdbUrl": "https://www.themoviedb.org/movie/278",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:01:46Z",
+    "valence": 0.75,
+    "arousal": 0.3,
+    "dominance": 0.8,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.55,
+    "eudaimonicValence": 0.88,
+    "psychologicallyRichValence": 0.65,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "trust",
+      "anticipation",
+      "sadness"
+    ],
+    "moodTags": [
+      "redemption",
+      "hope",
+      "friendship",
+      "justice",
+      "resilience"
+    ],
+    "watchContext": [
+      "solo",
+      "date",
+      "family"
+    ],
+    "vibeSentence": "Quiet resilience meeting hope; freedom earned through patient faith.",
+    "pacing": "slow-burn",
+    "endingType": "triumphant",
+    "comfortLevel": 0.7,
+    "emotionalSafetyWarnings": [
+      "sudden-grief"
+    ],
+    "conversationPotential": 0.82,
+    "reasoning": "The Shawshank Redemption is a masterpiece of patient storytelling that trades intensity for depth, building a powerful emotional arc from despair to triumphant liberation. Its core valence is deeply positive—not through escapism but through affirmation of hope and human integrity—while its slow-burn pacing and complex narrative demand significant cognitive engagement. The film works precisely because it balances genuine darkness (violence, corruption, death) with an unshakeable commitment to the possibility of transcendence through agency and friendship."
+  },
+  {
+    "tmdbId": 8363,
+    "imdbId": "tt0829482",
+    "title": "Superbad",
+    "year": 2007,
+    "genres": [
+      "Comedy"
+    ],
+    "originalLanguage": "en",
+    "runtime": 113,
+    "tmdbPopularity": 10.4748,
+    "tmdbVoteCount": 7931,
+    "tmdbRating": 7.259,
+    "tmdbUrl": "https://www.themoviedb.org/movie/8363",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:02:33Z",
+    "valence": 0.65,
+    "arousal": 0.45,
+    "dominance": 0.35,
+    "absorptionPotential": 0.55,
+    "hedonicValence": 0.8,
+    "eudaimonicValence": 0.65,
+    "psychologicallyRichValence": 0.35,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "joy",
+      "anticipation",
+      "surprise"
+    ],
+    "moodTags": [
+      "friendship",
+      "coming-of-age",
+      "awkward-humor",
+      "separation-anxiety",
+      "social-underdog"
+    ],
+    "watchContext": [
+      "friends",
+      "solo"
+    ],
+    "vibeSentence": "Sweaty panic and laughter wrapping around the ache of growing apart.",
+    "pacing": "building",
+    "endingType": "bittersweet",
+    "comfortLevel": 0.65,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.6,
+    "reasoning": "Superbad succeeds as comedy (high hedonic) but derives real emotional power from its separation-anxiety core (solid eudaimonic). The viewing experience is net-positive due to effective humor and moments of genuine connection, tempered by cringe comedy and the ache of the boys' conflict. The arc falls into man-in-a-hole: they start inadequate, descend into painful conflict when Evan tells Seth he's been holding him back, and climb back to acceptance of each other—but not conquest of their goals. Dominant arousal is moderate: building momentum through the night, not relentless. Dominance skews low because Seth and Evan are buffeted by events (car hit, police confusion, party chaos), though they do drive the narrative. Watch context is friends (quotable, fun, reactive) and solo (the friendship dynamics are introspectively engaging). Bittersweet ending because they don't achieve explicit goals (hooking up, staying together) but achieve something deeper (mutual understanding as they separate)."
+  },
+  {
+    "tmdbId": 76341,
+    "imdbId": "tt1392190",
+    "title": "Mad Max: Fury Road",
+    "year": 2015,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Science Fiction"
+    ],
+    "originalLanguage": "en",
+    "runtime": 121,
+    "tmdbPopularity": 10.723,
+    "tmdbVoteCount": 23835,
+    "tmdbRating": 7.63,
+    "tmdbUrl": "https://www.themoviedb.org/movie/76341",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:03:37Z",
+    "valence": -0.12,
+    "arousal": 0.88,
+    "dominance": 0.42,
+    "absorptionPotential": 0.71,
+    "hedonicValence": 0.81,
+    "eudaimonicValence": 0.54,
+    "psychologicallyRichValence": 0.59,
+    "emotionalArc": "cinderella",
+    "dominantEmotions": [
+      "fear",
+      "anticipation",
+      "anger"
+    ],
+    "moodTags": [
+      "survival",
+      "dystopia",
+      "redemption",
+      "adrenaline",
+      "female-agency",
+      "dark-spectacle"
+    ],
+    "watchContext": [
+      "friends",
+      "solo"
+    ],
+    "vibeSentence": "Two hours of white-knuckle momentum through apocalyptic desert fury.",
+    "pacing": "relentless",
+    "endingType": "triumphant",
+    "comfortLevel": 0.43,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.67,
+    "reasoning": "Mad Max: Fury Road is peak action spectacle—visually innovative and relentlessly thrilling, but emotionally more exhilarating than moving. The film's core strength is hedonic (pure visceral pleasure, escape) and technical (visual choreography, cinematography), not eudaimonic depth. Viewers are passengers on a momentum machine, not witnesses to revelation. The triumph lands cleanly, but the dystopia and constant threat keep valence slightly negative. Conversation orbits filmmaking craft rather than thematic interrogation."
+  },
+  {
+    "tmdbId": 493922,
+    "imdbId": "tt7784604",
+    "title": "Hereditary",
+    "year": 2018,
+    "genres": [
+      "Horror",
+      "Mystery",
+      "Thriller"
+    ],
+    "originalLanguage": "en",
+    "runtime": 128,
+    "tmdbPopularity": 10.7191,
+    "tmdbVoteCount": 8405,
+    "tmdbRating": 7.293,
+    "tmdbUrl": "https://www.themoviedb.org/movie/493922",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "rt"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:04:20Z",
+    "valence": -0.85,
+    "arousal": 0.65,
+    "dominance": -0.8,
+    "absorptionPotential": 0.88,
+    "hedonicValence": 0.08,
+    "eudaimonicValence": 0.82,
+    "psychologicallyRichValence": 0.78,
+    "emotionalArc": "oedipus",
+    "dominantEmotions": [
+      "fear",
+      "sadness",
+      "disgust"
+    ],
+    "moodTags": [
+      "intergenerational-trauma",
+      "loss-and-grief",
+      "familial-dysfunction",
+      "ancestral-darkness",
+      "psychological-horror",
+      "dread"
+    ],
+    "watchContext": [
+      "solo"
+    ],
+    "vibeSentence": "Ancestral horror wearing family's face; descent into madness you cannot stop.",
+    "pacing": "building",
+    "endingType": "devastating",
+    "comfortLevel": 0.2,
+    "emotionalSafetyWarnings": [
+      "child-harm",
+      "graphic-violence",
+      "sudden-grief"
+    ],
+    "conversationPotential": 0.87,
+    "reasoning": "Hereditary operates at the intersection of intimate family drama and cosmic horror, using visual precision and structural misdirection to create inescapable dread. Its emotional devastation comes not from jump scares but from watching love become weaponized and free will collapse under ancestral weight. The eudaimonic depth (intergenerational trauma, mother-child pathology) is exceptional; hedonic pleasure is nearly absent. High absorption and conversation potential reflect the film's narrative complexity and ending that demands reinterpretation of everything preceding it."
+  },
+  {
+    "tmdbId": 376867,
+    "imdbId": "tt4975722",
+    "title": "Moonlight",
+    "year": 2016,
+    "genres": [
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "runtime": 111,
+    "tmdbPopularity": 5.6772,
+    "tmdbVoteCount": 7447,
+    "tmdbRating": 7.358,
+    "tmdbUrl": "https://www.themoviedb.org/movie/376867",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:05:24Z",
+    "valence": -0.4,
+    "arousal": -0.45,
+    "dominance": -0.3,
+    "absorptionPotential": 0.82,
+    "hedonicValence": 0.12,
+    "eudaimonicValence": 0.91,
+    "psychologicallyRichValence": 0.78,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "sadness",
+      "anticipation",
+      "trust"
+    ],
+    "moodTags": [
+      "isolation",
+      "coming-of-age",
+      "melancholy",
+      "tender",
+      "identity",
+      "longing"
+    ],
+    "watchContext": [
+      "solo"
+    ],
+    "vibeSentence": "Quiet grief and blue light; the tenderness of being finally, almost seen.",
+    "pacing": "slow-burn",
+    "endingType": "bittersweet",
+    "comfortLevel": 0.22,
+    "emotionalSafetyWarnings": [
+      "child-harm",
+      "domestic-abuse",
+      "sudden-grief"
+    ],
+    "conversationPotential": 0.87,
+    "reasoning": "Moonlight is profoundly melancholic but never nihilistic—its beauty emerges precisely in how it holds tenderness alongside pain. The meditative pacing and sparse dialogue create high cognitive demand despite low arousal; every frame matters. While minimally pleasurable, it delivers extraordinary eudaimonic and psychological depth by centering the inner lives of people rendered invisible in mainstream cinema, yet leaves viewers uncertain rather than cathartic, requiring solitude to process."
+  },
+  {
+    "tmdbId": 496243,
+    "imdbId": "tt6751668",
+    "title": "Parasite",
+    "year": 2019,
+    "genres": [
+      "Comedy",
+      "Thriller",
+      "Drama"
+    ],
+    "originalLanguage": "ko",
+    "runtime": 133,
+    "tmdbPopularity": 27.3784,
+    "tmdbVoteCount": 20275,
+    "tmdbRating": 8.493,
+    "tmdbUrl": "https://www.themoviedb.org/movie/496243",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:06:50Z",
+    "valence": -0.35,
+    "arousal": 0.65,
+    "dominance": -0.4,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.45,
+    "eudaimonicValence": 0.85,
+    "psychologicallyRichValence": 0.75,
+    "emotionalArc": "icarus",
+    "dominantEmotions": [
+      "anticipation",
+      "sadness",
+      "anger"
+    ],
+    "moodTags": [
+      "class-struggle",
+      "systemic-injustice",
+      "dark-humor",
+      "desperation",
+      "family-bonds-tested",
+      "capitalism-critique"
+    ],
+    "watchContext": [
+      "solo",
+      "friends"
+    ],
+    "vibeSentence": "Brilliant deception unraveling under the weight of impossible class structures.",
+    "pacing": "building",
+    "endingType": "devastating",
+    "comfortLevel": 0.3,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.88,
+    "reasoning": "Parasite is a masterwork of structural tragedy that couples dark comedic appeal with devastating social commentary. The dominance score is negative because the viewer experiences the family's systematic powerlessness despite their ingenuity, while absorption is very high due to the film's complex narrative layers, dense symbolism, and masterful tonal control. High eudaimonic and psychological richness offset the bleakness, making it a rewarding but emotionally demanding experience best watched solo or with engaged film minds who can process its implications afterward."
+  },
+  {
+    "tmdbId": 120467,
+    "imdbId": "tt2278388",
+    "title": "The Grand Budapest Hotel",
+    "year": 2014,
+    "genres": [
+      "Comedy",
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "runtime": 100,
+    "tmdbPopularity": 9.0486,
+    "tmdbVoteCount": 15860,
+    "tmdbRating": 8.032,
+    "tmdbUrl": "https://www.themoviedb.org/movie/120467",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:08:13Z",
+    "valence": 0.3,
+    "arousal": 0.4,
+    "dominance": 0.2,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.75,
+    "eudaimonicValence": 0.8,
+    "psychologicallyRichValence": 0.7,
+    "emotionalArc": "oedipus",
+    "dominantEmotions": [
+      "sadness",
+      "joy",
+      "trust"
+    ],
+    "moodTags": [
+      "nostalgia",
+      "bittersweet",
+      "visual-beauty",
+      "mentorship",
+      "belle-époque"
+    ],
+    "watchContext": [
+      "solo",
+      "date"
+    ],
+    "vibeSentence": "Symmetrical beauty preserving friendship in amber as time dissolves it.",
+    "pacing": "steady",
+    "endingType": "bittersweet",
+    "comfortLevel": 0.7,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.8,
+    "reasoning": "The Grand Budapest Hotel is a masterwork of formal beauty built around melancholic reflection. It delivers genuine pleasure (wit, visual elegance, the moving friendship) while maintaining a bittersweet undertone about time's destruction. The cognitive demand is high—complex narrative structure, dense visual language, tonal layering—but the pacing remains measured and controlled. Eudaimonic value dominates: the film is fundamentally about grace under duress, the meaning we create from transience, and friendship as an assertion of beauty against entropy. The emotional arc is oedipus (apparent rise meets historical decline), and while characters exercise agency within their sphere, larger forces (war, age, entropy) prevail. Comfort is moderate: the melancholy requires emotional maturity, but the aesthetic beauty and formal control cushion the sadness. Best experienced solo or with a thoughtful partner."
+  },
+  {
+    "tmdbId": 14160,
+    "imdbId": "tt1049413",
+    "title": "Up",
+    "year": 2009,
+    "genres": [
+      "Animation",
+      "Comedy",
+      "Family",
+      "Adventure"
+    ],
+    "originalLanguage": "en",
+    "runtime": 96,
+    "tmdbPopularity": 18.5995,
+    "tmdbVoteCount": 21425,
+    "tmdbRating": 7.959,
+    "tmdbUrl": "https://www.themoviedb.org/movie/14160",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:09:07Z",
+    "valence": 0.7,
+    "arousal": 0.45,
+    "dominance": 0.6,
+    "absorptionPotential": 0.55,
+    "hedonicValence": 0.85,
+    "eudaimonicValence": 0.8,
+    "psychologicallyRichValence": 0.55,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "joy",
+      "sadness",
+      "trust"
+    ],
+    "moodTags": [
+      "redemption",
+      "found-family",
+      "aging",
+      "grief",
+      "adventure",
+      "nostalgia"
+    ],
+    "watchContext": [
+      "family",
+      "solo",
+      "date"
+    ],
+    "vibeSentence": "Floating houses and broken hearts learning to soar together.",
+    "pacing": "building",
+    "endingType": "bittersweet",
+    "comfortLevel": 0.75,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.75,
+    "reasoning": "Up balances devastating emotional depth with genuine joy and adventure: the opening montage (birth, marriage, infertility, death) lands hardly but gracefully, then transitions into a bright, funny adventure where Carl regains agency and connection. The film generates both hedonic value (humor, wonder, colorful world) and eudaimonic value (grief processing, meaning-making, redemption) simultaneously. The bittersweet ending — Carl reaches Paradise Falls but understands the real adventure was the life he lived with Ellie — affirms that healing integrates loss rather than erasing it. Moderate absorption reflects family-accessible storytelling that doesn't demand plot unpacking, though emotional weight is substantial."
+  },
+  {
+    "tmdbId": 37799,
+    "imdbId": "tt1285016",
+    "title": "The Social Network",
+    "year": 2010,
+    "genres": [
+      "Drama"
+    ],
+    "originalLanguage": "en",
+    "runtime": 121,
+    "tmdbPopularity": 8.3951,
+    "tmdbVoteCount": 12984,
+    "tmdbRating": 7.371,
+    "tmdbUrl": "https://www.themoviedb.org/movie/37799",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "wikipedia",
+      "rt",
+      "movielens"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:10:11Z",
+    "valence": 0.35,
+    "arousal": 0.7,
+    "dominance": 0.45,
+    "absorptionPotential": 0.9,
+    "hedonicValence": 0.65,
+    "eudaimonicValence": 0.78,
+    "psychologicallyRichValence": 0.65,
+    "emotionalArc": "icarus",
+    "dominantEmotions": [
+      "anger",
+      "sadness",
+      "disgust"
+    ],
+    "moodTags": [
+      "ambition",
+      "isolation",
+      "betrayal",
+      "intellectual",
+      "cynicism"
+    ],
+    "watchContext": [
+      "solo"
+    ],
+    "vibeSentence": "Genius without conscience, success without satisfaction.",
+    "pacing": "building",
+    "endingType": "bittersweet",
+    "comfortLevel": 0.3,
+    "emotionalSafetyWarnings": [],
+    "conversationPotential": 0.88,
+    "reasoning": "The Social Network pairs kinetic entertainment (Sorkin's razor-sharp dialogue, Fincher's rapid-cut editing) with fundamentally cynical emotional content. Valence stays modest—the film entertains but doesn't leave you feeling good; it's a meditation on how ambition can hollow out the human connections that make success meaningful. Arousal is high due to sustained narrative momentum and overlapping dialogue. Dominance is moderate because while Mark has agency, his choices are presented as self-destructive pathology, not triumphs we're invited to celebrate. Absorption is very high—this film will not let your attention waver. The three experience valences show the split: hedonic pleasure in clever entertainment, eudaimonic depth in genuine questions about what success costs, psychologically rich execution (though not conceptually revolutionary). The emotional arc is Icarus: rise to billionaire status, fall into isolation and moral emptiness. Best watched alone—it's introspective and unsettling, asking you to sit with moral discomfort and complicity. But it generates tremendous conversation potential because the questions it raises (Is Mark genius or sociopath? What does Facebook owe its founders? What is the cost of ambition?) don't resolve within the frame.\""
+  },
+  {
+    "tmdbId": 545611,
+    "imdbId": "tt6710474",
+    "title": "Everything Everywhere All at Once",
+    "year": 2022,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Science Fiction"
+    ],
+    "originalLanguage": "en",
+    "runtime": 140,
+    "tmdbPopularity": 14.1097,
+    "tmdbVoteCount": 7743,
+    "tmdbRating": 7.722,
+    "tmdbUrl": "https://www.themoviedb.org/movie/545611",
+    "certification": null,
+    "inputSources": [
+      "tmdb",
+      "rt"
+    ],
+    "classifierModel": "claude-haiku-4-5",
+    "classifierVersion": "2.0.0",
+    "classifiedAt": "2026-03-19T17:10:59Z",
+    "valence": 0.65,
+    "arousal": 0.85,
+    "dominance": 0.55,
+    "absorptionPotential": 0.85,
+    "hedonicValence": 0.75,
+    "eudaimonicValence": 0.9,
+    "psychologicallyRichValence": 0.85,
+    "emotionalArc": "man-in-a-hole",
+    "dominantEmotions": [
+      "sadness",
+      "joy",
+      "surprise"
+    ],
+    "moodTags": [
+      "intergenerational-healing",
+      "immigrant-grief",
+      "absurdist-wonder",
+      "chosen-love"
+    ],
+    "watchContext": [
+      "solo",
+      "friends"
+    ],
+    "vibeSentence": "Sensory overload collapsing into quiet, hard-won grace.",
+    "pacing": "building",
+    "endingType": "uplifting",
+    "comfortLevel": 0.5,
+    "emotionalSafetyWarnings": [
+      "self-harm",
+      "sudden-grief"
+    ],
+    "conversationPotential": 0.95,
+    "reasoning": "This film operates simultaneously as kinetic spectacle and philosophical meditation on family, identity, and meaning-making. Evelyn's journey from exhaustion and regret to agency and love is earned through relentless sensory and narrative complexity that demands total absorption. The result: emotionally devastating and ultimately transcendent."
+  }
+]

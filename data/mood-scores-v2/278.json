@@ -1,0 +1,60 @@
+{
+  "tmdbId": 278,
+  "imdbId": "tt0111161",
+  "title": "The Shawshank Redemption",
+  "year": 1994,
+  "genres": [
+    "Drama",
+    "Crime"
+  ],
+  "originalLanguage": "en",
+  "runtime": 142,
+  "tmdbPopularity": 48.1172,
+  "tmdbVoteCount": 29916,
+  "tmdbRating": 8.716,
+  "tmdbUrl": "https://www.themoviedb.org/movie/278",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:01:46Z",
+  "valence": 0.75,
+  "arousal": 0.3,
+  "dominance": 0.8,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.55,
+  "eudaimonicValence": 0.88,
+  "psychologicallyRichValence": 0.65,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "trust",
+    "anticipation",
+    "sadness"
+  ],
+  "moodTags": [
+    "redemption",
+    "hope",
+    "friendship",
+    "justice",
+    "resilience"
+  ],
+  "watchContext": [
+    "solo",
+    "date",
+    "family"
+  ],
+  "vibeSentence": "Quiet resilience meeting hope; freedom earned through patient faith.",
+  "pacing": "slow-burn",
+  "endingType": "triumphant",
+  "comfortLevel": 0.7,
+  "emotionalSafetyWarnings": [
+    "sudden-grief"
+  ],
+  "conversationPotential": 0.82,
+  "reasoning": "The Shawshank Redemption is a masterpiece of patient storytelling that trades intensity for depth, building a powerful emotional arc from despair to triumphant liberation. Its core valence is deeply positive—not through escapism but through affirmation of hope and human integrity—while its slow-burn pacing and complex narrative demand significant cognitive engagement. The film works precisely because it balances genuine darkness (violence, corruption, death) with an unshakeable commitment to the possibility of transcendence through agency and friendship."
+}
