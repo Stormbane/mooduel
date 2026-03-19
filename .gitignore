@@ -40,6 +40,7 @@ Thumbs.db
 # data pipeline (raw/intermediate files too large for git)
 data/raw/
 data/movie-input-corpus.jsonl
+data/batch-log.jsonl
 
 # test results
 test-results/

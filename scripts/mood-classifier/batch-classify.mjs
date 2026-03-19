@@ -72,6 +72,11 @@ function buildUserPrompt(movie) {
     parts.push(`\nWIKIPEDIA PLOT SUMMARY:\n${plot}`);
   }
 
+  // Add certification
+  if (movie.certification) {
+    parts.push(`CERTIFICATION: ${movie.certification} (${movie.certCountry || "US"})`);
+  }
+
   // Add critic/user reviews (up to 3)
   if (movie.reviews?.length > 0) {
     const reviewTexts = movie.reviews
@@ -82,6 +87,15 @@ function buildUserPrompt(movie) {
         return `${label}${sent} ${r.text.slice(0, 500)}`;
       });
     parts.push(`\nCRITIC/USER REVIEWS:\n${reviewTexts.join("\n\n")}`);
+  }
+
+  // Add MovieLens crowd-sourced tags (validated by millions of users)
+  if (movie.movieLensTags && Object.keys(movie.movieLensTags).length > 0) {
+    const tagStr = Object.entries(movie.movieLensTags)
+      .slice(0, 10)
+      .map(([tag, rel]) => `${tag} (${rel})`)
+      .join(", ");
+    parts.push(`\nMOVIELENS TAGS: ${tagStr}`);
   }
 
   parts.push(`\nScore this movie on all dimensions. Use the full range of each scale.`);
