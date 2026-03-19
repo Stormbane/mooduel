@@ -1,0 +1,58 @@
+{
+  "tmdbId": 496243,
+  "imdbId": "tt6751668",
+  "title": "Parasite",
+  "year": 2019,
+  "genres": [
+    "Comedy",
+    "Thriller",
+    "Drama"
+  ],
+  "originalLanguage": "ko",
+  "runtime": 133,
+  "tmdbPopularity": 27.3784,
+  "tmdbVoteCount": 20275,
+  "tmdbRating": 8.493,
+  "tmdbUrl": "https://www.themoviedb.org/movie/496243",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:06:50Z",
+  "valence": -0.35,
+  "arousal": 0.65,
+  "dominance": -0.4,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.45,
+  "eudaimonicValence": 0.85,
+  "psychologicallyRichValence": 0.75,
+  "emotionalArc": "icarus",
+  "dominantEmotions": [
+    "anticipation",
+    "sadness",
+    "anger"
+  ],
+  "moodTags": [
+    "class-struggle",
+    "systemic-injustice",
+    "dark-humor",
+    "desperation",
+    "family-bonds-tested",
+    "capitalism-critique"
+  ],
+  "watchContext": [
+    "solo",
+    "friends"
+  ],
+  "vibeSentence": "Brilliant deception unraveling under the weight of impossible class structures.",
+  "pacing": "building",
+  "endingType": "devastating",
+  "comfortLevel": 0.3,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.88,
+  "reasoning": "Parasite is a masterwork of structural tragedy that couples dark comedic appeal with devastating social commentary. The dominance score is negative because the viewer experiences the family's systematic powerlessness despite their ingenuity, while absorption is very high due to the film's complex narrative layers, dense symbolism, and masterful tonal control. High eudaimonic and psychological richness offset the bleakness, making it a rewarding but emotionally demanding experience best watched solo or with engaged film minds who can process its implications afterward."
+}

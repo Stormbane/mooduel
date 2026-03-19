@@ -1,0 +1,60 @@
+{
+  "tmdbId": 493922,
+  "imdbId": "tt7784604",
+  "title": "Hereditary",
+  "year": 2018,
+  "genres": [
+    "Horror",
+    "Mystery",
+    "Thriller"
+  ],
+  "originalLanguage": "en",
+  "runtime": 128,
+  "tmdbPopularity": 10.7191,
+  "tmdbVoteCount": 8405,
+  "tmdbRating": 7.293,
+  "tmdbUrl": "https://www.themoviedb.org/movie/493922",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "rt"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:04:20Z",
+  "valence": -0.85,
+  "arousal": 0.65,
+  "dominance": -0.8,
+  "absorptionPotential": 0.88,
+  "hedonicValence": 0.08,
+  "eudaimonicValence": 0.82,
+  "psychologicallyRichValence": 0.78,
+  "emotionalArc": "oedipus",
+  "dominantEmotions": [
+    "fear",
+    "sadness",
+    "disgust"
+  ],
+  "moodTags": [
+    "intergenerational-trauma",
+    "loss-and-grief",
+    "familial-dysfunction",
+    "ancestral-darkness",
+    "psychological-horror",
+    "dread"
+  ],
+  "watchContext": [
+    "solo"
+  ],
+  "vibeSentence": "Ancestral horror wearing family's face; descent into madness you cannot stop.",
+  "pacing": "building",
+  "endingType": "devastating",
+  "comfortLevel": 0.2,
+  "emotionalSafetyWarnings": [
+    "child-harm",
+    "graphic-violence",
+    "sudden-grief"
+  ],
+  "conversationPotential": 0.87,
+  "reasoning": "Hereditary operates at the intersection of intimate family drama and cosmic horror, using visual precision and structural misdirection to create inescapable dread. Its emotional devastation comes not from jump scares but from watching love become weaponized and free will collapse under ancestral weight. The eudaimonic depth (intergenerational trauma, mother-child pathology) is exceptional; hedonic pleasure is nearly absent. High absorption and conversation potential reflect the film's narrative complexity and ending that demands reinterpretation of everything preceding it."
+}

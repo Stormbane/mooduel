@@ -1,0 +1,60 @@
+{
+  "tmdbId": 376867,
+  "imdbId": "tt4975722",
+  "title": "Moonlight",
+  "year": 2016,
+  "genres": [
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "runtime": 111,
+  "tmdbPopularity": 5.6772,
+  "tmdbVoteCount": 7447,
+  "tmdbRating": 7.358,
+  "tmdbUrl": "https://www.themoviedb.org/movie/376867",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:05:24Z",
+  "valence": -0.4,
+  "arousal": -0.45,
+  "dominance": -0.3,
+  "absorptionPotential": 0.82,
+  "hedonicValence": 0.12,
+  "eudaimonicValence": 0.91,
+  "psychologicallyRichValence": 0.78,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "sadness",
+    "anticipation",
+    "trust"
+  ],
+  "moodTags": [
+    "isolation",
+    "coming-of-age",
+    "melancholy",
+    "tender",
+    "identity",
+    "longing"
+  ],
+  "watchContext": [
+    "solo"
+  ],
+  "vibeSentence": "Quiet grief and blue light; the tenderness of being finally, almost seen.",
+  "pacing": "slow-burn",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.22,
+  "emotionalSafetyWarnings": [
+    "child-harm",
+    "domestic-abuse",
+    "sudden-grief"
+  ],
+  "conversationPotential": 0.87,
+  "reasoning": "Moonlight is profoundly melancholic but never nihilistic—its beauty emerges precisely in how it holds tenderness alongside pain. The meditative pacing and sparse dialogue create high cognitive demand despite low arousal; every frame matters. While minimally pleasurable, it delivers extraordinary eudaimonic and psychological depth by centering the inner lives of people rendered invisible in mainstream cinema, yet leaves viewers uncertain rather than cathartic, requiring solitude to process."
+}

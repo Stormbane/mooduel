@@ -1,0 +1,61 @@
+{
+  "tmdbId": 14160,
+  "imdbId": "tt1049413",
+  "title": "Up",
+  "year": 2009,
+  "genres": [
+    "Animation",
+    "Comedy",
+    "Family",
+    "Adventure"
+  ],
+  "originalLanguage": "en",
+  "runtime": 96,
+  "tmdbPopularity": 18.5995,
+  "tmdbVoteCount": 21425,
+  "tmdbRating": 7.959,
+  "tmdbUrl": "https://www.themoviedb.org/movie/14160",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:09:07Z",
+  "valence": 0.7,
+  "arousal": 0.45,
+  "dominance": 0.6,
+  "absorptionPotential": 0.55,
+  "hedonicValence": 0.85,
+  "eudaimonicValence": 0.8,
+  "psychologicallyRichValence": 0.55,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "joy",
+    "sadness",
+    "trust"
+  ],
+  "moodTags": [
+    "redemption",
+    "found-family",
+    "aging",
+    "grief",
+    "adventure",
+    "nostalgia"
+  ],
+  "watchContext": [
+    "family",
+    "solo",
+    "date"
+  ],
+  "vibeSentence": "Floating houses and broken hearts learning to soar together.",
+  "pacing": "building",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.75,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.75,
+  "reasoning": "Up balances devastating emotional depth with genuine joy and adventure: the opening montage (birth, marriage, infertility, death) lands hardly but gracefully, then transitions into a bright, funny adventure where Carl regains agency and connection. The film generates both hedonic value (humor, wonder, colorful world) and eudaimonic value (grief processing, meaning-making, redemption) simultaneously. The bittersweet ending — Carl reaches Paradise Falls but understands the real adventure was the life he lived with Ellie — affirms that healing integrates loss rather than erasing it. Moderate absorption reflects family-accessible storytelling that doesn't demand plot unpacking, though emotional weight is substantial."
+}

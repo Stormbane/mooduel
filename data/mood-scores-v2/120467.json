@@ -1,0 +1,57 @@
+{
+  "tmdbId": 120467,
+  "imdbId": "tt2278388",
+  "title": "The Grand Budapest Hotel",
+  "year": 2014,
+  "genres": [
+    "Comedy",
+    "Drama"
+  ],
+  "originalLanguage": "en",
+  "runtime": 100,
+  "tmdbPopularity": 9.0486,
+  "tmdbVoteCount": 15860,
+  "tmdbRating": 8.032,
+  "tmdbUrl": "https://www.themoviedb.org/movie/120467",
+  "certification": null,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-19T17:08:13Z",
+  "valence": 0.3,
+  "arousal": 0.4,
+  "dominance": 0.2,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.75,
+  "eudaimonicValence": 0.8,
+  "psychologicallyRichValence": 0.7,
+  "emotionalArc": "oedipus",
+  "dominantEmotions": [
+    "sadness",
+    "joy",
+    "trust"
+  ],
+  "moodTags": [
+    "nostalgia",
+    "bittersweet",
+    "visual-beauty",
+    "mentorship",
+    "belle-époque"
+  ],
+  "watchContext": [
+    "solo",
+    "date"
+  ],
+  "vibeSentence": "Symmetrical beauty preserving friendship in amber as time dissolves it.",
+  "pacing": "steady",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.7,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.8,
+  "reasoning": "The Grand Budapest Hotel is a masterwork of formal beauty built around melancholic reflection. It delivers genuine pleasure (wit, visual elegance, the moving friendship) while maintaining a bittersweet undertone about time's destruction. The cognitive demand is high—complex narrative structure, dense visual language, tonal layering—but the pacing remains measured and controlled. Eudaimonic value dominates: the film is fundamentally about grace under duress, the meaning we create from transience, and friendship as an assertion of beauty against entropy. The emotional arc is oedipus (apparent rise meets historical decline), and while characters exercise agency within their sphere, larger forces (war, age, entropy) prevail. Comfort is moderate: the melancholy requires emotional maturity, but the aesthetic beauty and formal control cushion the sadness. Best experienced solo or with a thoughtful partner."
+}
