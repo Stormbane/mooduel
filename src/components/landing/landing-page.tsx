@@ -89,6 +89,18 @@ export function LandingPage() {
         <div className="absolute bottom-[10%] left-[20%] h-[400px] w-[400px] rounded-full bg-[var(--color-pop-blue)]/[0.03] blur-[120px]" />
       </div>
 
+      {/* ── Nav ── */}
+      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
+        <div className="flex items-center gap-2 opacity-70">
+          <Image src="/logo.svg" alt="Mooduel" width={120} height={24} className="h-6 w-auto" />
+        </div>
+        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+          <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+          <a href="https://github.com/Stormbane/mooduel" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+        </div>
+      </nav>
+
       {/* ══════════════════════════════════════════════════ */}
       {/* HERO                                               */}
       {/* ══════════════════════════════════════════════════ */}
