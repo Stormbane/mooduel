@@ -136,16 +136,25 @@ interface MovieMoodScore {
 
   // === Discrete Emotions ===
   dominantEmotions: string[];     // top 2-3 from Plutchik's wheel
-                                  // ["anticipation", "joy", "surprise"]
 
   // === Thematic Tags (for semantic affinity matching) ===
-  moodTags: string[];             // ["redemption", "isolation", "friendship", "institutional"]
+  moodTags: string[];             // ["redemption", "isolation", "friendship"]
+
+  // === Watch Experience (novel — no existing dataset has these) ===
+  watchContext: ("solo" | "date" | "friends" | "family")[];  // best viewing contexts
+  vibeSentence: string;           // "Rainy Sunday with tea and a heavy heart"
+  pacing: "slow-burn" | "building" | "steady" | "relentless" | "episodic";
+  endingType: "triumphant" | "bittersweet" | "devastating" | "ambiguous"
+            | "twist" | "uplifting" | "unsettling";
+  comfortLevel: number;           // 0 to 1 (transgressive ↔ cozy)
+  emotionalSafetyWarnings: string[];  // sparse — only surprising content
+  conversationPotential: number;  // 0 to 1 (how much people want to discuss it)
 
   // === Classification Meta ===
-  inputSources: string[];         // ["tmdb", "wikipedia", "rt-reviews"]
+  inputSources: string[];         // ["tmdb", "wikipedia"]
   classifierModel: string;        // "claude-haiku-4-5"
   classifiedAt: string;           // ISO timestamp
-  classifierVersion: string;      // semver for prompt/schema changes
+  classifierVersion: string;      // "2.0.0" — added watch experience fields
 }
 ```
 

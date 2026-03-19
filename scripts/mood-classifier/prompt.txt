@@ -33,6 +33,43 @@ These are the emotions the film primarily evokes in the viewer, not emotions cha
 ### Mood Tags
 3-6 thematic tags that capture what kind of mood this film serves. These are used for semantic affinity matching — connecting a viewer's current emotional state to relevant content. Use lowercase, hyphenate multi-word tags. Examples: redemption, isolation, coming-of-age, dark-humor, existential, nostalgia, revenge, found-family, survival, absurdist, romantic, paranoid.
 
+### Watch Context
+Who is this movie best watched with? Pick 1-3 from: solo, date, friends, family.
+- **solo**: Introspective, intense, or challenging films best experienced alone. Films that demand full attention or process heavy emotions.
+- **date**: Romantic, charming, or conversation-starting films. Not too heavy, not too mindless.
+- **friends**: Fun, exciting, quotable, or collectively thrilling. Movies you react to out loud.
+- **family**: Accessible across ages, not gratuitously violent/sexual, themes of togetherness. NOT the same as "for children" — a family film can be sophisticated.
+
+### Vibe Sentence
+A single evocative sentence (max 12 words) that captures what watching this film FEELS like. Not a plot summary — a sensory/emotional descriptor. Write it as a fragment, not a full sentence. Examples: "Rainy Sunday with tea and a heavy heart", "Adrenaline and popcorn at midnight", "Quiet devastation that stays for days", "Sugar rush with a surprisingly sharp edge."
+
+### Pacing
+The rhythm of the film's experience:
+- **slow-burn**: Patient, deliberate, builds gradually (Blade Runner 2049, Lost in Translation)
+- **building**: Starts measured, accelerates toward climax (Get Out, Parasite)
+- **steady**: Consistent rhythm throughout (The Grand Budapest Hotel, Ocean's Eleven)
+- **relentless**: Intense from start to finish, rarely lets up (Mad Max: Fury Road, Uncut Gems)
+- **episodic**: Distinct segments or vignettes (Pulp Fiction, The Grand Budapest Hotel)
+
+### Ending Type
+How the film resolves emotionally — what you walk away feeling:
+- **triumphant**: Clear victory, cathartic payoff (Rocky, The Shawshank Redemption)
+- **bittersweet**: Gain and loss intertwined (Moonlight, Up)
+- **devastating**: Emotionally shattering, lingers (Requiem for a Dream, Grave of the Fireflies)
+- **ambiguous**: Open to interpretation, unresolved (Inception, The Thing)
+- **twist**: Resolution reframes everything (The Sixth Sense, Parasite)
+- **uplifting**: Warm, hopeful, affirming (It's a Wonderful Life, Paddington 2)
+- **unsettling**: Leaves you disturbed, off-balance (Hereditary, No Country for Old Men)
+
+### Comfort Level
+How emotionally "safe" the viewing experience is (0 to 1). High comfort = predictable emotional shapes, reliable payoffs, warm familiar feelings. Low comfort = challenging, transgressive, may blindside you emotionally. A cozy rom-com is ~0.9. A Lars von Trier film is ~0.1. This is NOT about quality — it's about whether you can relax into it.
+
+### Emotional Safety Warnings
+Content that could blindside a vulnerable viewer. Only flag elements that are SURPRISING relative to the film's genre and marketing — a horror film having violence is expected, but a comedy containing a sudden suicide scene is a genuine warning. List 0-3 tags from: sudden-grief, sexual-assault, self-harm, child-harm, animal-harm, suicide, graphic-violence, domestic-abuse, psychological-manipulation. Leave empty if nothing unexpected.
+
+### Conversation Potential
+How much this film makes people want to discuss it afterward (0 to 1). High = "we need to talk about what just happened." Low = enjoyable but nothing to unpack. Parasite = 0.95. A generic action sequel = 0.15. This is different from eudaimonic valence — Schindler's List is deeply meaningful (high eudaimonic) but you sit in silence afterward (moderate conversation). Conversation potential is about the urge to *engage others* about it.
+
 ## Important Calibration Notes
 
 - Score the VIEWING EXPERIENCE, not the film's quality. A masterful horror film has negative valence even if it's a 10/10.
@@ -41,3 +78,5 @@ These are the emotions the film primarily evokes in the viewer, not emotions cha
 - The three experience valences are independent. A film CAN score 0.9 hedonic AND 0.8 eudaimonic (Pixar films often do). Don't treat them as a forced trade-off.
 - Use the full range of each scale. Not everything clusters around 0.5.
 - Absorption is about cognitive demand, not emotional engagement. You can be emotionally moved (high eudaimonic) by a simple narrative (low absorption).
+- Watch context can have multiple entries — many films work in more than one setting.
+- Emotional safety warnings should be SPARSE. Most films need zero warnings. Only flag what would genuinely catch someone off guard.

@@ -11,9 +11,9 @@
   "originalLanguage": "en",
   "releaseDate": "1994-09-23",
   "runtime": 142,
-  "tmdbPopularity": 43.3657,
-  "tmdbVoteCount": 29906,
-  "tmdbRating": 8.716,
+  "tmdbPopularity": 56.3199,
+  "tmdbVoteCount": 29936,
+  "tmdbRating": 8.7,
   "tmdbUrl": "https://www.themoviedb.org/movie/278",
   "imdbUrl": "https://www.imdb.com/title/tt0111161",
   "inputSources": [
@@ -21,27 +21,40 @@
     "wikipedia"
   ],
   "classifierModel": "claude-haiku-4-5",
-  "classifiedAt": "2026-03-14T18:06:18Z",
-  "valence": 0.6,
+  "classifiedAt": "2026-03-19T16:17:01Z",
+  "valence": 0.65,
   "arousal": 0.25,
-  "dominance": 0.55,
-  "absorptionPotential": 0.75,
-  "hedonicValence": 0.4,
-  "eudaimonicValence": 0.9,
-  "psychologicallyRichValence": 0.65,
+  "dominance": 0.68,
+  "absorptionPotential": 0.78,
+  "hedonicValence": 0.32,
+  "eudaimonicValence": 0.92,
+  "psychologicallyRichValence": 0.68,
   "emotionalArc": "man-in-a-hole",
   "dominantEmotions": [
-    "anticipation",
-    "sadness",
-    "joy"
+    "hope",
+    "trust",
+    "sadness"
   ],
   "moodTags": [
     "redemption",
     "hope",
     "friendship",
-    "institutional-corruption",
-    "wrongful-imprisonment",
-    "resilience"
+    "freedom",
+    "integrity",
+    "perseverance"
   ],
-  "reasoning": "The Shawshank Redemption is eudaemonically rich—it moves the viewer toward meaning and transcendence—but tempered by its unflinching depiction of brutality and systemic cruelty. The emotional arc is textbook man-in-a-hole: deep suffering followed by earned liberation. Absorption is high due to careful plotting and thematic density, but arousal is moderate because the film prioritizes contemplation over intensity. Dominance climbs throughout as Andy gains agency, and the ending affirms empowerment. This is serious art cinema disguised as drama—it doesn't entertain, it transforms."
+  "watchContext": [
+    "solo",
+    "date"
+  ],
+  "vibeSentence": "Decades of quiet resistance; a friend waiting on the beach.",
+  "pacing": "slow-burn",
+  "endingType": "triumphant",
+  "comfortLevel": 0.65,
+  "emotionalSafetyWarnings": [
+    "graphic-violence",
+    "sudden-grief"
+  ],
+  "conversationPotential": 0.9,
+  "reasoning": "Shawshank combines devastating realism about human cruelty with an ultimately redemptive narrative about hope as an active choice, yielding solidly positive valence despite years of darkness. The film demands careful engagement through complex symbolism (the posters, the geology, the hammer) and thematic density, but its deliberate pacing keeps physiological arousal low while maximizing cognitive and emotional absorption—you're solving Andy's puzzle across decades."
 }
