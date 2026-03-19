@@ -145,6 +145,20 @@
   background: linear-gradient(135deg, var(--color-pop-green), #0d9e4a);
 }
 
+/* ── Vibe sentence marquee ── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.vibe-marquee {
+  animation: marquee 60s linear infinite;
+}
+
+.vibe-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* ── react-brackets overrides ── */
 .bracket-container [class*="jss"] {
   color: inherit;

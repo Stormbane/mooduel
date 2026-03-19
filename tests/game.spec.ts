@@ -7,7 +7,7 @@ function gameArea(page: import("@playwright/test").Page) {
 
 /** Click through the splash screen to start the game */
 async function startGame(page: import("@playwright/test").Page) {
-  await page.goto("/");
+  await page.goto("/play");
   await page.getByText(/LET.S PLAY/i).click();
 }
 
@@ -37,7 +37,7 @@ async function playMoodRounds(page: import("@playwright/test").Page) {
 
 test.describe("Splash Screen", () => {
   test("shows splash screen with logo and play button", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/play");
     await expect(page).toHaveTitle(/Mooduel/);
     await expect(page.getByAltText("Mooduel")).toBeVisible();
     await expect(page.getByText(/LET.S PLAY/i)).toBeVisible();
@@ -45,7 +45,7 @@ test.describe("Splash Screen", () => {
   });
 
   test("clicking play starts the game", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/play");
     await page.getByText(/LET.S PLAY/i).click();
     await expect(
       page.getByText(/Round 1/i).or(page.getByText(/loading contenders/i))
