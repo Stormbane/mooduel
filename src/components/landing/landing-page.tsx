@@ -261,6 +261,76 @@ export function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════ */}
+      {/* MORE GAMES                                          */}
+      {/* ══════════════════════════════════════════════════ */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="flex flex-col items-center gap-12"
+          >
+            <motion.div variants={fadeUp} className="text-center">
+              <p className="text-sm font-semibold tracking-[0.2em] uppercase text-[var(--color-pop-orange)] mb-3">
+                More Ways to Play
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-[family-name:var(--font-display)] font-bold">
+                Three games, one mood dataset.
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              {[
+                {
+                  href: "/games/blind-taste",
+                  title: "Blind Taste Test",
+                  desc: "Five vibe sentences. No titles. No posters. Pick the movie you'd watch tonight — then see what you chose.",
+                  color: "pink",
+                  glow: "rgba(233,30,140,0.08)",
+                },
+                {
+                  href: "/games/roulette",
+                  title: "Mood Roulette",
+                  desc: "Spin three reels — emotional arc, watch context, wild card. See what movies match your random mood.",
+                  color: "purple",
+                  glow: "rgba(139,92,246,0.08)",
+                },
+                {
+                  href: "/games/mirror",
+                  title: "Mood Mirror",
+                  desc: "Twelve rapid choices reveal your emotional fingerprint — and the movies that match it perfectly.",
+                  color: "green",
+                  glow: "rgba(30,215,96,0.08)",
+                },
+              ].map((game) => (
+                <motion.div key={game.href} variants={fadeUp}>
+                  <Link
+                    href={game.href}
+                    className="group block relative rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-8 transition-all duration-500 hover:border-border"
+                    style={{ boxShadow: `0 0 60px ${game.glow}` }}
+                  >
+                    <div className="relative z-10">
+                      <h3 className={`text-xl font-[family-name:var(--font-display)] font-bold mb-3 gradient-text-${game.color}`}>
+                        {game.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed text-sm">
+                        {game.desc}
+                      </p>
+                      <span className="inline-block mt-4 text-xs text-muted-foreground/40 group-hover:text-muted-foreground transition-colors">
+                        Play now →
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════ */}
       {/* THE SCIENCE                                        */}
       {/* ══════════════════════════════════════════════════ */}
       <section className="relative z-10 py-32 px-6">
