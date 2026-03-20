@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { BGPattern } from "@/components/ui/bg-pattern";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 
@@ -461,11 +462,7 @@ export default function DashboardPage() {
 
   return (
     <div className="relative min-h-screen">
-      {/* Ambient */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute top-[10%] left-[40%] h-[600px] w-[600px] rounded-full bg-[var(--color-pop-purple)]/[0.02] blur-[150px]" />
-        <div className="absolute bottom-[20%] right-[20%] h-[400px] w-[400px] rounded-full bg-[var(--color-pop-pink)]/[0.02] blur-[120px]" />
-      </div>
+      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
@@ -476,6 +473,7 @@ export default function DashboardPage() {
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
           <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
           <Link href="/dashboard" className="text-foreground font-medium">Dashboard</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
         </div>
       </nav>
 

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { BGPattern } from "@/components/ui/bg-pattern";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -18,11 +19,7 @@ const stagger: Variants = {
 export default function DonatePage() {
   return (
     <div className="relative min-h-screen">
-      {/* Warm ambient glow */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute top-[20%] left-[30%] h-[500px] w-[500px] rounded-full bg-[var(--color-pop-orange)]/[0.03] blur-[140px]" />
-        <div className="absolute bottom-[30%] right-[20%] h-[400px] w-[400px] rounded-full bg-[var(--color-pop-yellow)]/[0.02] blur-[140px]" />
-      </div>
+      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
@@ -31,8 +28,9 @@ export default function DonatePage() {
         </Link>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
           <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
+          <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
         </div>
       </nav>
 

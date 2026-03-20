@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { BGPattern } from "@/components/ui/bg-pattern";
 
 // ── Vibe sentences from the v2 test run ──
 const VIBE_SENTENCES = [
@@ -82,12 +83,8 @@ export function LandingPage() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* ── Ambient glow ── */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute top-[-20%] left-[10%] h-[600px] w-[600px] rounded-full bg-[var(--color-pop-pink)]/[0.03] blur-[120px]" />
-        <div className="absolute top-[30%] right-[5%] h-[500px] w-[500px] rounded-full bg-[var(--color-pop-purple)]/[0.04] blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[20%] h-[400px] w-[400px] rounded-full bg-[var(--color-pop-blue)]/[0.03] blur-[120px]" />
-      </div>
+      {/* ── Background pattern ── */}
+      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
       {/* ── Nav ── */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
@@ -96,8 +93,9 @@ export function LandingPage() {
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
+          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
+          <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
           <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-          <a href="https://github.com/Stormbane/mooduel" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
         </div>
       </nav>
 
@@ -394,28 +392,18 @@ export function LandingPage() {
       <footer className="relative z-10 border-t border-border/30 py-12 px-6">
         <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-sm text-muted-foreground/50">
-            <span>Open source</span>
+            <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
             <span className="text-muted-foreground/20">·</span>
-            <span>CC-BY-NC-4.0</span>
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
             <span className="text-muted-foreground/20">·</span>
-            <a
-              href="https://github.com/Stormbane/mooduel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-            >
-              GitHub
-            </a>
+            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+            <span className="text-muted-foreground/20">·</span>
+            <a href="https://github.com/Stormbane/mooduel" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground/50">
-            <a
-              href="/donate"
-              className="hover:text-[var(--color-pop-yellow)] transition-colors"
-            >
-              ☕ Buy us a coffee
-            </a>
+            <a href="/donate" className="hover:text-[var(--color-pop-yellow)] transition-colors">☕ Support</a>
             <span className="text-muted-foreground/20">·</span>
-            <span>Made with ♡</span>
+            <span>CC-BY-NC-4.0</span>
           </div>
         </div>
       </footer>
