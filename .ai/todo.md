@@ -163,9 +163,65 @@
 
 ---
 
-## M6: Ship & Scale
+## M6: Data Dashboard (`/dashboard`)
+Interactive visualization of the Mooduel Movie Database.
+- [ ] Mood Map: 2D scatter of all 30K movies in VA space (zoom, click, explore)
+      Color by genre, decade, comfort level, or emotional arc
+- [ ] Decade Mood Shifts: how cinema's emotional landscape changed over time
+      1950s vs 1970s vs 2020s — average VA profiles per decade
+- [ ] Genre Emotional Fingerprints: each genre's VA position and spread
+      Comedy vs Horror vs Drama as mood distributions
+- [ ] Comfort Spectrum: distribution of comfort levels, where do most movies cluster
+- [ ] Arc Distribution: pie/bar of emotional arcs, change over time
+- [ ] Pacing × Ending heatmap: which combos are common, which are rare
+- [ ] Vibe Sentence Explorer: searchable, filterable, click to see full profile
+- [ ] "Surprising" stats: most uncomfortable comedy, most comfortable horror,
+      highest conversation potential animated film, etc.
+
+---
+
+## M7: Ship & Scale
 - [ ] Vercel production deployment
 - [ ] Custom domain (mooduel.com)
 - [ ] SEO + social sharing (share winner movie card, mood profile card)
 - [ ] Analytics (privacy-respecting: Plausible or Umami)
 - [ ] Consulting offering page for streaming platforms
+
+---
+
+## M8: Cross-Media Mood Database
+Extend mood classification beyond movies to all media.
+Same LLM pipeline, adapted prompts, consistent core schema.
+See `.ai/knowledge/cross-media-vision.md` for full design.
+
+### Phase 1: TV Shows (~10-15K series)
+- [ ] TMDB TV API (already available) + TVmaze for episode data
+- [ ] Adapt classifier prompt for episodic structure
+- [ ] Add: binge-ability, season arc shape, episode-vs-season mood
+- [ ] Start with top 10K by TMDB popularity
+
+### Phase 2: Video Games (~15-20K titles)
+- [ ] IGDB + Steam reviews + Steam tags + RAWG API
+- [ ] Adapt classifier for interactive media
+- [ ] Add: agency, skill-emotion coupling, complicity, replayability
+- [ ] Start with top 15K by review count
+
+### Phase 3: Books (~20-30K titles)
+- [ ] Open Library + Goodreads Kaggle + LibraryThing tags
+- [ ] Adapt classifier for literary analysis
+- [ ] Add: prose density, internal/external, re-readability
+- [ ] Start with top 20K by Goodreads ratings count
+
+### Phase 4: Music (~50K albums)
+- [ ] Spotify Audio Features (valence/energy → VA mapping) + Last.fm tags
+- [ ] Classify albums (not individual tracks) for emotional arcs
+- [ ] Add: album arc shape, lyrical/instrumental split
+- [ ] Spotify features give us partial VA for free — LLM enriches the rest
+
+### Cross-Media Applications
+- [ ] Mood Translation Engine: "I loved Blade Runner 2049, what book feels like that?"
+- [ ] Universal Vibe Search: one search across all media by feeling
+- [ ] Cross-Media Emotional Playlists: album → movie → game evening arcs
+- [ ] Emotional Palette Mapping: where are the gaps in each medium?
+- [ ] Media Metabolism Research: how do different media process the same emotions?
+- [ ] → Beautiful Tree: cross-media resonance graph for matching people
