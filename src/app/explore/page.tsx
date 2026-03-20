@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { BGPattern } from "@/components/ui/bg-pattern";
 
 // ── Types ──
 interface MoodMovie {
@@ -185,10 +186,7 @@ export default function ExplorePage() {
 
   return (
     <div className="relative min-h-screen">
-      {/* Ambient */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute top-[5%] left-[50%] -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-[var(--color-pop-purple)]/[0.025] blur-[140px]" />
-      </div>
+      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
@@ -197,8 +195,9 @@ export default function ExplorePage() {
         </Link>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
           <Link href="/explore" className="text-foreground font-medium">Explore</Link>
+          <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
         </div>
       </nav>
 
