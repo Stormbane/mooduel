@@ -26,6 +26,7 @@ export interface SlimMoodMovie {
   rtc?: number;  // rotten tomatoes critic score 0-100
   rta?: number;  // rotten tomatoes audience score 0-100
   imdb?: number; // imdb rating 1-10
+  pp?: string;   // TMDB poster_path e.g. "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
 }
 
 /** Expand slim fields to readable names (for display) */
