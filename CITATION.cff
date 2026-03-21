@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+type: dataset
+title: "Mooduel Movie Database: Structured Mood Profiles for 30K Films"
+message: "If you use this dataset, please cite it as below."
+authors:
+  - family-names: Basak
+    given-names: Sutirtha
+    orcid: ""
+date-released: 2026-03-21
+version: "1.0.0"
+license: CC-BY-NC-4.0
+url: https://github.com/Stormbane/mooduel
+repository-code: https://github.com/Stormbane/mooduel
+keywords:
+  - movie mood
+  - emotion classification
+  - valence arousal
+  - mood management theory
+  - movie recommendation
+  - open dataset
+abstract: >-
+  The Mooduel Movie Database contains structured mood profiles for 30,611
+  movies spanning 1888-2026. Each movie is scored across 18 psychological
+  dimensions including valence, arousal, dominance, absorption potential,
+  hedonic/eudaimonic/psychologically-rich valence, emotional arc, pacing,
+  ending type, comfort level, watch context, and vibe sentence. Classified
+  using Claude Haiku 4.5 from TMDB metadata, Wikipedia plots, Rotten
+  Tomatoes critic reviews, TMDB user reviews, and MovieLens Tag Genome.
