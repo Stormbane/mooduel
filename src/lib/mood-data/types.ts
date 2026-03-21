@@ -25,6 +25,7 @@ export interface SlimMoodMovie {
   conv: number;  // conversation potential 0..1
   rtc?: number;  // rotten tomatoes critic score 0-100
   rta?: number;  // rotten tomatoes audience score 0-100
+  imdb?: number; // imdb rating 1-10
 }
 
 /** Expand slim fields to readable names (for display) */
