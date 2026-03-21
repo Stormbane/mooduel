@@ -7,6 +7,7 @@ import Image from "next/image";
 import { BGPattern } from "@/components/ui/bg-pattern";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
+import { MovieRatingsCompact } from "@/components/ui/ratings";
 
 const PRESETS = [
   { name: "Rainy Sunday", desc: "Calm → contemplative → warm", trajectory: [
@@ -225,7 +226,7 @@ export default function MoodDJPage() {
                       >
                         <p className="font-[family-name:var(--font-display)] font-bold text-xs text-foreground/70 group-hover:text-foreground">
                           {m.t} <span className="text-muted-foreground/30 font-normal">({m.y})</span>
-                          {m.r && <span className="text-[var(--color-pop-yellow)] ml-1">★ {m.r}</span>}
+                          <MovieRatingsCompact movie={m} />
                         </p>
                         <p className="text-[10px] italic text-muted-foreground/50 mt-1 line-clamp-2">&ldquo;{m.v}&rdquo;</p>
                       </button>

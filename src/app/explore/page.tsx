@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BGPattern } from "@/components/ui/bg-pattern";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
+import { MovieRatings } from "@/components/ui/ratings";
 
 const WATCH_ICONS: Record<string, string> = { solo: "◉", date: "♡", friends: "⚑", family: "☆" };
 const ENDING_COLORS: Record<string, string> = {
@@ -260,7 +261,7 @@ function MovieCard({ movie, expanded, onToggle }: { movie: SlimMoodMovie; expand
             <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground/50">
               <span>{movie.y}</span>
               {movie.rt && <><span>·</span><span>{movie.rt}m</span></>}
-              {movie.r && <><span>·</span><span>★ {movie.r}</span></>}
+              <MovieRatings movie={movie} />
             </div>
           </div>
           <VAIndicator valence={movie.va} arousal={movie.ar} />

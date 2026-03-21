@@ -7,6 +7,7 @@ import Image from "next/image";
 import { BGPattern } from "@/components/ui/bg-pattern";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
+import { MovieRatingsCompact } from "@/components/ui/ratings";
 
 // ── Questions: binary mood trade-offs ──
 interface Question {
@@ -279,7 +280,7 @@ export default function MirrorPage() {
                   >
                     <p className="font-[family-name:var(--font-display)] font-bold text-sm text-foreground/80">
                       {m.t} <span className="text-muted-foreground/40 font-normal">({m.y})</span>
-                      {m.r && <span className="text-[var(--color-pop-yellow)] text-xs ml-2">★ {m.r}</span>}
+                      <MovieRatingsCompact movie={m} />
                     </p>
                     <p className="text-xs italic text-muted-foreground/60 mt-1">&ldquo;{m.v}&rdquo;</p>
                     <div className="flex gap-1.5 mt-2">
