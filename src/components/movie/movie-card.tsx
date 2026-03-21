@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 import { MovieRatings, MovieRatingsCompact } from "@/components/ui/ratings";
 import { VAIndicator } from "./va-indicator";
 import { ComfortBar } from "./comfort-bar";
 import { DimBar } from "./dim-bar";
+
+const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
 
 const WATCH_ICONS: Record<string, string> = { solo: "◉", date: "♡", friends: "⚑", family: "☆" };
 
@@ -56,9 +59,13 @@ export function MovieCard({ movie, variant = "default", expandable = false, onCl
         onClick={isClickable ? handleClick : undefined}
         className={`flex items-center gap-3 text-left rounded-lg transition-colors ${isClickable ? "cursor-pointer hover:bg-card/50" : ""} ${className}`}
       >
-        <div className={`w-10 h-14 rounded-md bg-gradient-to-br ${getVAColor(movie.va, movie.ar)} shrink-0 flex items-center justify-center`}>
-          <span className="text-[8px] text-muted-foreground/30 font-mono">{movie.y}</span>
-        </div>
+        {movie.pp ? (
+          <Image src={`${TMDB_IMAGE_BASE}/w92${movie.pp}`} alt={movie.t} width={40} height={60} className="w-10 h-[60px] rounded-md object-cover shrink-0" />
+        ) : (
+          <div className={`w-10 h-[60px] rounded-md bg-gradient-to-br ${getVAColor(movie.va, movie.ar)} shrink-0 flex items-center justify-center`}>
+            <span className="text-[8px] text-muted-foreground/30 font-mono">{movie.y}</span>
+          </div>
+        )}
         <div className="min-w-0">
           <p className="font-[family-name:var(--font-display)] font-bold text-sm text-foreground/90 truncate">{movie.t}</p>
           <MovieRatingsCompact movie={movie} />
@@ -74,23 +81,33 @@ export function MovieCard({ movie, variant = "default", expandable = false, onCl
         onClick={isClickable ? handleClick : undefined}
         className={`w-full text-left p-5 ${isClickable ? "cursor-pointer" : ""}`}
       >
-        {/* Header: title + year + runtime + VA */}
-        <div className="flex items-start justify-between gap-3 mb-3">
+        {/* Header: poster + title + year + runtime + VA */}
+        <div className="flex gap-4 mb-3">
+          {movie.pp ? (
+            <Image src={`${TMDB_IMAGE_BASE}/w185${movie.pp}`} alt={movie.t} width={80} height={120} className="w-20 h-[120px] rounded-lg object-cover shrink-0" />
+          ) : (
+            <div className={`w-20 h-[120px] rounded-lg bg-gradient-to-br ${getVAColor(movie.va, movie.ar)} shrink-0 flex items-center justify-center`}>
+              <VAIndicator valence={movie.va} arousal={movie.ar} size={40} />
+            </div>
+          )}
           <div className="flex-1 min-w-0">
-            <h3 className="font-[family-name:var(--font-display)] font-bold text-foreground/90 leading-tight">{movie.t}</h3>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="font-[family-name:var(--font-display)] font-bold text-foreground/90 leading-tight">{movie.t}</h3>
+              {!movie.pp && <VAIndicator valence={movie.va} arousal={movie.ar} />}
+            </div>
             <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground/50">
               <span>{movie.y}</span>
               {movie.rt && <><span>·</span><span>{movie.rt}m</span></>}
+            </div>
+            <div className="mt-1">
               <MovieRatings movie={movie} />
             </div>
+            {/* Vibe sentence */}
+            <p className="text-sm italic text-foreground/70 leading-relaxed mt-2 font-light line-clamp-3">
+              &ldquo;{movie.v}&rdquo;
+            </p>
           </div>
-          <VAIndicator valence={movie.va} arousal={movie.ar} />
         </div>
-
-        {/* Vibe sentence */}
-        <p className="text-sm italic text-foreground/70 leading-relaxed mb-4 font-light">
-          &ldquo;{movie.v}&rdquo;
-        </p>
 
         {/* Genre + watch context */}
         <div className="flex items-center justify-between gap-2 mb-3">
