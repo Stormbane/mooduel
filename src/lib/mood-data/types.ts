@@ -23,6 +23,8 @@ export interface SlimMoodMovie {
   co: number;    // comfort level 0..1
   warn: string[]; // safety warnings
   conv: number;  // conversation potential 0..1
+  rtc?: number;  // rotten tomatoes critic score 0-100
+  rta?: number;  // rotten tomatoes audience score 0-100
 }
 
 /** Expand slim fields to readable names (for display) */

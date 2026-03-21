@@ -7,6 +7,7 @@ import Image from "next/image";
 import { BGPattern } from "@/components/ui/bg-pattern";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
+import { MovieRatingsCompact } from "@/components/ui/ratings";
 
 // Simple but effective text similarity: tokenize, compute TF overlap + mood keyword boosting
 function scoreMatch(movie: SlimMoodMovie, query: string): number {
@@ -217,7 +218,7 @@ export default function VibeSearchPage() {
                         <p className="font-[family-name:var(--font-display)] font-bold text-sm text-foreground/90">
                           {r.movie.t}
                           <span className="text-muted-foreground/40 font-normal ml-1">({r.movie.y})</span>
-                          {r.movie.r && <span className="text-[var(--color-pop-yellow)] text-xs ml-2">★ {r.movie.r}</span>}
+                          <MovieRatingsCompact movie={r.movie} />
                         </p>
                         <p className="text-sm italic text-foreground/60 mt-1 leading-relaxed">
                           &ldquo;{r.movie.v}&rdquo;
