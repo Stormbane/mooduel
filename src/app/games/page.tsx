@@ -39,6 +39,34 @@ const GAMES = [
     status: "play",
   },
   {
+    href: "/games/comfort-zone",
+    title: "Comfort Zone",
+    desc: "Five levels from cozy to devastating. How far outside your comfort zone will you go tonight?",
+    color: "orange",
+    status: "play",
+  },
+  {
+    href: "/games/mood-dj",
+    title: "Movie Mood DJ",
+    desc: "Build a movie marathon with a designed emotional arc. Choose a preset, fill each slot, watch the mood flow.",
+    color: "yellow",
+    status: "play",
+  },
+  {
+    href: "/games/couples",
+    title: "Couples Mediator",
+    desc: "Two moods, one movie. Each person picks their mood independently — we find the emotional intersection.",
+    color: "coral",
+    status: "play",
+  },
+  {
+    href: "/vibe-search",
+    title: "Vibe Search",
+    desc: "Describe a feeling in your own words. We search 30,000 movies by mood, not by title.",
+    color: "blue",
+    status: "play",
+  },
+  {
     href: "/play",
     title: "Mooduel",
     desc: "The full game — mood detection through color, art, and emotion, then movie picks and a tournament bracket.",
@@ -52,6 +80,9 @@ const colorMap: Record<string, { border: string; text: string; glow: string }> =
   purple: { border: "border-[var(--color-pop-purple)]/30", text: "text-[var(--color-pop-purple)]", glow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.1)]" },
   green: { border: "border-[var(--color-pop-green)]/30", text: "text-[var(--color-pop-green)]", glow: "hover:shadow-[0_0_40px_rgba(30,215,96,0.1)]" },
   orange: { border: "border-[var(--color-pop-orange)]/30", text: "text-[var(--color-pop-orange)]", glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.1)]" },
+  yellow: { border: "border-[var(--color-pop-yellow)]/30", text: "text-[var(--color-pop-yellow)]", glow: "hover:shadow-[0_0_40px_rgba(251,191,36,0.1)]" },
+  coral: { border: "border-[var(--color-pop-coral)]/30", text: "text-[var(--color-pop-coral)]", glow: "hover:shadow-[0_0_40px_rgba(255,107,107,0.1)]" },
+  blue: { border: "border-[var(--color-pop-blue)]/30", text: "text-[var(--color-pop-blue)]", glow: "hover:shadow-[0_0_40px_rgba(56,189,248,0.1)]" },
 };
 
 export default function GamesPage() {
