@@ -1,24 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 72" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 72" fill="none">
   <defs>
-    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="wordmark" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#E91E8C"/>
       <stop offset="50%" stop-color="#8B5CF6"/>
       <stop offset="100%" stop-color="#38BDF8"/>
     </linearGradient>
-    <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#38BDF8"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
-    </linearGradient>
   </defs>
-  <!-- Icon mark — two overlapping cards -->
-  <g transform="translate(2, 8)">
-    <rect x="4" y="8" width="22" height="30" rx="5" fill="url(#g1)" opacity="0.9" transform="rotate(-8, 15, 23)"/>
-    <rect x="22" y="8" width="22" height="30" rx="5" fill="url(#g2)" opacity="0.9" transform="rotate(8, 33, 23)"/>
-    <circle cx="24" cy="23" r="4.5" fill="#0d0d0d"/>
-    <circle cx="24" cy="23" r="2.5" fill="white"/>
+
+  <!-- Brain icon -->
+  <g transform="translate(6, 6)">
+    <!-- Brain outline - left hemisphere -->
+    <path d="M28 48 C28 48, 16 46, 14 38 C12 30, 16 26, 16 26 C14 24, 10 20, 12 14 C14 8, 20 6, 24 8 C26 4, 32 4, 34 8"
+      stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <!-- Brain outline - right hemisphere -->
+    <path d="M34 8 C36 4, 42 4, 44 8 C48 6, 54 8, 56 14 C58 20, 54 24, 52 26 C52 26, 56 30, 54 38 C52 46, 40 48, 40 48"
+      stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <!-- Brain stem -->
+    <line x1="34" y1="42" x2="34" y2="54" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Center line -->
+    <line x1="34" y1="10" x2="34" y2="42" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+
+    <!-- Happy eyes -->
+    <path d="M23 26 Q26 22 29 26" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M39 26 Q42 22 45 26" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+    <!-- Mood dots bubbling up -->
+    <circle cx="26" cy="0" r="4" fill="#E91E8C"/>
+    <circle cx="42" cy="2" r="3" fill="#1ED760"/>
+    <circle cx="34" cy="-6" r="3.5" fill="#8B5CF6"/>
+    <circle cx="18" cy="-2" r="2.5" fill="#38BDF8"/>
+    <circle cx="48" cy="-4" r="2" fill="#FBBF24"/>
+    <circle cx="30" cy="-12" r="2" fill="#FF6B6B"/>
+    <circle cx="40" cy="-10" r="1.5" fill="#F97316"/>
   </g>
+
   <!-- Wordmark -->
-  <text x="62" y="50" font-family="'Inter', 'Helvetica Neue', sans-serif" font-weight="800" font-size="40" letter-spacing="-1" fill="url(#g1)">
+  <text x="76" y="50" font-family="'Space Grotesk', 'Inter', sans-serif" font-weight="700" font-size="40" letter-spacing="-0.5" fill="url(#wordmark)">
     mooduel
   </text>
 </svg>
