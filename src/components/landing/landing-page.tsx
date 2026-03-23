@@ -112,10 +112,10 @@ export function LandingPage() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{ backgroundImage: "url(/hero-bg.jpg)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
-        {/* Hero content — fades when docked */}
-        <div className={`flex flex-col items-center gap-8 max-w-3xl text-center transition-all`}>
+        {/* Hero content */}
+        <div className="relative z-10 flex flex-col items-center gap-8 max-w-3xl text-center">
           <motion.div
             variants={stagger}
             initial="hidden"
@@ -137,7 +137,7 @@ export function LandingPage() {
           </motion.div>
           
             {/* Tagline */}
-            <div className="gap-4">
+            <div className="gap-4" style={{marginTop: -70}}>
               <h1
                 className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
               >
