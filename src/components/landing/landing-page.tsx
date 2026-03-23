@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BGPattern } from "@/components/ui/bg-pattern";
@@ -73,83 +73,59 @@ const fadeIn: Variants = {
 };
 
 export function LandingPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
+  const [docked, setDocked] = useState(false);
+  const { scrollY } = useScroll();
+
+  // Dock the logo after scrolling just 20px — immediate response
+  useMotionValueEvent(scrollY, "change", (y) => {
+    setDocked(y > 20);
   });
-
-  // Logo transform: center-hero (top:30%) → nav-bar (top-left)
-  const logoScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.25]);
-  const logoX = useTransform(scrollYProgress, [0, 0.35], ["0%", "-38vw"]);
-  const logoY = useTransform(scrollYProgress, [0, 0.35], ["0px", "-26vh"]);
-
-  // Content fades out as logo shrinks
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 0.3], [0, -40]);
-
-  // Nav links fade in as logo docks
-  const navOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* ── Background pattern ── */}
       <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
-      {/* ── Sticky nav bar (links appear as logo docks) ── */}
-      <motion.nav
-        className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 max-w-6xl mx-auto"
-        style={{ opacity: navOpacity }}
-      >
-        {/* Logo placeholder — the real logo animates here via transform */}
-        <div className="w-40 h-10" />
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-          <Link href="/games" className="hover:text-foreground transition-colors">Games</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-          <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
-          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-        </div>
-      </motion.nav>
+      {/* ── Fixed nav bar — slides down when docked ── */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${docked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
+        <div className="absolute inset-0 bg-background/85 backdrop-blur-md border-b border-border/10" />
+        <nav className="relative flex items-center justify-between px-6 py-3 max-w-6xl mx-auto">
+          <Link href="/" className="shrink-0">
+            <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-10 w-auto" />
+          </Link>
+          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
+            <Link href="/games" className="hover:text-foreground transition-colors">Games</Link>
+            <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
+            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+          </div>
+        </nav>
+      </div>
 
       {/* ══════════════════════════════════════════════════ */}
       {/* HERO                                               */}
       {/* ══════════════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
-        {/* The animated logo — starts big & centered, shrinks to nav */}
-        <motion.div
-          className="fixed z-40 pointer-events-none"
-          style={{
-            scale: logoScale,
-            x: logoX,
-            y: logoY,
-            top: "30%",
-            left: "50%",
-            translateX: "-50%",
-            translateY: "-50%",
-          }}
-        >
-          <Image
-            src="/logo.png"
-            alt="Mooduel"
-            width={800}
-            height={200}
-            priority
-            className="w-[400px] sm:w-[600px] h-auto"
-          />
-        </motion.div>
-
-        {/* Hero content (fades out on scroll) */}
-        <motion.div
-          style={{ opacity: contentOpacity, y: contentY }}
-          className="flex flex-col items-center gap-8 max-w-3xl text-center mt-48 sm:mt-56"
-        >
+      <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
+        {/* Hero content — fades when docked */}
+        <div className={`flex flex-col items-center gap-8 max-w-3xl text-center transition-all duration-500 ${docked ? "opacity-0 -translate-y-10" : "opacity-100 translate-y-0"}`}>
           <motion.div
             variants={stagger}
             initial="hidden"
             animate="visible"
             className="flex flex-col items-center gap-6"
           >
+            {/* Hero logo — large, centered */}
+            <motion.div variants={fadeUp}>
+              <Image
+                src="/logo.png"
+                alt="Mooduel"
+                width={800}
+                height={200}
+                priority
+                className="w-[400px] sm:w-[600px] h-auto"
+              />
+            </motion.div>
 
             {/* Tagline */}
             <motion.h1
@@ -196,17 +172,19 @@ export function LandingPage() {
               ~2 minutes &middot; no account needed &middot; open source
             </motion.p>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          style={{ opacity: contentOpacity }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="h-10 w-6 rounded-full border border-muted-foreground/20 flex items-start justify-center pt-2"
+            className={`h-10 w-6 rounded-full border border-muted-foreground/20 flex items-start justify-center pt-2 transition-opacity duration-300 ${docked ? "opacity-0" : "opacity-100"}`}
           >
             <div className="h-2 w-1 rounded-full bg-muted-foreground/40" />
           </motion.div>
