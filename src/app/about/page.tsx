@@ -54,7 +54,7 @@ export default function AboutPage() {
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
         <Link href="/" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.svg" alt="Mooduel" width={120} height={24} className="h-6 w-auto" />
+          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
         </Link>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>

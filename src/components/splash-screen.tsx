@@ -23,12 +23,12 @@ export function SplashScreen({ onPlay }: SplashScreenProps) {
           transition={{ duration: 0.8, delay: 0.1 }}
         >
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt="Mooduel"
-            width={360}
-            height={72}
+            width={400}
+            height={100}
             priority
-            className="w-[280px] sm:w-[360px] h-auto"
+            className="w-[280px] sm:w-[400px] h-auto"
           />
         </motion.div>
 

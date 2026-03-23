@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Mooduel",
   description: "Discover what you're in the mood for — through play, not forms.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
   },
 };
 

@@ -89,7 +89,7 @@ export function LandingPage() {
       {/* ── Nav ── */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 opacity-70">
-          <Image src="/logo.svg" alt="Mooduel" width={120} height={24} className="h-6 w-auto" />
+          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
@@ -116,12 +116,12 @@ export function LandingPage() {
             {/* Logo */}
             <motion.div variants={fadeUp}>
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="Mooduel"
-                width={420}
-                height={84}
+                width={400}
+                height={100}
                 priority
-                className="w-[300px] sm:w-[420px] h-auto"
+                className="w-[280px] sm:w-[400px] h-auto"
               />
             </motion.div>
 
