@@ -78,34 +78,71 @@ export function LandingPage() {
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.8], [0, -60]);
+
+  // Logo transform: center-hero (top:30%) → nav-bar (top-left)
+  const logoScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.25]);
+  const logoX = useTransform(scrollYProgress, [0, 0.35], ["0%", "-38vw"]);
+  const logoY = useTransform(scrollYProgress, [0, 0.35], ["0px", "-26vh"]);
+
+  // Content fades out as logo shrinks
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.3], [0, -40]);
+
+  // Nav links fade in as logo docks
+  const navOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* ── Background pattern ── */}
       <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
 
-      {/* ── Nav ── */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <div className="flex items-center gap-2 opacity-70">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </div>
+      {/* ── Sticky nav bar (links appear as logo docks) ── */}
+      <motion.nav
+        className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 max-w-6xl mx-auto"
+        style={{ opacity: navOpacity }}
+      >
+        {/* Logo placeholder — the real logo animates here via transform */}
+        <div className="w-40 h-10" />
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
+          <Link href="/games" className="hover:text-foreground transition-colors">Games</Link>
           <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
           <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
           <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* ══════════════════════════════════════════════════ */}
       {/* HERO                                               */}
       {/* ══════════════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
+      <section ref={heroRef} className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
+        {/* The animated logo — starts big & centered, shrinks to nav */}
         <motion.div
-          style={{ opacity: heroOpacity, y: heroY }}
-          className="flex flex-col items-center gap-8 max-w-3xl text-center"
+          className="fixed z-40 pointer-events-none"
+          style={{
+            scale: logoScale,
+            x: logoX,
+            y: logoY,
+            top: "30%",
+            left: "50%",
+            translateX: "-50%",
+            translateY: "-50%",
+          }}
+        >
+          <Image
+            src="/logo.png"
+            alt="Mooduel"
+            width={800}
+            height={200}
+            priority
+            className="w-[400px] sm:w-[600px] h-auto"
+          />
+        </motion.div>
+
+        {/* Hero content (fades out on scroll) */}
+        <motion.div
+          style={{ opacity: contentOpacity, y: contentY }}
+          className="flex flex-col items-center gap-8 max-w-3xl text-center mt-48 sm:mt-56"
         >
           <motion.div
             variants={stagger}
@@ -113,17 +150,6 @@ export function LandingPage() {
             animate="visible"
             className="flex flex-col items-center gap-6"
           >
-            {/* Logo */}
-            <motion.div variants={fadeUp}>
-              <Image
-                src="/logo.png"
-                alt="Mooduel"
-                width={400}
-                height={100}
-                priority
-                className="w-[280px] sm:w-[400px] h-auto"
-              />
-            </motion.div>
 
             {/* Tagline */}
             <motion.h1
@@ -175,9 +201,7 @@ export function LandingPage() {
         {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+          style={{ opacity: contentOpacity }}
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
