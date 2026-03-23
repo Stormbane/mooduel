@@ -40,7 +40,14 @@ Thumbs.db
 # data pipeline (raw/intermediate files too large for git)
 data/raw/
 data/movie-input-corpus.jsonl
+data/movie-mood-scores.jsonl
+data/movie-mood-scores-batch1-parsed.jsonl.bak
 data/batch-log.jsonl
+data/batch-log-v2.jsonl
+data/test-100-results.json
+
+# logo source files (PSD, inspiration, etc)
+logo/
 
 # test results
 test-results/
