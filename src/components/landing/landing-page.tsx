@@ -107,6 +107,13 @@ export function LandingPage() {
       {/* HERO                                               */}
       {/* ══════════════════════════════════════════════════ */}
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
+        {/* Hero background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: "url(/hero-bg.jpg)" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+
         {/* Hero content — fades when docked */}
         <div className={`flex flex-col items-center gap-8 max-w-3xl text-center transition-all`}>
           <motion.div
