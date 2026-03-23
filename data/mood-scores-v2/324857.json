@@ -1,0 +1,51 @@
+{
+  "tmdbId": 324857,
+  "title": "Spider-Man: Into the Spider-Verse",
+  "year": 2018,
+  "genres": [
+    "Animation",
+    "Action",
+    "Adventure",
+    "Science Fiction"
+  ],
+  "tmdbRating": 8.394,
+  "inputSources": [
+    "tmdb",
+    "rt"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-20T00:10:20Z",
+  "valence": 0.7,
+  "arousal": 0.62,
+  "dominance": 0.68,
+  "absorptionPotential": 0.68,
+  "hedonicValence": 0.82,
+  "eudaimonicValence": 0.72,
+  "psychologicallyRichValence": 0.62,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "joy",
+    "trust",
+    "anticipation"
+  ],
+  "moodTags": [
+    "coming-of-age",
+    "found-family",
+    "empowerment",
+    "celebration",
+    "resilience",
+    "identity"
+  ],
+  "watchContext": [
+    "friends",
+    "family"
+  ],
+  "vibeSentence": "Neon velocity, genuine heart, pure joy in motion.",
+  "pacing": "building",
+  "endingType": "triumphant",
+  "comfortLevel": 0.8,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.74,
+  "reasoning": "This film pairs visual revolution with emotional intelligence. Valence is high positive because joy and affirmation are dominant, even with genuine grief present. Arousal is kinetic but modulated for accessibility (high spectacle, clear breathing room). Dominance is empowering — Miles' journey is about active self-determination, not rescue. Absorption is high because visual language demands attention while narrative clarity prevents confusion. Hedonic value is very strong (entertainment, humor, spectacle designed for enjoyment); eudaimonic is solid (identity and belonging matter, not just plot); psychological richness is moderate (visually innovative, fresh representation perspective, but narratively conventional). The man-in-a-hole arc with triumphant ending creates the most satisfying emotional shape. Comfort is high because emotional beats are warm and predictable. Conversation flows from celebration, not debate."
+}

@@ -1,5 +1,6 @@
 import { BGPattern } from "@/components/ui/bg-pattern";
 import { NavBar } from "./nav-bar";
+import { Footer } from "./footer";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ interface PageLayoutProps {
   maxWidth?: string;
   navMaxWidth?: string;
   patternColor?: string;
+  hideFooter?: boolean;
 }
 
 export function PageLayout({
@@ -15,6 +17,7 @@ export function PageLayout({
   maxWidth = "max-w-6xl",
   navMaxWidth,
   patternColor = "rgba(139,92,246,0.15)",
+  hideFooter = false,
 }: PageLayoutProps) {
   return (
     <div className="relative min-h-screen">
@@ -23,6 +26,7 @@ export function PageLayout({
       <main className={`relative z-10 px-6 pb-24 ${maxWidth} mx-auto`}>
         {children}
       </main>
+      {!hideFooter && <Footer maxWidth={maxWidth} />}
     </div>
   );
 }

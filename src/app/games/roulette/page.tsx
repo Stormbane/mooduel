@@ -2,9 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import { BGPattern } from "@/components/ui/bg-pattern";
+import { PageLayout } from "@/components/layout/page-layout";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 import { MovieRatingsCompact } from "@/components/ui/ratings";
@@ -110,21 +108,8 @@ export default function RoulettePage() {
   }
 
   return (
-    <div className="relative min-h-screen">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.1)" />
-
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <Link href="/games" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/games" className="hover:text-foreground transition-colors">All Games</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-        </div>
-      </nav>
-
-      <main className="relative z-10 px-6 pb-24 max-w-4xl mx-auto pt-16">
-        <div className="text-center mb-10">
+    <PageLayout currentPage="/games/roulette" maxWidth="max-w-4xl" patternColor="rgba(139,92,246,0.1)">
+        <div className="text-center mb-10 pt-16">
           <h1 className="text-4xl font-[family-name:var(--font-display)] font-bold mb-2">
             Mood <span className="gradient-text-purple">Roulette</span>
           </h1>
@@ -208,8 +193,7 @@ export default function RoulettePage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
-    </div>
+    </PageLayout>
   );
 }
 

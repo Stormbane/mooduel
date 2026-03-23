@@ -1,0 +1,52 @@
+{
+  "tmdbId": 419430,
+  "title": "Get Out",
+  "year": 2017,
+  "genres": [
+    "Mystery",
+    "Thriller",
+    "Horror"
+  ],
+  "tmdbRating": 7.6,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-20T00:09:20Z",
+  "valence": -0.25,
+  "arousal": 0.65,
+  "dominance": 0.35,
+  "absorptionPotential": 0.72,
+  "hedonicValence": 0.35,
+  "eudaimonicValence": 0.85,
+  "psychologicallyRichValence": 0.68,
+  "emotionalArc": "man-in-a-hole",
+  "dominantEmotions": [
+    "fear",
+    "anger",
+    "surprise"
+  ],
+  "moodTags": [
+    "paranoia",
+    "race-conscious",
+    "social-commentary",
+    "body-horror",
+    "systemic-oppression",
+    "dark-humor"
+  ],
+  "watchContext": [
+    "solo",
+    "friends"
+  ],
+  "vibeSentence": "Dread wrapped in civility; discomfort that lingers.",
+  "pacing": "building",
+  "endingType": "triumphant",
+  "comfortLevel": 0.25,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.92,
+  "reasoning": "Get Out's power lies in escalating dread rooted in genuine social horror. The film prioritizes eudaimonic meaning (race-conscious social commentary) and psychological richness (perspective-broadening genre subversion) over hedonic pleasure, making discomfort the point. Chris's agency and ultimate victory prevent overwhelming helplessness, but sustained tension keeps arousal high. The man-in-a-hole trajectory ends triumphantly, yet the viewing experience remains intentionally unsettling—designed to provoke rather than comfort."
+}

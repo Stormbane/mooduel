@@ -2,14 +2,11 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import { BGPattern } from "@/components/ui/bg-pattern";
+import { PageLayout } from "@/components/layout/page-layout";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 
-const fadeUp: Variants = {
+const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
@@ -52,20 +49,7 @@ export default function BlindTastePage() {
   }
 
   return (
-    <div className="relative min-h-screen">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(233,30,140,0.1)" />
-
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <Link href="/games" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/games" className="hover:text-foreground transition-colors">All Games</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-        </div>
-      </nav>
-
-      <main className="relative z-10 px-6 pb-24 max-w-3xl mx-auto">
+    <PageLayout currentPage="/games/blind-taste" maxWidth="max-w-3xl" patternColor="rgba(233,30,140,0.1)">
         <AnimatePresence mode="wait">
           {/* ── INTRO ── */}
           {phase === "intro" && (
@@ -251,8 +235,7 @@ export default function BlindTastePage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
-    </div>
+    </PageLayout>
   );
 }
 

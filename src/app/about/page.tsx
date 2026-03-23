@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import { BGPattern } from "@/components/ui/bg-pattern";
+import { PageLayout } from "@/components/layout/page-layout";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -48,23 +46,7 @@ const PIPELINE_STEPS = [
 
 export default function AboutPage() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
-
-      {/* Nav */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <Link href="/" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-          <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
-          <Link href="/about" className="text-foreground font-medium">About</Link>
-        </div>
-      </nav>
-
-      <main className="relative z-10 px-6 pb-24">
+    <PageLayout currentPage="/about" maxWidth="max-w-4xl">
         <div className="mx-auto max-w-4xl">
 
           {/* ── Header ── */}
@@ -248,24 +230,7 @@ export default function AboutPage() {
           </Section>
 
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-border/30 py-10 px-6">
-        <div className="mx-auto max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground/50">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <span className="text-muted-foreground/20">·</span>
-            <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-            <span className="text-muted-foreground/20">·</span>
-            <a href="https://github.com/Stormbane/mooduel" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
-          </div>
-          <div className="text-sm text-muted-foreground/40">
-            CC-BY-NC-4.0 · Made with ♡
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PageLayout>
   );
 }
 

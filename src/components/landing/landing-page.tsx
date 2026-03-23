@@ -108,12 +108,12 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════ */}
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
         {/* Hero content — fades when docked */}
-        <div className={`flex flex-col items-center gap-8 max-w-3xl text-center transition-all duration-500 ${docked ? "opacity-0 -translate-y-10" : "opacity-100 translate-y-0"}`}>
+        <div className={`flex flex-col items-center gap-8 max-w-3xl text-center transition-all`}>
           <motion.div
             variants={stagger}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center gap-6"
+            className={`flex flex-col items-center gap-6 duration-500 ${docked ? "opacity-0 -translate-y-10" : "opacity-100 translate-y-0"}`}
           >
             {/* Hero logo — large, centered */}
             <motion.div variants={fadeUp}>
@@ -127,28 +127,31 @@ export function LandingPage() {
               />
             </motion.div>
 
+          </motion.div>
+          
             {/* Tagline */}
-            <motion.h1
-              variants={fadeUp}
-              className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
-            >
-              Find your movie through{" "}
-              <span className="gradient-text-pink">mood</span>
-              , not search
-            </motion.h1>
+            <div className="gap-4">
+              <h1
+                className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
+              >
+                Stop searching
+              </h1>
+              <h1
+                className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
+              >
+                <span>Start <span className="gradient-text-pink">feeling</span></span>
+              </h1>
+            </div>
 
             {/* Subtitle */}
-            <motion.p
-              variants={fadeUp}
+            <p
               className="text-lg sm:text-xl text-muted-foreground font-light max-w-xl leading-relaxed"
             >
-              An open-source game that reads your mood through play and matches you
-              to movies using psychology — backed by the first open dataset of movie
-              mood profiles.
-            </motion.p>
+              Algorithms know what you’ve watched. We figure out how you feel. Play a quick game to unlock movie recommendations tailored to your current mood.
+            </p>
 
             {/* CTAs */}
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 mt-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
               <Link
                 href="/play"
                 className="group relative rounded-xl px-10 py-4 text-lg font-bold tracking-widest text-white gradient-bg-pink shadow-[0_0_40px_rgba(233,30,140,0.25)] transition-all duration-300 hover:shadow-[0_0_60px_rgba(233,30,140,0.4)] hover:scale-105 active:scale-95"
@@ -160,35 +163,11 @@ export function LandingPage() {
                 href="/explore"
                 className="rounded-xl border border-[var(--color-pop-purple)]/40 px-10 py-4 text-lg font-semibold tracking-wide text-[var(--color-pop-purple)] transition-all duration-300 hover:border-[var(--color-pop-purple)]/70 hover:bg-[var(--color-pop-purple)]/5 hover:shadow-[0_0_30px_rgba(139,92,246,0.15)] active:scale-95"
               >
-                Explore the Dataset
+                See the Data
               </Link>
-            </motion.div>
-
-            {/* Hint */}
-            <motion.p
-              variants={fadeUp}
-              className="text-sm text-muted-foreground/40 tracking-wide"
-            >
-              ~2 minutes &middot; no account needed &middot; open source
-            </motion.p>
-          </motion.div>
+            </div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className={`h-10 w-6 rounded-full border border-muted-foreground/20 flex items-start justify-center pt-2 transition-opacity duration-300 ${docked ? "opacity-0" : "opacity-100"}`}
-          >
-            <div className="h-2 w-1 rounded-full bg-muted-foreground/40" />
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════ */}

@@ -3,8 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import { BGPattern } from "@/components/ui/bg-pattern";
+import { PageLayout } from "@/components/layout/page-layout";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 import { MovieRatingsCompact } from "@/components/ui/ratings";
@@ -137,20 +136,7 @@ export default function MirrorPage() {
   const quadrantColor = getQuadrantColor(profile.v, profile.a);
 
   return (
-    <div className="relative min-h-screen">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(30,215,96,0.08)" />
-
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <Link href="/games" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/games" className="hover:text-foreground transition-colors">All Games</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-        </div>
-      </nav>
-
-      <main className="relative z-10 px-6 pb-24 max-w-xl mx-auto">
+    <PageLayout currentPage="/games/mirror" maxWidth="max-w-xl" patternColor="rgba(30,215,96,0.08)">
         <AnimatePresence mode="wait">
           {/* ── INTRO ── */}
           {phase === "intro" && (
@@ -312,8 +298,7 @@ export default function MirrorPage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
-    </div>
+    </PageLayout>
   );
 }
 

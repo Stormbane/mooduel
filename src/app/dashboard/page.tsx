@@ -3,9 +3,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import { BGPattern } from "@/components/ui/bg-pattern";
+import { PageLayout } from "@/components/layout/page-layout";
 import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 
@@ -461,23 +459,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="relative min-h-screen">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(139,92,246,0.15)" />
-
-      {/* Nav */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <Link href="/" className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-          <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-          <Link href="/dashboard" className="text-foreground font-medium">Dashboard</Link>
-          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-        </div>
-      </nav>
-
-      <main className="relative z-10 px-6 pb-24 max-w-7xl mx-auto">
+    <PageLayout currentPage="/dashboard" maxWidth="max-w-7xl">
         {/* Header */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="pt-12 pb-8 text-center">
           <p className="text-sm font-semibold tracking-[0.2em] uppercase text-[var(--color-pop-pink)] mb-3">
@@ -591,22 +573,7 @@ export default function DashboardPage() {
             )}
           </div>
         </motion.div>
-      </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-border/20 py-10 px-6">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground/40">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <span className="text-muted-foreground/15">·</span>
-            <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-            <span className="text-muted-foreground/15">·</span>
-            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-          </div>
-          <span className="text-sm text-muted-foreground/30">Mooduel Movie Database · {stats.n.toLocaleString()} movies</span>
-        </div>
-      </footer>
-    </div>
+    </PageLayout>
   );
 }
 

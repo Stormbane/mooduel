@@ -1,0 +1,51 @@
+{
+  "tmdbId": 238,
+  "title": "The Godfather",
+  "year": 1972,
+  "genres": [
+    "Drama",
+    "Crime"
+  ],
+  "tmdbRating": 8.687,
+  "inputSources": [
+    "tmdb",
+    "wikipedia",
+    "rt",
+    "movielens"
+  ],
+  "classifierModel": "claude-haiku-4-5",
+  "classifierVersion": "2.0.0",
+  "classifiedAt": "2026-03-20T00:08:29Z",
+  "valence": -0.3,
+  "arousal": 0.35,
+  "dominance": -0.2,
+  "absorptionPotential": 0.85,
+  "hedonicValence": 0.4,
+  "eudaimonicValence": 0.85,
+  "psychologicallyRichValence": 0.7,
+  "emotionalArc": "oedipus",
+  "dominantEmotions": [
+    "sadness",
+    "anticipation",
+    "anger"
+  ],
+  "moodTags": [
+    "corruption",
+    "power-struggle",
+    "tragic",
+    "family-bonds",
+    "moral-compromise",
+    "atmospheric-darkness"
+  ],
+  "watchContext": [
+    "solo",
+    "friends"
+  ],
+  "vibeSentence": "The slow, inescapable corruption of power wrapped in family love.",
+  "pacing": "building",
+  "endingType": "bittersweet",
+  "comfortLevel": 0.3,
+  "emotionalSafetyWarnings": [],
+  "conversationPotential": 0.9,
+  "reasoning": "The Godfather trades hedonic pleasure for profound eudaimonic depth. It's a slow-burn, cognitively demanding epic whose beauty serves tragedy—Michael's idealistic arc inverts into ruthless compromise (oedipus shape: hope, false redemption, final corruption). The measured pacing and constant underlying tension create steady arousal without relentlessness. Viewers feel increasingly trapped by inevitable forces despite Michael's growing power, hence negative dominance. Masterfully crafted but emotionally dark, leaving you moved and unsettled rather than satisfied."
+}
