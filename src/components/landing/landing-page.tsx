@@ -109,10 +109,11 @@ export function LandingPage() {
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
         {/* Hero background image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: "url(/hero-bg.jpg)" }}
+          className="absolute inset-0 bg-contain bg-center bg-no-repeat opacity-60"
+          style={{ backgroundImage: "url(/background.jpg)", marginTop: -100 }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0"
+          style={{ marginTop: -100, background: "linear-gradient(to bottom, transparent 75%, var(--background) 100%)" }} />
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-center gap-8 max-w-3xl text-center">
