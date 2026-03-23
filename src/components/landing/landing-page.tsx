@@ -113,7 +113,7 @@ export function LandingPage() {
           style={{ backgroundImage: "url(/background.jpg)", marginTop: -100 }}
         />
         <div className="absolute inset-0"
-          style={{ marginTop: -100, background: "linear-gradient(to bottom, transparent 25%, var(--background) 100%)", height: 755 }} />
+          style={{ marginTop: -100, background: "linear-gradient(to bottom, transparent 25%, var(--background) 100%)", height: 855 }} />
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-center gap-8 max-w-3xl text-center">
@@ -137,18 +137,38 @@ export function LandingPage() {
 
           </motion.div>
           
-            {/* Tagline */}
-            <div className="gap-4" style={{marginTop: -70}}>
-              <h1
-                className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
-              >
-                Stop searching
-              </h1>
-              <h1
-                className="text-3xl sm:text-5xl md:text-6xl font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight"
-              >
-                <span>Start <span className="gradient-text-pink">feeling</span></span>
-              </h1>
+            {/* Tagline — arc path matching logo curve */}
+            <div style={{marginTop: -70}}>
+              <svg viewBox="0 0 600 160" className="w-[340px] sm:w-[500px] md:w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <path id="arc1" d="M 30,65 Q 300,10 570,65" />
+                  <path id="arc2" d="M 60,120 Q 300,70 540,120" />
+                  <linearGradient id="tagline-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#E91E8C" />
+                    <stop offset="100%" stopColor="#FF6B6B" />
+                  </linearGradient>
+                </defs>
+                <text
+                  fontFamily="'Space Grotesk', sans-serif"
+                  fontWeight="700"
+                  fontSize="48"
+                  fill="white"
+                  textAnchor="middle"
+                >
+                  <textPath href="#arc1" startOffset="50%">Stop searching</textPath>
+                </text>
+                <text
+                  fontFamily="'Space Grotesk', sans-serif"
+                  fontWeight="700"
+                  fontSize="48"
+                  textAnchor="middle"
+                >
+                  <textPath href="#arc2" startOffset="50%">
+                    <tspan fill="white">Start </tspan>
+                    <tspan fill="url(#tagline-gradient)">feeling</tspan>
+                  </textPath>
+                </text>
+              </svg>
             </div>
 
             {/* Subtitle */}
