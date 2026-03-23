@@ -90,15 +90,15 @@ export function LandingPage() {
       <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${docked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
         <div className="absolute inset-0 bg-background/85 backdrop-blur-md border-b border-border/10" />
         <nav className="relative flex items-center justify-between px-6 py-3 max-w-6xl mx-auto">
-          <Link href="/" className="shrink-0">
+          <Link href="/" className="shrink-0 opacity-80 hover:opacity-100 hover:scale-105 transition-all duration-200">
             <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <Link href="/play" className="hover:text-foreground transition-colors">Play</Link>
-            <Link href="/games" className="hover:text-foreground transition-colors">Games</Link>
-            <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
-            <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
-            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+            <Link href="/play" className="hover:text-[var(--color-pop-pink)] hover:scale-110 transition-all duration-200">Play</Link>
+            <Link href="/games" className="hover:text-[var(--color-pop-purple)] hover:scale-110 transition-all duration-200">Games</Link>
+            <Link href="/explore" className="hover:text-[var(--color-pop-green)] hover:scale-110 transition-all duration-200">Explore</Link>
+            <Link href="/dashboard" className="hover:text-[var(--color-pop-blue)] hover:scale-110 transition-all duration-200">Dashboard</Link>
+            <Link href="/about" className="hover:text-[var(--color-pop-orange)] hover:scale-110 transition-all duration-200">About</Link>
           </div>
         </nav>
       </div>
@@ -109,11 +109,11 @@ export function LandingPage() {
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 -mt-14">
         {/* Hero background image */}
         <div
-          className="absolute inset-0 bg-contain bg-center bg-no-repeat opacity-60"
+          className="absolute inset-0 bg-contain bg-center bg-no-repeat opacity-40"
           style={{ backgroundImage: "url(/background.jpg)", marginTop: -100 }}
         />
         <div className="absolute inset-0"
-          style={{ marginTop: -100, background: "linear-gradient(to bottom, transparent 75%, var(--background) 100%)" }} />
+          style={{ marginTop: -100, background: "linear-gradient(to bottom, transparent 25%, var(--background) 100%)", height: 755 }} />
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-center gap-8 max-w-3xl text-center">
@@ -153,7 +153,7 @@ export function LandingPage() {
 
             {/* Subtitle */}
             <p
-              className="text-lg sm:text-xl text-muted-foreground font-light max-w-xl leading-relaxed"
+              className="text-lg sm:text-xl text-muted-foreground font-heavy max-w-xl leading-relaxed"
             >
               Algorithms know what you’ve watched. We figure out how you feel. Play a quick game to unlock movie recommendations tailored to your current mood.
             </p>
@@ -451,11 +451,11 @@ export function LandingPage() {
       <footer className="relative z-10 border-t border-border/30 py-12 px-6">
         <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-sm text-muted-foreground/50">
-            <Link href="/explore" className="hover:text-foreground transition-colors">Explore</Link>
+            <Link href="/explore" className="hover:text-[var(--color-pop-green)] hover:scale-110 transition-all duration-200">Explore</Link>
             <span className="text-muted-foreground/20">·</span>
-            <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
+            <Link href="/dashboard" className="hover:text-[var(--color-pop-blue)] hover:scale-110 transition-all duration-200">Dashboard</Link>
             <span className="text-muted-foreground/20">·</span>
-            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+            <Link href="/about" className="hover:text-[var(--color-pop-orange)] hover:scale-110 transition-all duration-200">About</Link>
             <span className="text-muted-foreground/20">·</span>
             <a href="https://github.com/Stormbane/mooduel" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
           </div>
