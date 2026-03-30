@@ -1,7 +1,8 @@
 # CLAUDE.md
 
 ## Project
-Movie Picker — discover what you're in the mood to watch through play, not forms.
+Mooduel — discover what you're in the mood to watch through play, not forms.
+30,000+ movies scored across 18 psychological mood dimensions.
 
 ## Commands
 

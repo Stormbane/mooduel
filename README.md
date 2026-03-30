@@ -50,13 +50,13 @@ const quiet = movies
 | `hedonicValence` | number | 0–1 | Fun, pleasure, entertainment value |
 | `eudaimonicValence` | number | 0–1 | Meaning, insight, being moved |
 | `psychologicallyRichValence` | number | 0–1 | Novelty, complexity, perspective-broadening |
-| `emotionalArc` | enum | 6 types | Story shape (man-in-a-hole, icarus, etc.) |
+| `emotionalArc` | enum | 7 types | Story shape (cinderella, man-in-a-hole, oedipus, etc.) |
 | `dominantEmotions` | string[] | 2–3 | Top emotions from Plutchik's wheel |
 | `moodTags` | string[] | 3–6 | Thematic tags for semantic matching |
 | `watchContext` | enum[] | 1–3 | Best setting: solo, date, friends, family |
 | `vibeSentence` | string | ≤12 words | What watching this movie *feels* like |
-| `pacing` | enum | 5 types | slow-burn, building, steady, relentless, episodic |
-| `endingType` | enum | 7 types | triumphant, bittersweet, devastating, ambiguous, twist, uplifting, unsettling |
+| `pacing` | enum | 8 types | slow-burn, building, steady, accelerating, relentless, meandering, staccato, episodic |
+| `endingType` | enum | 9 types | triumphant, bittersweet, devastating, ambiguous, twist, uplifting, unsettling, cathartic, pyrrhic |
 | `comfortLevel` | number | 0–1 | Emotional safety: cozy vs. transgressive |
 | `emotionalSafetyWarnings` | string[] | 0–3 | Content that could blindside vulnerable viewers |
 | `conversationPotential` | number | 0–1 | How much people want to discuss it after |
@@ -105,8 +105,8 @@ const quiet = movies
 | | |
 |---|---|
 | Framework | Next.js 16, React 19 |
-| Styling | Tailwind CSS v4, shadcn/ui |
-| Animation | Framer Motion |
+| Styling | Tailwind CSS v4 |
+| Animation | CSS transitions, IntersectionObserver |
 | Classifier | Claude Haiku 4.5 (Anthropic Batch API) |
 | Language | TypeScript |
 

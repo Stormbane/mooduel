@@ -1,4 +1,3 @@
-import { BGPattern } from "@/components/ui/bg-pattern";
 import { NavBar } from "./nav-bar";
 import { Footer } from "./footer";
 
@@ -7,22 +6,24 @@ interface PageLayoutProps {
   currentPage?: string;
   maxWidth?: string;
   navMaxWidth?: string;
-  patternColor?: string;
   hideFooter?: boolean;
+  /** @deprecated No longer used — kept for backwards compatibility */
+  patternColor?: string;
 }
 
 export function PageLayout({
   children,
   currentPage,
-  maxWidth = "max-w-6xl",
+  maxWidth = "max-w-[1200px]",
   navMaxWidth,
-  patternColor = "rgba(139,92,246,0.15)",
   hideFooter = false,
 }: PageLayoutProps) {
   return (
-    <div className="relative min-h-screen">
-      <BGPattern variant="dots" mask="fade-edges" size={32} fill={patternColor} />
-      <NavBar currentPage={currentPage} maxWidth={navMaxWidth || maxWidth} />
+    <div className="min-h-screen bg-background text-foreground">
+      <NavBar
+        currentPage={currentPage}
+        maxWidth={navMaxWidth || maxWidth}
+      />
       <main className={`relative z-10 px-6 pb-24 ${maxWidth} mx-auto`}>
         {children}
       </main>

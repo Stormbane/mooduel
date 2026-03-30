@@ -1,12 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
 const NAV_LINKS = [
-  { href: "/play", label: "Play", color: "hover:text-[var(--color-pop-pink)]" },
-  { href: "/games", label: "Games", color: "hover:text-[var(--color-pop-purple)]" },
-  { href: "/explore", label: "Explore", color: "hover:text-[var(--color-pop-green)]" },
-  { href: "/dashboard", label: "Dashboard", color: "hover:text-[var(--color-pop-blue)]" },
-  { href: "/about", label: "About", color: "hover:text-[var(--color-pop-orange)]" },
+  { href: "/games", label: "Games", color: "#8B5CF6" },
+  { href: "/explore", label: "Explore", color: "#1ED760" },
+  { href: "/dashboard", label: "Dashboard", color: "#38BDF8" },
+  { href: "/about", label: "About", color: "#F97316" },
 ];
 
 interface NavBarProps {
@@ -15,22 +16,48 @@ interface NavBarProps {
   logoHref?: string;
 }
 
-export function NavBar({ currentPage, maxWidth = "max-w-6xl", logoHref = "/" }: NavBarProps) {
+export function NavBar({
+  currentPage,
+  maxWidth = "max-w-[1200px]",
+  logoHref = "/",
+}: NavBarProps) {
   return (
-    <nav className={`relative z-20 flex items-center justify-between px-6 py-4 ${maxWidth} mx-auto`}>
-      <Link href={logoHref} className="flex items-center gap-2 opacity-80 hover:opacity-100 hover:scale-105 transition-all duration-200">
-        <Image src="/logo.png" alt="Mooduel" width={160} height={40} className="h-8 w-auto" />
+    <nav
+      className={`relative z-20 flex items-center justify-between px-0 py-4 ${maxWidth} mx-auto`}
+    >
+      <Link
+        href={logoHref}
+        className="shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-150"
+      >
+        <Image
+          src="/logo.png"
+          alt="Mooduel"
+          width={260}
+          height={80}
+          className="h-12 w-auto"
+        />
       </Link>
-      <div className="flex items-center gap-6 text-sm text-muted-foreground">
+      <div className="flex items-center gap-6">
         {NAV_LINKS.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className={
+            className="font-[family-name:var(--font-display)] font-bold text-base text-muted-foreground/80 transition-colors duration-150"
+            style={
               currentPage === link.href
-                ? "text-foreground font-medium"
-                : `${link.color} hover:scale-110 transition-all duration-200 origin-center`
+                ? { color: link.color }
+                : undefined
             }
+            onMouseEnter={(e) => {
+              if (currentPage !== link.href) {
+                e.currentTarget.style.color = link.color;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (currentPage !== link.href) {
+                e.currentTarget.style.color = "";
+              }
+            }}
           >
             {link.label}
           </Link>

@@ -76,7 +76,7 @@ export function MovieCard({ movie, variant = "default", expandable = false, onCl
 
   // ── Default + Expanded ──
   return (
-    <div className={`rounded-2xl border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden hover:border-border/60 transition-colors duration-300 ${className}`}>
+    <div className={`rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] overflow-hidden hover:border-[oklch(0.35_0_0)] transition-colors duration-150 ${className}`}>
       <Wrapper
         onClick={isClickable ? handleClick : undefined}
         className={`w-full text-left p-5 ${isClickable ? "cursor-pointer" : ""}`}
@@ -151,7 +151,7 @@ export function MovieCard({ movie, variant = "default", expandable = false, onCl
         style={{ gridTemplateRows: isExpanded ? "1fr" : "0fr" }}
       >
         <div className="overflow-hidden">
-          <div className="px-5 pb-5 pt-2 border-t border-border/20 space-y-4">
+          <div className="px-5 pb-5 pt-2 border-t border-[oklch(0.25_0_0)]/50 space-y-4">
             {/* Mood tags */}
             {movie.tags.length > 0 && (
               <div>
@@ -180,15 +180,15 @@ export function MovieCard({ movie, variant = "default", expandable = false, onCl
             <div>
               <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground/40 mb-2">Mood Profile</p>
               <div className="space-y-1.5">
-                <DimBar label="valence" value={movie.va} signed />
-                <DimBar label="arousal" value={movie.ar} signed />
-                <DimBar label="dominance" value={movie.do} signed />
-                <DimBar label="absorption" value={movie.ab} />
-                <DimBar label="hedonic" value={movie.he} />
-                <DimBar label="eudaimonic" value={movie.eu} />
-                <DimBar label="psych. rich" value={movie.pr} />
-                <DimBar label="comfort" value={movie.co} />
-                <DimBar label="conversation" value={movie.conv} />
+                <DimBar label="valence" fieldKey="valence" value={movie.va} signed />
+                <DimBar label="arousal" fieldKey="arousal" value={movie.ar} signed />
+                <DimBar label="dominance" fieldKey="dominance" value={movie.do} signed />
+                <DimBar label="absorption" fieldKey="absorptionPotential" value={movie.ab} />
+                <DimBar label="hedonic" fieldKey="hedonicValence" value={movie.he} />
+                <DimBar label="eudaimonic" fieldKey="eudaimonicValence" value={movie.eu} />
+                <DimBar label="psych. rich" fieldKey="psychologicallyRichValence" value={movie.pr} />
+                <DimBar label="comfort" fieldKey="comfortLevel" value={movie.co} />
+                <DimBar label="conversation" fieldKey="conversationPotential" value={movie.conv} />
               </div>
             </div>
           </div>

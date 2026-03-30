@@ -145,6 +145,16 @@
   background: linear-gradient(135deg, var(--color-pop-green), #0d9e4a);
 }
 
+/* ── Carousel progress bar ── */
+@keyframes carousel-progress-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.carousel-progress {
+  animation: carousel-progress-fill var(--progress-duration, 8000ms) linear forwards;
+}
+
 /* ── Vibe sentence marquee ── */
 @keyframes marquee {
   0% { transform: translateX(0); }
