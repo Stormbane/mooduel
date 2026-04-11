@@ -9,6 +9,16 @@
 
 No ratings. No forms. Just vibes.
 
+## What it is
+
+Mooduel is two things in one repo:
+
+1. **A playful mood-detection app.** You play short games — pick a colour, react to a painting, swipe through vibes — and the app builds a live profile of your current emotional state. Then it matches that profile against 30,000+ movies and runs a tournament bracket so you finish with one film picked for the mood you're actually in, not the mood you wish you were in.
+
+2. **An open psychology dataset.** Every movie in the database is scored across 18 dimensions drawn from affect research (PAD, Russell's circumplex), media psychology (Zillmann's MMT, Oliver & Bartsch hedonic/eudaimonic/psychologically-rich), and narrative theory (Reagan emotional arcs, Plutchik). Scored once by Claude Haiku from plot, reviews, and crowd tags. Continuously refined by the community.
+
+The dataset powers the app. The app generates feedback that improves the dataset. Both ship together under open licenses so anyone can use either piece for research, recommenders, or their own experiments.
+
 ## The Dataset
 
 The **Mooduel Movie Database** contains mood profiles for **30,611 movies** spanning 1888–2026. Every movie is scored across **18 psychological dimensions** using LLM classification from plot summaries, critic reviews, and crowd-sourced tags.
@@ -75,10 +85,32 @@ const quiet = movies
 
 | Game | What it does |
 |------|-------------|
-| **Mooduel** | Full mood detection (color → art → emotion) + movie picks + tournament bracket |
+| **Mooduel** | Full mood detection (colour → art → emotion) + movie picks + tournament bracket |
 | **Blind Taste Test** | 5 vibe sentences, no titles — pick blind, reveal the movie |
 | **Mood Roulette** | Spin 3 reels (arc × context × wild card), discover matching movies |
 | **Mood Mirror** | 12 rapid binary choices → your emotional fingerprint + matched movies |
+| **Comfort Zone** | Rate your tolerance for darkness, find films at the edge of where you'll go |
+| **Couples** | Two profiles, one movie at the intersection — the date-night mediator |
+| **Mood DJ** | Build a vibe sequence and let the app score how each pick lands |
+
+## Explore & Dashboard
+
+- `/explore` — search and filter the full 30K-movie database, full mood card per film
+- `/dashboard` — live charts of the dataset: VA scatter, dimension distributions, decade shifts
+- `/leaderboard` — top community contributors by reputation
+- `/profile` — your corrections, votes, and reputation history
+
+## Community Calibration
+
+Mood scoring is hard and a single LLM pass is never the final word. Mooduel ships with a built-in correction system:
+
+- Sign in with GitHub or Google
+- On any movie card, suggest a correction to any of the 18 dimensions
+- Other users upvote or downvote your suggestion
+- Once a correction reaches a net score of +3 it's auto-accepted, applied to the database, and the contributor earns reputation
+- Voters who backed accepted corrections also earn reputation
+
+The goal is a dataset that gets sharper with every player, not a static snapshot frozen at the moment the LLM ran.
 
 ## Methodology
 
@@ -104,11 +136,15 @@ const quiet = movies
 
 | | |
 |---|---|
-| Framework | Next.js 16, React 19 |
-| Styling | Tailwind CSS v4 |
-| Animation | CSS transitions, IntersectionObserver |
-| Classifier | Claude Haiku 4.5 (Anthropic Batch API) |
+| Framework | Next.js 16 (App Router), React 19 |
 | Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Animation | Framer Motion, CSS transitions, IntersectionObserver |
+| Database | Supabase (Postgres) — movies, profiles, corrections, votes, reputation |
+| Auth | Supabase Auth (GitHub + Google OAuth) |
+| Charts | Recharts |
+| Classifier | Claude Haiku 4.5 (Anthropic Batch API) |
+| Tests | Playwright |
 
 ## Run Locally
 
@@ -116,9 +152,11 @@ const quiet = movies
 git clone https://github.com/Stormbane/mooduel.git
 cd mooduel
 npm install
-cp .env.local.example .env.local  # Add your TMDB API key
+cp .env.example .env.local  # add TMDB key + Supabase URL/keys
 npm run dev
 ```
+
+You'll need a Supabase project for the movie database, auth, and corrections to work. Migrations live in `supabase/all_migrations.sql`. Seed scripts are in `scripts/`.
 
 ## Citation
 

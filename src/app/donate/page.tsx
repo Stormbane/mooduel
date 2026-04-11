@@ -84,7 +84,7 @@ export default function DonatePage() {
               <SupportCard
                 icon="★"
                 title="Star on GitHub"
-                subtitle="Free — helps visibility"
+                subtitle="Free, helps visibility"
                 href="https://github.com/Stormbane/mooduel"
                 color="yellow"
               />

@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { AuthButton } from "@/components/auth/auth-button";
 
 const NAV_LINKS = [
   { href: "/games", label: "Games", color: "#8B5CF6" },
   { href: "/explore", label: "Explore", color: "#1ED760" },
   { href: "/dashboard", label: "Dashboard", color: "#38BDF8" },
-  { href: "/about", label: "About", color: "#F97316" },
 ];
 
 interface NavBarProps {
@@ -39,6 +39,7 @@ export function NavBar({
       </Link>
       <div className="flex items-center gap-6">
         {NAV_LINKS.map((link) => (
+
           <Link
             key={link.href}
             href={link.href}
@@ -62,6 +63,7 @@ export function NavBar({
             {link.label}
           </Link>
         ))}
+        <AuthButton />
       </div>
     </nav>
   );

@@ -13,6 +13,9 @@ out/
 .env.production
 .env*.local
 
+# MCP config (contains API tokens)
+.mcp.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -24,6 +27,17 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+.continue/
+.agents/
+
+# Claude skill metadata
+skills-lock.json
+
+# image source files (root only — not src/app/profile)
+/profile/
+
+# Supabase CLI temp
+supabase/.temp/
 
 # OS
 .DS_Store

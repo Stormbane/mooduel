@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, Geist_Mono } from "next/font/google";
+import { AuthProvider } from "@/lib/supabase/auth-context";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -21,7 +22,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Mooduel",
-  description: "Discover what you're in the mood for — through play, not forms.",
+  description: "Discover what you're in the mood for. Through play, not forms.",
   icons: {
     icon: "/favicon.png",
   },
@@ -37,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${geistMono.variable} font-[family-name:var(--font-sans)] antialiased`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

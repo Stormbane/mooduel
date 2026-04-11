@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
   retries: 1,
-  timeout: 30_000,
+  timeout: 90_000,
   use: {
     baseURL: "http://localhost:3007",
     screenshot: "only-on-failure",

@@ -19,14 +19,14 @@ const GAMES = [
   {
     href: "/games/blind-taste",
     title: "Blind Taste Test",
-    desc: "Five vibe sentences. No titles. No posters. Pick the movie you'd watch tonight — then see what you chose.",
+    desc: "Five vibe sentences. No titles. No posters. Pick the movie you'd watch tonight, then see what you chose.",
     color: "pink",
     status: "play",
   },
   {
     href: "/games/roulette",
     title: "Mood Roulette",
-    desc: "Spin three reels — emotional arc, watch context, wild card. See what movies land. Pull again if you dare.",
+    desc: "Spin three reels: emotional arc, watch context, wild card. See what movies land. Pull again if you dare.",
     color: "purple",
     status: "play",
   },
@@ -54,7 +54,7 @@ const GAMES = [
   {
     href: "/games/couples",
     title: "Couples Mediator",
-    desc: "Two moods, one movie. Each person picks their mood independently — we find the emotional intersection.",
+    desc: "Two moods, one movie. Each person picks their mood independently and we find the emotional intersection.",
     color: "coral",
     status: "play",
   },
@@ -68,7 +68,7 @@ const GAMES = [
   {
     href: "/play",
     title: "Mooduel",
-    desc: "The full game — mood detection through color, art, and emotion, then movie picks and a tournament bracket.",
+    desc: "The full game. Mood detection through color, art, and emotion, then movie picks and a tournament bracket.",
     color: "orange",
     status: "play",
   },

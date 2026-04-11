@@ -89,7 +89,7 @@ export default function CouplesPage() {
               </p>
               <p className="text-sm text-muted-foreground/60 mb-8 max-w-sm mx-auto">
                 Each person picks their mood independently. We find the movie
-                that satisfies both — the emotional intersection of tonight.
+                that satisfies both; the emotional intersection of tonight.
               </p>
               <button onClick={() => setPhase("player1-mood")} className="rounded-xl px-8 py-3 text-sm font-bold tracking-widest text-white gradient-bg-pink shadow-[0_0_30px_rgba(233,30,140,0.2)] hover:scale-105 active:scale-95 transition-all cursor-pointer">
                 START

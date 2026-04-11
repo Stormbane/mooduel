@@ -43,7 +43,7 @@ const QUESTIONS: Question[] = [
     aShift: { co: 0.2, v: 0.1 }, bShift: { pr: 0.2, co: -0.2 } },
   { optionA: "Watch alone", optionB: "Watch with someone",
     aShift: { a: -0.1, eu: 0.1 }, bShift: { he: 0.1, co: 0.1 } },
-  { optionA: "Catharsis — let it out", optionB: "Escape — take me somewhere else",
+  { optionA: "Catharsis, let it out", optionB: "Escape, take me somewhere else",
     aShift: { eu: 0.3, v: -0.1 }, bShift: { he: 0.3, v: 0.2 } },
   { optionA: "I want to think", optionB: "I want to feel",
     aShift: { pr: 0.3, a: -0.1 }, bShift: { eu: 0.2, a: 0.2 } },
@@ -58,10 +58,10 @@ function getQuadrantName(v: number, a: number): string {
 }
 
 function getQuadrantDesc(v: number, a: number): string {
-  if (v > 0 && a > 0) return "You're seeking energy and uplift — thrilling, joyful, alive.";
-  if (v > 0 && a <= 0) return "You want something gentle and warm — comforting, tender, safe.";
-  if (v <= 0 && a > 0) return "You're drawn to intensity with depth — challenging, gripping, thought-provoking.";
-  return "You want quiet contemplation — meditative, melancholic, slow.";
+  if (v > 0 && a > 0) return "You're seeking energy and uplift. Thrilling, joyful, alive.";
+  if (v > 0 && a <= 0) return "You want something gentle and warm. Comforting, tender, safe.";
+  if (v <= 0 && a > 0) return "You're drawn to intensity with depth. Challenging, gripping, thought-provoking.";
+  return "You want quiet contemplation. Meditative, melancholic, slow.";
 }
 
 function getQuadrantColor(v: number, a: number): string {
@@ -148,7 +148,7 @@ export default function MirrorPage() {
                 Twelve quick choices. No right answers.
               </p>
               <p className="text-muted-foreground/60 mb-8 max-w-sm mx-auto text-sm">
-                At the end, you&rsquo;ll see your emotional fingerprint —
+                At the end, you&rsquo;ll see your emotional fingerprint
                 and the movies that match it perfectly.
               </p>
               <button

@@ -104,6 +104,27 @@ export const VIBES = [
   "Floating houses and broken hearts learning to soar together.",
   "Genius without conscience, success without satisfaction.",
   "Sensory overload collapsing into quiet, hard-won grace.",
+  "Revenge dressed in elegance, served across decades with surgical patience.",
+  "Lonely astronaut finding more humanity in silence than Earth ever offered.",
+  "Childhood wonder rotting into adult compromise; nostalgia that cuts.",
+  "Dancing through systemic collapse because the music hasn't stopped yet.",
+  "Love letter to a city that doesn't love you back, written in neon and rain.",
+  "The comedy of pretending everything is fine while the house burns down.",
+  "Ocean-deep grief disguised as a road trip with terrible snacks.",
+  "Adrenaline and brotherhood at thirty thousand feet with nowhere to land.",
+  "Slow-burn seduction between two people who will absolutely destroy each other.",
+  "Found family in the wreckage; tenderness between people who forgot how.",
+];
+
+// Accent colors that cycle through the marquee separators
+export const VIBE_COLORS = [
+  "#E91E8C", // pink
+  "#8B5CF6", // purple
+  "#38BDF8", // sky
+  "#1ED760", // green
+  "#F97316", // orange
+  "#FBBF24", // amber
+  "#FF6B6B", // coral
 ];
 
 // -- All 18 dimension fields (The Godfather as reference movie) --

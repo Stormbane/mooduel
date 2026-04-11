@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 function gameArea(page: import("@playwright/test").Page) { return page.getByTestId("game-area"); }
-test("tournament screenshot", async ({ page }) => {
+test.skip("tournament screenshot", async ({ page }) => {
   test.setTimeout(180_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");

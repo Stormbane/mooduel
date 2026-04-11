@@ -115,7 +115,7 @@ export default function ComfortZonePage() {
 
               <div className="text-center mb-8">
                 <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-1" style={{ color: level.color }}>
-                  Level {currentLevel + 1} — {level.name}
+                  Level {currentLevel + 1}: {level.name}
                 </p>
                 <p className="text-sm text-muted-foreground/60">{level.desc}</p>
                 <p className="text-xs text-muted-foreground/30 mt-1">
@@ -171,10 +171,10 @@ export default function ComfortZonePage() {
                     <div className="flex flex-col gap-3">
                       <button onClick={goDeeper} className="rounded-xl px-6 py-3 text-sm font-bold tracking-widest text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
                         style={{ backgroundColor: LEVELS[currentLevel + 1].color }}>
-                        GO DEEPER — {LEVELS[currentLevel + 1].name}
+                        GO DEEPER: {LEVELS[currentLevel + 1].name}
                       </button>
                       <button onClick={stayHere} className="rounded-xl border border-border/40 px-6 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                        Stay here — show me more at this level
+                        Stay here, show me more at this level
                       </button>
                       <button onClick={() => setPhase("summary")} className="text-xs text-muted-foreground/30 hover:text-muted-foreground transition-colors cursor-pointer mt-2">
                         I&rsquo;m done
@@ -197,7 +197,7 @@ export default function ComfortZonePage() {
             <motion.div key="summary" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-16 text-center">
               <h2 className="text-3xl font-[family-name:var(--font-display)] font-bold mb-2">Your Comfort Journey</h2>
               <p className="text-sm text-muted-foreground/60 mb-8">
-                You reached <span style={{ color: LEVELS[deepestLevel].color }} className="font-semibold">{LEVELS[deepestLevel].name}</span> — level {deepestLevel + 1} of {LEVELS.length}
+                You reached <span style={{ color: LEVELS[deepestLevel].color }} className="font-semibold">{LEVELS[deepestLevel].name}</span>, level {deepestLevel + 1} of {LEVELS.length}
               </p>
 
               {/* Journey visualization */}

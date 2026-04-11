@@ -35,10 +35,17 @@
 - [ ] Validate: spot-check 100 random scores, distribution sanity
 - [ ] Quality report: histograms per dimension, outlier detection
 
-### Phase 3: Integration with Mooduel Game
-- [ ] `src/lib/mood-data/` — load mood scores from static JSON
-- [ ] `src/lib/engine/candidates.ts` — score movies using VA when available
-- [ ] `src/hooks/use-game.ts` — load mood scores, pass to scoring
+### Phase 3: Integration with Mooduel Game ✅
+- [x] Supabase database: 5 tables (movies, profiles, corrections, votes, reputation_events)
+- [x] 30,611 movies seeded from mood-data.json → Supabase
+- [x] API routes: /api/movies (paginated), /scatter, /stats, /pool, /corrections, /vote, /leaderboard
+- [x] Explore page: server-side search/filter/pagination
+- [x] Dashboard: server-computed stats + scatter data
+- [x] All 7 game pages: read from /api/movies/pool instead of static JSON
+- [x] Auth: GitHub + Google OAuth, AuthProvider context, AuthButton in navbar
+- [x] Community calibration: CorrectionDialog, CorrectionList with voting, wired into MovieCard
+- [x] Supabase MCP configured (.mcp.json) for self-sufficient DB operations
+- [x] Deleted public/mood-data.json (17MB) — all data flows from Supabase
 - [ ] Winner screen: show mood profile card for winning movie
 - [ ] Verify: game works without mood data (genre fallback), improves with it
 
@@ -64,13 +71,14 @@
 - [ ] "The Dataset" — stats bar + scrolling vibe sentences
 - [ ] Trust block: GitHub stars, movie count, open source badge
 
-### Explore Page (`/explore`) — Mooduel Movie DB
-- [ ] Search by title (instant, client-side over static JSON)
-- [ ] Filter by mood (VA sliders, comfort level, pacing, ending type)
-- [ ] Filter by watch context (solo / date / friends / family)
+### Explore Page (`/explore`) — Mooduel Movie DB ✅
+- [x] Search by title (server-side via Supabase, debounced)
+- [x] Filter by pacing, ending type, watch context
+- [x] Server-side pagination with "show more"
+- [x] Full mood card: all 18 dimensions visualised (MovieCard expanded view)
+- [ ] Filter by mood (VA sliders, comfort level)
 - [ ] Browse by vibe (scrollable vibe sentences, click to explore similar)
-- [ ] Mood map: interactive 2D scatter (valence × arousal), all movies as dots
-- [ ] Full mood card: all 18 dimensions visualised for a single movie
+- [ ] Mood map on explore page
 - [ ] Mobile responsive
 
 ### About Page (`/about`)

@@ -61,7 +61,7 @@ export default function BlindTastePage() {
                 Five movies. No titles. No posters. No years.
               </p>
               <p className="text-muted-foreground/60 mb-8 max-w-md mx-auto text-sm">
-                Just how each one feels — described in a single sentence.
+                Just how each one feels, described in a single sentence.
                 Pick the one you&rsquo;d watch tonight.
               </p>
               <button
@@ -186,7 +186,7 @@ export default function BlindTastePage() {
                 <p className="text-xs text-muted-foreground/30 italic">
                   {picked.va > 0.3 ? "You're drawn to warmth tonight." :
                    picked.va < -0.3 ? "You're seeking something that challenges." :
-                   "You're in a nuanced mood — neither light nor dark."}
+                   "You're in a nuanced mood. Neither light nor dark."}
                   {picked.ar > 0.5 ? " You want intensity." : " You want calm."}
                 </p>
               </motion.div>

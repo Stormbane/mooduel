@@ -52,7 +52,7 @@ export function SplashScreen({ onPlay }: SplashScreenProps) {
           <p>
             We start with colors and vibes to read your mood. Then movies
             matched to how you feel. Your picks go head-to-head in a tournament
-            — and one champion emerges.
+            until one champion emerges.
           </p>
           <p>
             No ratings. No forms. Just vibes.

@@ -10,7 +10,7 @@ async function fetchMoodData(): Promise<SlimMoodMovie[]> {
   if (cachedData) return cachedData;
   if (loadingPromise) return loadingPromise;
 
-  loadingPromise = fetch("/mood-data.json")
+  loadingPromise = fetch("/api/movies/pool")
     .then((r) => r.json())
     .then((data: SlimMoodMovie[]) => {
       cachedData = data;

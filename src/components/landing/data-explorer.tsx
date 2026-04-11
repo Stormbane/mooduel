@@ -5,7 +5,6 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DATA_FIELDS, POSTER_MAP, GODFATHER_POSTER, TOKENS } from "./landing-data";
 import { Accordion } from "./accordion";
-import { FieldTooltip } from "@/components/ui/field-tooltip";
 
 const { radius: R, surface: SURFACE, border: BORDER } = TOKENS;
 
@@ -16,7 +15,6 @@ function JsonLine({
   color,
   isActive,
   isLast,
-  onHover,
   onClick,
 }: {
   fieldKey: string;
@@ -24,7 +22,6 @@ function JsonLine({
   color: string;
   isActive: boolean;
   isLast: boolean;
-  onHover: () => void;
   onClick: () => void;
 }) {
   return (
@@ -36,12 +33,9 @@ function JsonLine({
           : "border-l-transparent hover:bg-white/[0.02]",
       )}
       style={isActive ? { borderLeftColor: color } : undefined}
-      onMouseEnter={onHover}
       onClick={onClick}
     >
-      <FieldTooltip fieldKey={fieldKey}>
-        <span className="text-[#38BDF8]/70">&quot;{fieldKey}&quot;</span>
-      </FieldTooltip>
+      <span className="text-[#38BDF8]/70">&quot;{fieldKey}&quot;</span>
       <span className="text-muted-foreground/30">: </span>
       <span
         style={{ color: isActive ? color : undefined, wordBreak: "break-word" }}
@@ -59,7 +53,6 @@ export function DataExplorer({ focusIdx }: { focusIdx: number | null }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
-  const hoverRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const active = DATA_FIELDS[activeIdx];
   const duration = 8000;
 
@@ -86,22 +79,6 @@ export function DataExplorer({ focusIdx }: { focusIdx: number | null }) {
     setActiveIdx(idx);
     setProgressKey((k) => k + 1);
     if (pause) setPaused(true);
-  }, []);
-
-  const handleHover = useCallback(
-    (idx: number) => {
-      if (paused) return;
-      if (hoverRef.current) clearTimeout(hoverRef.current);
-      hoverRef.current = setTimeout(() => {
-        setActiveIdx(idx);
-        setProgressKey((k) => k + 1);
-      }, 300);
-    },
-    [paused],
-  );
-
-  const handleLeave = useCallback(() => {
-    if (hoverRef.current) clearTimeout(hoverRef.current);
   }, []);
 
   const togglePause = () => {
@@ -199,7 +176,7 @@ export function DataExplorer({ focusIdx }: { focusIdx: number | null }) {
             )}
             {active.rangeType === "freeform" && (
               <p className="text-xs text-muted-foreground/30 italic">
-                Free-form {active.value.startsWith("[") ? "array" : "text"} — no
+                Free-form {active.value.startsWith("[") ? "array" : "text"}, no
                 fixed vocabulary
               </p>
             )}
@@ -382,7 +359,6 @@ export function DataExplorer({ focusIdx }: { focusIdx: number | null }) {
               color={f.color}
               isActive={i === activeIdx}
               isLast={i === DATA_FIELDS.length - 1}
-              onHover={() => handleHover(i)}
               onClick={() => {
                 if (paused && activeIdx === i) {
                   setPaused(false);

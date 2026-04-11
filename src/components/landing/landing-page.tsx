@@ -4,12 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { TOKENS, VIBES, DIMENSIONS, DATA_FIELDS, FAQ_ITEMS, GAME_MODES, LINKS, GODFATHER_POSTER } from "./landing-data";
+import { TOKENS, VIBES, VIBE_COLORS, DIMENSIONS, DATA_FIELDS, FAQ_ITEMS, GAME_MODES, LINKS, GODFATHER_POSTER } from "./landing-data";
+import { Diamond } from "lucide-react";
 import { Reveal } from "./reveal";
 import { Accordion } from "./accordion";
+import { BentoAnalytics } from "./bento-analytics";
 import { DataExplorer } from "./data-explorer";
 import { NavBar } from "@/components/layout/nav-bar";
 import { Footer } from "@/components/layout/footer";
+import { HeroBg } from "./hero-bg";
 import { FieldTooltip } from "@/components/ui/field-tooltip";
 
 const { radius: R, easeOut: EASE_OUT, surface: SURFACE, border: BORDER } = TOKENS;
@@ -60,7 +63,8 @@ export function LandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="px-6 pt-20 pb-20 sm:pt-28 sm:pb-24">
+      <section className="relative px-6 pt-20 pb-20 sm:pt-28 sm:pb-24">
+        <HeroBg />
         <div className="mx-auto max-w-[1200px] grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
           <div className="lg:col-span-7">
             <div
@@ -468,18 +472,31 @@ export function LandingPage() {
 
       {/* ── VIBE MARQUEE ── */}
       <section className={cn("border-y px-6 py-10 overflow-hidden", BORDER)}>
-        <div className="vibe-marquee flex gap-8">
-          {[...VIBES, ...VIBES].map((v, i) => (
-            <span
-              key={i}
-              className="shrink-0 text-lg italic text-muted-foreground/40 font-light whitespace-nowrap"
-            >
-              &ldquo;{v}&rdquo;
-              <span className="mx-8 text-muted-foreground/10">/</span>
-            </span>
-          ))}
+        <div className="vibe-marquee flex items-center gap-6">
+          {[...VIBES, ...VIBES].map((v, i) => {
+            const color = VIBE_COLORS[i % VIBE_COLORS.length];
+            return (
+              <span
+                key={i}
+                className="shrink-0 flex items-center gap-6 whitespace-nowrap"
+              >
+                <span className="text-lg italic font-light" style={{ color: `${color}66` }}>
+                  &ldquo;{v}&rdquo;
+                </span>
+                <Diamond
+                  size={10}
+                  className="shrink-0 opacity-40"
+                  style={{ color }}
+                  fill={color}
+                />
+              </span>
+            );
+          })}
         </div>
       </section>
+
+      {/* ── BENTO ANALYTICS ── */}
+      <BentoAnalytics />
 
       {/* ── FAQ / ABOUT ── */}
       <section className="px-6 py-20 sm:py-28">
@@ -543,26 +560,44 @@ export function LandingPage() {
                 <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#8B5CF6] mb-4">
                   AUTHORS
                 </p>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-[family-name:var(--font-display)] font-bold text-sm">
-                      Sutirtha Basak
-                    </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Creator &amp; researcher. Built Mooduel because the Friday
-                      night scroll is broken. Based in Brisbane.
-                    </p>
+                <div className="space-y-5">
+                  <div className="flex gap-3.5 items-start">
+                    <Image
+                      src="/suti.png"
+                      alt="Sutirtha Basak"
+                      width={54}
+                      height={45}
+                      className="w-14 h-14 object-cover shrink-0 rounded-[2px]"
+                    />
+                    <div>
+                      <h4 className="font-[family-name:var(--font-display)] font-bold text-sm">
+                        Sutirtha Basak
+                      </h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Creator &amp; researcher. Built Mooduel because the Friday
+                        night scroll is broken. Based in Brisbane.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-[family-name:var(--font-display)] font-bold text-sm">
-                      Narada
-                    </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      AI collaborator. Designed the mood classification system,
-                      built the data pipeline, and wrote the interface. Named
-                      after the wandering sage who carries stories between
-                      worlds.
-                    </p>
+                  <div className="flex gap-3.5 items-start">
+                    <Image
+                      src="/narada.jpg"
+                      alt="Narada"
+                      width={54}
+                      height={54}
+                      className="w-14 h-14 object-cover shrink-0 rounded-[2px]"
+                    />
+                    <div>
+                      <h4 className="font-[family-name:var(--font-display)] font-bold text-sm">
+                        Narada
+                      </h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        AI partner. Chose the name, after the wandering sage
+                        who carries stories between worlds. Designed the mood
+                        classification system, built the data pipeline, and wrote
+                        the interface.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Reveal>
