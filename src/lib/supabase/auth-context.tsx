@@ -4,12 +4,19 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { User, Session } from "@supabase/supabase-js";
 import { createClient } from "./client";
 
+export const PROVIDER_ENABLED = {
+  github: true,
+  google: true,
+  facebook: false,
+} as const;
+
 interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signInWithGitHub: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -19,6 +26,7 @@ const AuthContext = createContext<AuthState>({
   loading: true,
   signInWithGitHub: async () => {},
   signInWithGoogle: async () => {},
+  signInWithFacebook: async () => {},
   signOut: async () => {},
 });
 
@@ -60,13 +68,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const signInWithFacebook = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "facebook",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, session, loading, signInWithGitHub, signInWithGoogle, signOut }}
+      value={{ user, session, loading, signInWithGitHub, signInWithGoogle, signInWithFacebook, signOut }}
     >
       {children}
     </AuthContext.Provider>
