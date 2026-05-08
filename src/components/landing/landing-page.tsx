@@ -52,14 +52,17 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* ── NAVBAR (scroll-dock) ── */}
+      {/* ── NAVBAR (always visible; logo only after hero logo scrolls away) ── */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${docked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          docked ? "border-b" : "border-b border-transparent",
+          docked && SURFACE,
+          docked && BORDER,
+        )}
         style={{ transitionTimingFunction: EASE_OUT }}
       >
-        <div className={cn("border-b", SURFACE, BORDER)}>
-          <NavBar />
-        </div>
+        <NavBar hideLogo={!docked} />
       </div>
 
       {/* ── HERO ── */}
@@ -100,13 +103,13 @@ export function LandingPage() {
             <Reveal delay={300}>
               <div className="flex flex-wrap gap-3 mt-8">
                 <Link
-                  href="/play"
+                  href="/games/blind-taste"
                   className={cn(
                     "inline-flex items-center px-6 py-3 bg-[#E91E8C] text-white font-semibold text-sm tracking-wide transition-transform duration-100 hover:brightness-110 active:scale-[0.97]",
                     R,
                   )}
                 >
-                  Play Mooduel
+                  Play a game
                 </Link>
                 <Link
                   href="/explore"
@@ -397,7 +400,7 @@ export function LandingPage() {
                   {GAME_MODES.map((g) => (
                     <Link
                       key={g.title}
-                      href="/play"
+                      href={g.href}
                       className="group block text-left"
                     >
                       <h4
@@ -449,7 +452,7 @@ export function LandingPage() {
       </section>
 
       {/* ── DATA DEEP DIVE ── */}
-      <section ref={carouselRef} className="px-6 py-20 sm:py-28 scroll-mt-16">
+      <section id="data-explorer" ref={carouselRef} className="px-6 py-20 sm:py-28 scroll-mt-16">
         <div className="mx-auto max-w-[1200px]">
           <Reveal>
             <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#1ED760] mb-3">

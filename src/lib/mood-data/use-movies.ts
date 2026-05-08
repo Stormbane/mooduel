@@ -92,8 +92,10 @@ export function useScatterData() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/movies/scatter")
-      .then((r) => r.json())
+    // Prefer the precomputed static cache (gigabit-fast, no Supabase hop).
+    // Fall back to the live API only if the static asset is missing.
+    fetch("/dashboard-cache/scatter.json")
+      .then((r) => (r.ok ? r.json() : fetch("/api/movies/scatter").then((r) => r.json())))
       .then((d) => {
         setData(d);
         setLoading(false);
@@ -129,8 +131,10 @@ export function useDashboardStats() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/movies/stats")
-      .then((r) => r.json())
+    // Same strategy as scatter: static cache first, API as fallback.
+    // Re-run `npm run cache:dashboard` after movies/corrections change.
+    fetch("/dashboard-cache/stats.json")
+      .then((r) => (r.ok ? r.json() : fetch("/api/movies/stats").then((r) => r.json())))
       .then((d) => {
         setStats(d);
         setLoading(false);

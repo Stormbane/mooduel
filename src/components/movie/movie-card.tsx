@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 import { MovieRatings, MovieRatingsCompact } from "@/components/ui/ratings";
@@ -73,6 +73,9 @@ interface MovieCardProps {
   expandable?: boolean;
   onClick?: () => void;
   className?: string;
+  /** When true, expand the card and open the correction dialog on mount.
+   *  Used by the post-OAuth redirect flow (`?correct=<movieId>`). */
+  autoOpenCorrection?: boolean;
 }
 
 export function MovieCard({
@@ -81,11 +84,21 @@ export function MovieCard({
   expandable = false,
   onClick,
   className = "",
+  autoOpenCorrection = false,
 }: MovieCardProps) {
-  const [expanded, setExpanded] = useState(variant === "expanded");
-  const [showCorrectionDialog, setShowCorrectionDialog] = useState(false);
+  const [expanded, setExpanded] = useState(variant === "expanded" || autoOpenCorrection);
+  const [showCorrectionDialog, setShowCorrectionDialog] = useState(autoOpenCorrection);
   const [correctionRefresh, setCorrectionRefresh] = useState(0);
   const isExpanded = variant === "expanded" || expanded;
+
+  // If the autoOpen prop flips on after mount (e.g. after OAuth redirect
+  // when ExplorePage hydrates the URL param), reflect that in local state.
+  useEffect(() => {
+    if (autoOpenCorrection) {
+      setExpanded(true);
+      setShowCorrectionDialog(true);
+    }
+  }, [autoOpenCorrection]);
 
   const handleClick = () => {
     if (onClick) onClick();

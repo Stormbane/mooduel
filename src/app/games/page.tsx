@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
 import { PageLayout } from "@/components/layout/page-layout";
+import { GAMES } from "@/components/game-shell/types";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
@@ -15,107 +16,106 @@ const stagger: Variants = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const GAMES = [
+/**
+ * Games that ship on the v1.0 landing. Vibe Tree and Mood Drift are in
+ * build; they render a "coming soon" card until their page.tsx lands.
+ */
+const V1_GAMES = [
   {
-    href: "/games/blind-taste",
-    title: "Blind Taste Test",
-    desc: "Five vibe sentences. No titles. No posters. Pick the movie you'd watch tonight, then see what you chose.",
-    color: "pink",
-    status: "play",
+    id: "blind-taste",
+    status: "live" as const,
+    blurb:
+      "Five vibe sentences. No titles. No posters. Pick the one you'd watch tonight, then see what you chose.",
   },
   {
-    href: "/games/roulette",
-    title: "Mood Roulette",
-    desc: "Spin three reels: emotional arc, watch context, wild card. See what movies land. Pull again if you dare.",
-    color: "purple",
-    status: "play",
+    id: "vibe-tree",
+    status: "soon" as const,
+    blurb:
+      "Navigate a tree of mood clusters, each named by the dataset. Descend branch by branch until one movie remains.",
   },
   {
-    href: "/games/mirror",
-    title: "Mood Mirror",
-    desc: "Twelve rapid choices. No right answers. At the end: your emotional fingerprint and the movies that match it.",
-    color: "green",
-    status: "play",
+    id: "mood-drift",
+    status: "soon" as const,
+    blurb:
+      "A daily puzzle. Guess today's hidden movie from its mood signature. Six tries. Wordle for vibes.",
   },
-  {
-    href: "/games/comfort-zone",
-    title: "Comfort Zone",
-    desc: "Five levels from cozy to devastating. How far outside your comfort zone will you go tonight?",
-    color: "orange",
-    status: "play",
-  },
-  {
-    href: "/games/mood-dj",
-    title: "Movie Mood DJ",
-    desc: "Build a movie marathon with a designed emotional arc. Choose a preset, fill each slot, watch the mood flow.",
-    color: "yellow",
-    status: "play",
-  },
-  {
-    href: "/games/couples",
-    title: "Couples Mediator",
-    desc: "Two moods, one movie. Each person picks their mood independently and we find the emotional intersection.",
-    color: "coral",
-    status: "play",
-  },
-  {
-    href: "/vibe-search",
-    title: "Vibe Search",
-    desc: "Describe a feeling in your own words. We search 30,000 movies by mood, not by title.",
-    color: "blue",
-    status: "play",
-  },
-  {
-    href: "/play",
-    title: "Mooduel",
-    desc: "The full game. Mood detection through color, art, and emotion, then movie picks and a tournament bracket.",
-    color: "orange",
-    status: "play",
-  },
-];
-
-const colorMap: Record<string, { border: string; text: string; glow: string }> = {
-  pink: { border: "border-[var(--color-pop-pink)]/30", text: "text-[var(--color-pop-pink)]", glow: "hover:shadow-[0_0_40px_rgba(233,30,140,0.1)]" },
-  purple: { border: "border-[var(--color-pop-purple)]/30", text: "text-[var(--color-pop-purple)]", glow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.1)]" },
-  green: { border: "border-[var(--color-pop-green)]/30", text: "text-[var(--color-pop-green)]", glow: "hover:shadow-[0_0_40px_rgba(30,215,96,0.1)]" },
-  orange: { border: "border-[var(--color-pop-orange)]/30", text: "text-[var(--color-pop-orange)]", glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.1)]" },
-  yellow: { border: "border-[var(--color-pop-yellow)]/30", text: "text-[var(--color-pop-yellow)]", glow: "hover:shadow-[0_0_40px_rgba(251,191,36,0.1)]" },
-  coral: { border: "border-[var(--color-pop-coral)]/30", text: "text-[var(--color-pop-coral)]", glow: "hover:shadow-[0_0_40px_rgba(255,107,107,0.1)]" },
-  blue: { border: "border-[var(--color-pop-blue)]/30", text: "text-[var(--color-pop-blue)]", glow: "hover:shadow-[0_0_40px_rgba(56,189,248,0.1)]" },
-};
+] as const;
 
 export default function GamesPage() {
   return (
     <PageLayout currentPage="/games" maxWidth="max-w-4xl">
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="pt-16 pb-12 text-center">
-          <motion.h1 variants={fadeUp} className="text-4xl font-[family-name:var(--font-display)] font-bold mb-3">
-            Games
-          </motion.h1>
-          <motion.p variants={fadeUp} className="text-muted-foreground">
-            Different ways to discover movies through mood.
-          </motion.p>
-        </motion.div>
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+        className="pt-16 pb-12 text-center"
+      >
+        <motion.h1
+          variants={fadeUp}
+          className="text-4xl font-[family-name:var(--font-display)] font-bold mb-3"
+        >
+          Games
+        </motion.h1>
+        <motion.p variants={fadeUp} className="text-muted-foreground">
+          Different ways to discover movies through mood.
+        </motion.p>
+      </motion.div>
 
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {GAMES.map((game) => {
-            const c = colorMap[game.color];
-            return (
-              <motion.div key={game.href} variants={fadeUp}>
-                <Link
-                  href={game.href}
-                  className={`block rounded-2xl border ${c.border} bg-card/30 p-6 transition-all duration-300 hover:border-opacity-60 ${c.glow} hover:bg-card/50`}
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+      >
+        {V1_GAMES.map((g) => {
+          const game = GAMES[g.id];
+          const disabled = g.status === "soon";
+          const inner = (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <h2
+                  className="font-[family-name:var(--font-display)] font-bold text-lg"
+                  style={{ color: game.accent.color }}
                 >
-                  <h2 className={`font-[family-name:var(--font-display)] font-bold text-lg ${c.text} mb-2`}>
-                    {game.title}
-                  </h2>
-                  <p className="text-sm text-muted-foreground/70 leading-relaxed">
-                    {game.desc}
-                  </p>
+                  {game.title}
+                </h2>
+                {disabled && (
+                  <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40">
+                    Coming soon
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground/70 leading-relaxed">
+                {g.blurb}
+              </p>
+            </>
+          );
+
+          return (
+            <motion.div key={game.id} variants={fadeUp}>
+              {disabled ? (
+                <div
+                  className="block rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] p-6 opacity-60 cursor-not-allowed"
+                  aria-disabled="true"
+                >
+                  {inner}
+                </div>
+              ) : (
+                <Link
+                  href={game.path}
+                  className="block rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] p-6 transition-colors duration-150 hover:border-[oklch(0.35_0_0)] hover:bg-[oklch(0.14_0_0)]"
+                >
+                  {inner}
                 </Link>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              )}
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      <p className="text-center text-xs text-muted-foreground/30 mt-16">
+        More games on the way.
+      </p>
     </PageLayout>
   );
 }

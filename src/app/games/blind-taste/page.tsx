@@ -2,30 +2,47 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PageLayout } from "@/components/layout/page-layout";
-import { useMoodData } from "@/lib/mood-data/use-mood-data";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
+import { useMoodData } from "@/lib/mood-data/use-mood-data";
+import { GamePage } from "@/components/game-shell/game-page";
+import { IntroScreen } from "@/components/game-shell/intro-screen";
+import { ResultScreen } from "@/components/game-shell/result-screen";
+import { GAMES } from "@/components/game-shell/types";
+import { useGameSession } from "@/lib/game/use-game-session";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
+const GAME = GAMES["blind-taste"];
+
+type Phase = "intro" | "picking" | "reveal" | "history";
+
+interface Session {
+  history: { pickedId: number; passedIds: number[] }[];
+}
 
 function pickRandom<T>(arr: T[], n: number): T[] {
   const shuffled = [...arr].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
 }
 
-type Phase = "intro" | "picking" | "reveal" | "history";
-
 export default function BlindTastePage() {
   const { data: movies, loading } = useMoodData();
   const [phase, setPhase] = useState<Phase>("intro");
   const [candidates, setCandidates] = useState<SlimMoodMovie[]>([]);
   const [picked, setPicked] = useState<SlimMoodMovie | null>(null);
-  const [history, setHistory] = useState<{ picked: SlimMoodMovie; others: SlimMoodMovie[] }[]>([]);
+  const [session, setSession, clearSession] = useGameSession<Session>(
+    "blind-taste",
+    { history: [] },
+  );
 
-  const goodMovies = useMemo(() => movies.filter((m) => m.v.length > 10 && m.r && m.r >= 5), [movies]);
+  const goodMovies = useMemo(
+    () => movies.filter((m) => m.v.length > 10 && m.r && m.r >= 5),
+    [movies],
+  );
+
+  const moviesById = useMemo(() => {
+    const map = new Map<number, SlimMoodMovie>();
+    for (const m of movies) map.set(m.id, m);
+    return map;
+  }, [movies]);
 
   const startRound = useCallback(() => {
     const picks = pickRandom(goodMovies, 5);
@@ -34,216 +51,268 @@ export default function BlindTastePage() {
     setPhase("picking");
   }, [goodMovies]);
 
-  const handlePick = useCallback((movie: SlimMoodMovie) => {
-    setPicked(movie);
-    setHistory((h) => [...h, { picked: movie, others: candidates.filter((m) => m.id !== movie.id) }]);
-    setPhase("reveal");
-  }, [candidates]);
+  const handlePick = useCallback(
+    (movie: SlimMoodMovie) => {
+      const passedIds = candidates.filter((m) => m.id !== movie.id).map((m) => m.id);
+      setPicked(movie);
+      setSession((s) => ({
+        history: [...s.history, { pickedId: movie.id, passedIds }],
+      }));
+      setPhase("reveal");
+    },
+    [candidates, setSession],
+  );
+
+  const resetAll = useCallback(() => {
+    clearSession();
+    setPicked(null);
+    setCandidates([]);
+    setPhase("intro");
+  }, [clearSession]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-sm text-muted-foreground/50 animate-pulse">Loading movies...</p>
-      </div>
+      <GamePage game={GAME}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="text-sm text-muted-foreground/50 animate-pulse">
+            Loading movies...
+          </p>
+        </div>
+      </GamePage>
     );
   }
 
   return (
-    <PageLayout currentPage="/games/blind-taste" maxWidth="max-w-3xl" patternColor="rgba(233,30,140,0.1)">
-        <AnimatePresence mode="wait">
-          {/* ── INTRO ── */}
-          {phase === "intro" && (
-            <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-24 text-center">
-              <h1 className="text-4xl font-[family-name:var(--font-display)] font-bold mb-4">
-                Blind <span className="gradient-text-pink">Taste</span> Test
-              </h1>
-              <p className="text-muted-foreground mb-2 max-w-md mx-auto leading-relaxed">
-                Five movies. No titles. No posters. No years.
+    <GamePage game={GAME}>
+      <AnimatePresence mode="wait">
+        {phase === "intro" && (
+          <IntroScreen
+            key="intro"
+            game={GAME}
+            subtitle="Five movies. No titles. No posters. No years."
+            description="Just how each one feels, described in a single sentence. Pick the one you'd watch tonight."
+            ctaLabel="SHOW ME THE VIBES"
+            onStart={startRound}
+          />
+        )}
+
+        {phase === "picking" && (
+          <motion.div
+            key="picking"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="pt-16"
+          >
+            <p
+              className="text-center text-[11px] font-semibold tracking-[0.2em] uppercase mb-3"
+              style={{ color: GAME.accent.color }}
+            >
+              Round {session.history.length + 1}
+            </p>
+            <h2 className="text-center text-2xl font-[family-name:var(--font-display)] font-bold mb-2">
+              Which one are you watching tonight?
+            </h2>
+            <p className="text-center text-sm text-muted-foreground/50 mb-10">
+              No peeking. Trust the vibe.
+            </p>
+
+            <div className="space-y-3">
+              {candidates.map((movie, i) => (
+                <motion.button
+                  key={movie.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  onClick={() => handlePick(movie)}
+                  className="w-full text-left rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] px-6 py-5 transition-colors duration-150 hover:border-[oklch(0.35_0_0)] hover:bg-[oklch(0.14_0_0)] cursor-pointer"
+                >
+                  <p className="text-base italic text-foreground/80 leading-relaxed">
+                    &ldquo;{movie.v}&rdquo;
+                  </p>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {phase === "reveal" && picked && (
+          <ResultScreen
+            key="reveal"
+            game={GAME}
+            movie={picked}
+            eyebrow="You chose"
+            sharePayload={{
+              game: "blind-taste",
+              pickedMovieId: picked.id,
+              passedMovieIds: candidates
+                .filter((m) => m.id !== picked.id)
+                .map((m) => m.id),
+            }}
+            shareIntent={`I picked ${picked.t} (${picked.y}) from five mystery vibes on Mooduel.`}
+            onPlayAgain={startRound}
+            playAgainLabel="Next round"
+          >
+            {/* Passed-on candidates */}
+            <div className="mt-6">
+              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground/40 mb-3">
+                What you passed on
               </p>
-              <p className="text-muted-foreground/60 mb-8 max-w-md mx-auto text-sm">
-                Just how each one feels, described in a single sentence.
-                Pick the one you&rsquo;d watch tonight.
-              </p>
-              <button
-                onClick={startRound}
-                className="rounded-xl px-8 py-3 text-sm font-bold tracking-widest text-white gradient-bg-pink shadow-[0_0_30px_rgba(233,30,140,0.2)] hover:shadow-[0_0_50px_rgba(233,30,140,0.35)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              >
-                SHOW ME THE VIBES
-              </button>
-            </motion.div>
-          )}
-
-          {/* ── PICKING ── */}
-          {phase === "picking" && (
-            <motion.div key="picking" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-16">
-              <p className="text-center text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-pop-pink)] mb-2">
-                Round {history.length + 1}
-              </p>
-              <h2 className="text-center text-2xl font-[family-name:var(--font-display)] font-bold mb-2">
-                Which one are you watching tonight?
-              </h2>
-              <p className="text-center text-sm text-muted-foreground/50 mb-10">
-                No peeking. Trust the vibe.
-              </p>
-
-              <div className="space-y-4">
-                {candidates.map((movie, i) => (
-                  <motion.button
-                    key={movie.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    onClick={() => handlePick(movie)}
-                    className="w-full text-left rounded-xl border border-border/30 bg-card/30 px-6 py-5 transition-all duration-300 hover:border-[var(--color-pop-pink)]/40 hover:bg-card/50 cursor-pointer group"
-                  >
-                    <p className="text-base italic text-foreground/80 leading-relaxed group-hover:text-foreground transition-colors">
-                      &ldquo;{movie.v}&rdquo;
-                    </p>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── REVEAL ── */}
-          {phase === "reveal" && picked && (
-            <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-16">
-              <p className="text-center text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-pop-green)] mb-6">
-                You chose
-              </p>
-
-              {/* Picked movie - big reveal */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="rounded-2xl border border-[var(--color-pop-pink)]/30 bg-card/40 p-6 mb-6"
-              >
-                <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl text-foreground/90 mb-1">
-                  {picked.t}
-                  <span className="text-muted-foreground/40 font-normal text-lg ml-2">({picked.y})</span>
-                </h2>
-                <p className="text-sm italic text-foreground/60 mb-4">&ldquo;{picked.v}&rdquo;</p>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                  <MiniStat label="Valence" value={picked.va.toFixed(2)} />
-                  <MiniStat label="Arousal" value={picked.ar.toFixed(2)} />
-                  <MiniStat label="Comfort" value={picked.co.toFixed(2)} />
-                  <MiniStat label="Conversation" value={picked.conv.toFixed(2)} />
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <span className="rounded-full bg-[var(--color-pop-pink)]/10 border border-[var(--color-pop-pink)]/20 px-2.5 py-0.5 text-[10px] text-[var(--color-pop-pink)]">{picked.pa}</span>
-                  <span className="rounded-full bg-[var(--color-pop-green)]/10 border border-[var(--color-pop-green)]/20 px-2.5 py-0.5 text-[10px] text-[var(--color-pop-green)]">{picked.end}</span>
-                  <span className="rounded-full bg-[var(--color-pop-purple)]/10 border border-[var(--color-pop-purple)]/20 px-2.5 py-0.5 text-[10px] text-[var(--color-pop-purple)]">{picked.arc}</span>
-                  {picked.wc.map((c) => (
-                    <span key={c} className="rounded-full bg-border/20 px-2.5 py-0.5 text-[10px] text-muted-foreground/60">{c}</span>
-                  ))}
-                </div>
-
-                {picked.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {picked.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] text-muted-foreground/40">#{tag}</span>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-
-              {/* What you didn't pick */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                <p className="text-xs text-muted-foreground/40 mb-3 uppercase tracking-wider font-semibold">What you passed on</p>
-                <div className="space-y-2">
-                  {candidates.filter((m) => m.id !== picked.id).map((m) => (
-                    <div key={m.id} className="rounded-lg border border-border/20 bg-card/20 px-4 py-3">
-                      <p className="font-medium text-sm text-foreground/70">{m.t} <span className="text-muted-foreground/30">({m.y})</span></p>
-                      <p className="text-xs italic text-muted-foreground/40 mt-0.5">&ldquo;{m.v}&rdquo;</p>
+              <div className="space-y-2">
+                {candidates
+                  .filter((m) => m.id !== picked.id)
+                  .map((m) => (
+                    <div
+                      key={m.id}
+                      className="rounded-[4px] border border-white/5 bg-white/[0.02] px-4 py-3"
+                    >
+                      <p className="text-sm text-foreground/70">
+                        {m.t}{" "}
+                        <span className="text-muted-foreground/40">({m.y})</span>
+                      </p>
+                      <p className="text-xs italic text-muted-foreground/40 mt-0.5">
+                        &ldquo;{m.v}&rdquo;
+                      </p>
                     </div>
                   ))}
-                </div>
-              </motion.div>
+              </div>
+            </div>
 
-              {/* Actions */}
-              <div className="flex items-center justify-center gap-4 mt-8">
-                <button
-                  onClick={startRound}
-                  className="rounded-xl px-6 py-3 text-sm font-bold tracking-widest text-white gradient-bg-pink hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                >
-                  NEXT ROUND
-                </button>
-                {history.length > 0 && (
-                  <button
-                    onClick={() => setPhase("history")}
-                    className="rounded-xl border border-border/40 px-6 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            {session.history.length > 1 && (
+              <button
+                onClick={() => setPhase("history")}
+                className="block mx-auto mt-6 text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+              >
+                My picks ({session.history.length}) →
+              </button>
+            )}
+          </ResultScreen>
+        )}
+
+        {phase === "history" && (
+          <motion.div
+            key="history"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="pt-12"
+          >
+            <h2 className="text-center text-2xl font-[family-name:var(--font-display)] font-bold mb-2">
+              Your taste profile
+            </h2>
+            <p className="text-center text-sm text-muted-foreground/50 mb-8">
+              {session.history.length} round{session.history.length !== 1 ? "s" : ""} played
+            </p>
+
+            {session.history.length >= 2 && (
+              <AggregateCard
+                history={session.history}
+                moviesById={moviesById}
+                accent={GAME.accent.color}
+              />
+            )}
+
+            <div className="space-y-2 mt-6">
+              {session.history.map((h, i) => {
+                const m = moviesById.get(h.pickedId);
+                if (!m) return null;
+                return (
+                  <div
+                    key={i}
+                    className="rounded-[4px] border border-white/5 bg-white/[0.02] px-4 py-3"
                   >
-                    My picks ({history.length})
-                  </button>
-                )}
-              </div>
-
-              {/* Mood insight */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-center">
-                <p className="text-xs text-muted-foreground/30 italic">
-                  {picked.va > 0.3 ? "You're drawn to warmth tonight." :
-                   picked.va < -0.3 ? "You're seeking something that challenges." :
-                   "You're in a nuanced mood. Neither light nor dark."}
-                  {picked.ar > 0.5 ? " You want intensity." : " You want calm."}
-                </p>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* ── HISTORY ── */}
-          {phase === "history" && (
-            <motion.div key="history" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-16">
-              <h2 className="text-center text-2xl font-[family-name:var(--font-display)] font-bold mb-2">Your Taste Profile</h2>
-              <p className="text-center text-sm text-muted-foreground/50 mb-8">
-                {history.length} round{history.length !== 1 ? "s" : ""} played
-              </p>
-
-              {/* Aggregate stats */}
-              {history.length >= 2 && (
-                <div className="rounded-xl border border-[var(--color-pop-purple)]/20 bg-card/30 p-5 mb-8">
-                  <p className="text-xs font-semibold tracking-[0.15em] uppercase text-[var(--color-pop-purple)] mb-3">Your averages</p>
-                  <div className="grid grid-cols-4 gap-3 text-xs">
-                    <MiniStat label="Valence" value={(history.reduce((s, h) => s + h.picked.va, 0) / history.length).toFixed(2)} />
-                    <MiniStat label="Arousal" value={(history.reduce((s, h) => s + h.picked.ar, 0) / history.length).toFixed(2)} />
-                    <MiniStat label="Comfort" value={(history.reduce((s, h) => s + h.picked.co, 0) / history.length).toFixed(2)} />
-                    <MiniStat label="Convo" value={(history.reduce((s, h) => s + h.picked.conv, 0) / history.length).toFixed(2)} />
+                    <p className="text-[10px] text-muted-foreground/30 mb-1">
+                      Round {i + 1}
+                    </p>
+                    <p className="text-sm text-foreground/80">
+                      {m.t}{" "}
+                      <span className="text-muted-foreground/40">({m.y})</span>
+                    </p>
+                    <p className="text-xs italic text-muted-foreground/50 mt-0.5">
+                      &ldquo;{m.v}&rdquo;
+                    </p>
                   </div>
-                </div>
-              )}
+                );
+              })}
+            </div>
 
-              <div className="space-y-3">
-                {history.map((h, i) => (
-                  <div key={i} className="rounded-lg border border-border/20 bg-card/20 px-4 py-3">
-                    <p className="text-xs text-muted-foreground/30 mb-1">Round {i + 1}</p>
-                    <p className="font-medium text-sm text-foreground/80">{h.picked.t} ({h.picked.y})</p>
-                    <p className="text-xs italic text-muted-foreground/50">&ldquo;{h.picked.v}&rdquo;</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-center gap-4 mt-8">
-                <button onClick={startRound} className="rounded-xl px-6 py-3 text-sm font-bold tracking-widest text-white gradient-bg-pink hover:scale-105 active:scale-95 transition-all cursor-pointer">
-                  PLAY AGAIN
-                </button>
-                <button onClick={() => setPhase("reveal")} className="rounded-xl border border-border/40 px-6 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  Back
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-    </PageLayout>
+            <div className="flex flex-wrap justify-center gap-3 mt-8">
+              <button
+                onClick={startRound}
+                className="rounded-[4px] px-5 py-2.5 text-sm font-semibold tracking-wide text-white transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
+                style={{ backgroundColor: GAME.accent.color }}
+              >
+                Next round
+              </button>
+              <button
+                onClick={() => setPhase("reveal")}
+                className="rounded-[4px] border border-[oklch(0.25_0_0)] px-5 py-2.5 text-sm text-foreground/80 hover:text-foreground hover:bg-white/[0.03] transition-colors"
+              >
+                Back
+              </button>
+              <button
+                onClick={resetAll}
+                className="rounded-[4px] px-5 py-2.5 text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+              >
+                Reset session
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </GamePage>
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: string }) {
+function AggregateCard({
+  history,
+  moviesById,
+  accent,
+}: {
+  history: { pickedId: number; passedIds: number[] }[];
+  moviesById: Map<number, SlimMoodMovie>;
+  accent: string;
+}) {
+  const picks = history
+    .map((h) => moviesById.get(h.pickedId))
+    .filter((m): m is SlimMoodMovie => !!m);
+  if (picks.length === 0) return null;
+
+  const avg = (sel: (m: SlimMoodMovie) => number) =>
+    picks.reduce((s, m) => s + sel(m), 0) / picks.length;
+
+  const stats = [
+    { label: "Valence", value: avg((m) => m.va), signed: true },
+    { label: "Arousal", value: avg((m) => m.ar), signed: true },
+    { label: "Comfort", value: avg((m) => m.co), signed: false },
+    { label: "Convo", value: avg((m) => m.conv), signed: false },
+  ];
+
   return (
-    <div className="text-center">
-      <p className="text-muted-foreground/40 text-[10px] uppercase tracking-wider">{label}</p>
-      <p className="font-mono text-foreground/70 mt-0.5">{value}</p>
+    <div
+      className="rounded-[4px] border bg-[oklch(0.12_0_0)] p-5"
+      style={{ borderColor: `${accent}4D` }}
+    >
+      <p
+        className="text-[10px] font-semibold tracking-[0.2em] uppercase mb-3"
+        style={{ color: accent }}
+      >
+        Your averages
+      </p>
+      <div className="grid grid-cols-4 gap-3">
+        {stats.map((s) => (
+          <div key={s.label} className="text-center">
+            <p className="text-[9px] uppercase tracking-wider text-muted-foreground/50">
+              {s.label}
+            </p>
+            <p className="font-[family-name:var(--font-geist-mono)] text-sm text-foreground/80 mt-0.5 tabular-nums">
+              {s.signed
+                ? (s.value >= 0 ? "+" : "") + s.value.toFixed(2)
+                : s.value.toFixed(2)}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

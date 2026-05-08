@@ -558,16 +558,16 @@ export const FAQ_ITEMS = [
 
 // ââ Game modes ââ
 export const GAME_MODES = [
-  { title: "Mooduel", desc: "Three rounds of vibe picks, then a tournament. Eight movies enter, one wins.", color: "#E91E8C" },
-  { title: "Blind Taste Test", desc: "Five vibe sentences. No titles, no posters. Pick the mood, see the movie.", color: "#8B5CF6" },
-  { title: "Mood Roulette", desc: "Spin three reels \u2014 emotional arc, context, wild card. See what lands.", color: "#1ED760" },
-  { title: "Mood Mirror", desc: "Twelve rapid choices map your emotional fingerprint to matching films.", color: "#38BDF8" },
+  { title: "Blind Taste Test", desc: "Five vibe sentences. No titles, no posters. Pick the one you'd watch tonight.", color: "#E91E8C", href: "/games/blind-taste" },
+  { title: "Vibe Tree", desc: "Navigate a tree of mood clusters. Descend branch by branch until one movie remains.", color: "#8B5CF6", href: "/games/vibe-tree" },
+  { title: "Mood Drift", desc: "A daily puzzle. Guess today's hidden film by its mood signature. Six tries.", color: "#1ED760", href: "/games/mood-drift" },
 ];
 
 // ââ External links ââ
 export const LINKS = [
   { label: "GitHub", href: "https://github.com/Stormbane/mooduel", color: "#fff" },
-  { label: "HuggingFace Dataset", href: "#", color: "#FBBF24" },
+  { label: "HuggingFace Dataset", href: "https://huggingface.co/datasets/fractalintelligence/mooduel-v1.0", color: "#FBBF24" },
+  { label: "About & methodology", href: "/about", color: "#F97316" },
   { label: "Explore Movies", href: "/explore", color: "#1ED760" },
   { label: "Dashboard", href: "/dashboard", color: "#38BDF8" },
 ];

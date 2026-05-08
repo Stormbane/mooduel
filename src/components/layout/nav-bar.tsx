@@ -5,21 +5,26 @@ import Image from "next/image";
 import { AuthButton } from "@/components/auth/auth-button";
 
 const NAV_LINKS = [
+  { href: "/", label: "Home", color: "#E91E8C" },
   { href: "/games", label: "Games", color: "#8B5CF6" },
   { href: "/explore", label: "Explore", color: "#1ED760" },
   { href: "/dashboard", label: "Dashboard", color: "#38BDF8" },
+  { href: "/about", label: "About", color: "#F97316" },
 ];
 
 interface NavBarProps {
   currentPage?: string;
   maxWidth?: string;
   logoHref?: string;
+  /** Hide the logo (e.g. on landing where the hero owns the logo until scroll). */
+  hideLogo?: boolean;
 }
 
 export function NavBar({
   currentPage,
   maxWidth = "max-w-[1200px]",
   logoHref = "/",
+  hideLogo = false,
 }: NavBarProps) {
   return (
     <nav
@@ -27,7 +32,14 @@ export function NavBar({
     >
       <Link
         href={logoHref}
-        className="shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-150"
+        aria-hidden={hideLogo || undefined}
+        tabIndex={hideLogo ? -1 : undefined}
+        className={`shrink-0 transition-all duration-500 ${
+          hideLogo
+            ? "opacity-0 -translate-y-2 pointer-events-none"
+            : "opacity-80 hover:opacity-100 translate-y-0"
+        }`}
+        style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
       >
         <Image
           src="/logo.png"

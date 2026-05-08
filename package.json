@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export:dataset": "tsx scripts/export-dataset.ts"
+    "export:dataset": "tsx scripts/export-dataset.ts",
+    "cache:dashboard": "tsx scripts/build-dashboard-cache.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.79.0",

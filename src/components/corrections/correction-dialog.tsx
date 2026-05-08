@@ -51,6 +51,17 @@ export function CorrectionDialog({ movie, onClose, onSubmitted }: CorrectionDial
   const field = CORRECTABLE_FIELDS.find((f) => f.key === selectedField);
   const originalValue = field ? field.getValue(movie) : null;
 
+  /**
+   * For OAuth round-trips: send the user back to the same path with
+   * `?correct=<movie.id>` so MovieCard can auto-reopen this dialog.
+   */
+  const nextAfterOAuth = (() => {
+    if (typeof window === "undefined") return undefined;
+    const url = new URL(window.location.href);
+    url.searchParams.set("correct", String(movie.id));
+    return url.pathname + url.search;
+  })();
+
   const canSubmit = selectedField && proposedValue && justification.length >= 10 &&
     String(originalValue) !== proposedValue;
 
@@ -119,7 +130,7 @@ export function CorrectionDialog({ movie, onClose, onSubmitted }: CorrectionDial
               </p>
               <div className="max-w-xs mx-auto space-y-2">
                 <button
-                  onClick={() => PROVIDER_ENABLED.github && signInWithGitHub()}
+                  onClick={() => PROVIDER_ENABLED.github && signInWithGitHub(nextAfterOAuth)}
                   disabled={!PROVIDER_ENABLED.github}
                   title={PROVIDER_ENABLED.github ? undefined : "Coming soon"}
                   className={cn(
@@ -136,7 +147,7 @@ export function CorrectionDialog({ movie, onClose, onSubmitted }: CorrectionDial
                   {!PROVIDER_ENABLED.github && <span className="ml-auto text-[10px] text-muted-foreground/40">soon</span>}
                 </button>
                 <button
-                  onClick={() => PROVIDER_ENABLED.google && signInWithGoogle()}
+                  onClick={() => PROVIDER_ENABLED.google && signInWithGoogle(nextAfterOAuth)}
                   disabled={!PROVIDER_ENABLED.google}
                   title={PROVIDER_ENABLED.google ? undefined : "Coming soon"}
                   className={cn(
@@ -156,7 +167,7 @@ export function CorrectionDialog({ movie, onClose, onSubmitted }: CorrectionDial
                   {!PROVIDER_ENABLED.google && <span className="ml-auto text-[10px] text-muted-foreground/40">soon</span>}
                 </button>
                 <button
-                  onClick={() => PROVIDER_ENABLED.facebook && signInWithFacebook()}
+                  onClick={() => PROVIDER_ENABLED.facebook && signInWithFacebook(nextAfterOAuth)}
                   disabled={!PROVIDER_ENABLED.facebook}
                   title={PROVIDER_ENABLED.facebook ? undefined : "Coming soon"}
                   className={cn(

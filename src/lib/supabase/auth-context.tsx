@@ -14,9 +14,9 @@ interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signInWithGitHub: () => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signInWithFacebook: () => Promise<void>;
+  signInWithGitHub: (next?: string) => Promise<void>;
+  signInWithGoogle: (next?: string) => Promise<void>;
+  signInWithFacebook: (next?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -29,6 +29,15 @@ const AuthContext = createContext<AuthState>({
   signInWithFacebook: async () => {},
   signOut: async () => {},
 });
+
+/**
+ * Build an OAuth callback URL that preserves the user's location.
+ * If `next` is omitted, defaults to current `pathname + search`.
+ */
+function buildRedirectTo(next?: string): string {
+  const target = next ?? `${window.location.pathname}${window.location.search}`;
+  return `${window.location.origin}/auth/callback?next=${encodeURIComponent(target)}`;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -54,24 +63,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const signInWithGitHub = async () => {
+  const signInWithGitHub = async (next?: string) => {
     await supabase.auth.signInWithOAuth({
       provider: "github",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: buildRedirectTo(next) },
     });
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (next?: string) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: buildRedirectTo(next) },
     });
   };
 
-  const signInWithFacebook = async () => {
+  const signInWithFacebook = async (next?: string) => {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: buildRedirectTo(next) },
     });
   };
 

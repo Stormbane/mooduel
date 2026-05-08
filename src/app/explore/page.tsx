@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { PageLayout } from "@/components/layout/page-layout";
 import { MovieCard } from "@/components/movie/movie-card";
@@ -69,6 +70,21 @@ export default function ExplorePage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Post-OAuth deep link: ?correct=<movieId> → reopen that card's correction dialog.
+  // We capture the id once, then strip the query so refreshes don't loop.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [pendingCorrectionId, setPendingCorrectionId] = useState<number | null>(null);
+  useEffect(() => {
+    const raw = searchParams.get("correct");
+    if (!raw) return;
+    const id = Number(raw);
+    if (Number.isFinite(id) && id > 0) setPendingCorrectionId(id);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("correct");
+    router.replace(url.pathname + (url.search || ""), { scroll: false });
+  }, [searchParams, router]);
 
   const debouncedSearch = useDebouncedValue(search, 300);
   const pacingKey = pacingFilter.sort().join(",");
@@ -245,12 +261,20 @@ export default function ExplorePage() {
             loading && movies.length === 0 && "opacity-50 transition-opacity duration-200",
           )}>
             {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} expandable />
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                expandable
+                autoOpenCorrection={pendingCorrectionId === movie.id}
+              />
             ))}
           </div>
           {loading && movies.length === 0 && (
-            <div className="flex items-center justify-center py-20">
+            <div className="flex flex-col items-center justify-center py-20 gap-3">
               <div className="text-2xl animate-pulse text-muted-foreground/30">◎</div>
+              <p className="text-sm font-[family-name:var(--font-geist-mono)] text-muted-foreground/40 tracking-wide">
+                Loading first 60 movies...
+              </p>
             </div>
           )}
           {hasMore && (

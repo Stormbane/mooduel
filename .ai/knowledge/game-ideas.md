@@ -262,3 +262,103 @@ love these tonight."
 
 ### Movie Mood Embeddings
 18-dim vectors as numpy/PyTorch tensors. ML infrastructure.
+
+---
+
+## v1.0 Launch Games (added 2026-04-25)
+
+After auditing the six built M4 games, Suti decided to ship three polished
+games rather than six rough ones. The main Mooduel tournament game is being
+cut from v1 — it's the weakest concept of the lot. Hide the ones we don't
+launch (keep routes live so tweets don't 404, but remove from nav/landing).
+
+### Shared infrastructure requirements
+- Consistent `<GamePage>`, `<IntroScreen>`, `<ResultScreen>` components so
+  every game has identical layout, nav, result card, share, and streaming
+  provider surface. CSS can diverge per game; markup cannot.
+- Canonical `<ResultScreen>` includes: winner movie card, mood profile,
+  streaming providers (TMDB `/watch/providers` + Vercel `x-vercel-ip-country`),
+  share button, "play again" CTA.
+- Share system: `/api/share` POST creates a `share_results` row keyed by a
+  10-char base62 token; `/s/[token]` is server-rendered (crawlable OG tags);
+  `/s/[token]/opengraph-image` dynamically generates a 1200×630 PNG via
+  Next 16's `next/og`.
+- Streaming providers: TMDB only for v1. Country-aware via Vercel request
+  header. Cache per-movie/country for 7 days. No deep links yet (provider
+  homepages only), no affiliate monetisation in v1.
+- Session persistence: localStorage for anon, Supabase for authed (later).
+
+### New game ideas worth considering for v1
+
+#### Hierarchical Vibe Tree (**strong candidate**)
+Agglomerative clustering (Ward's linkage, minimises within-cluster variance)
+on the 18-dim mood vectors across 30K movies. Produces a dendrogram cuttable
+at any level. LLM-name each visited internal node from its centroid + member
+titles via `claude -p` (headless CLI, no API key needed, cached forever).
+
+**User flow**: land on the root node. See 6-8 branches named by the LLM
+("Tender catharsis", "Ambient dread", "Sincere romance"). Click one to
+descend. Repeat 3-5 levels until you reach a leaf (single movie) or a small
+cluster you can choose from. UMAP/t-SNE mini-map shows "you are here."
+Shareable path: "I found *Mulholland Drive* via Melancholic → Slow-Burn → Ambiguous".
+
+**Implementation notes**:
+- Offline scipy `linkage(X, method='ward')` on 30K×18 matrix (needs ~4GB RAM)
+- Output: dendrogram JSON with cluster centroids, member counts, example titles
+- Ward produces lopsided trees; rebalance by merging small branches up, or
+  cut the dendrogram at fixed heights to get ~6-8 children per level
+- LLM naming: `claude -p --output-format json "Name this movie cluster..."`,
+  cache result by cluster-id in Supabase
+- UI: breadcrumb trail + current node card + 6-8 child branches + mini VA map
+
+#### Mood Drift (Wordle for movies, already in todo)
+Daily hidden target movie. 6 guesses. Each guess, the app shows distance in
+simplified axes ("warmer, slower, more comforting") not raw 18-dim vectors.
+Shareable grid: `Hereditary → Paddington in 4 moves · 🟨🟨🟩`.
+
+**Implementation notes**:
+- Daily rotation: pre-picked target set rotating by `date.now() % 365`
+- Feedback should reduce 18 dims to 4-5 human axes: valence, arousal,
+  comfort, pacing-speed, meaning
+- Guess input: autocomplete against the movie list
+- Streak tracking in localStorage (later: Supabase for authed users)
+
+#### Two-Truths-One-Lie for Vibe Sentences
+Show 3 vibe sentences, 2 from real movies, 1 LLM-fabricated in the dataset's
+voice. User picks the fake. Quick rounds, streak-based, shareable.
+
+**Implementation notes**:
+- Fake generation: `claude -p` precomputed batch of ~500 fakes from the
+  dataset's vibe-sentence style, stored in a `fake_vibes` table
+- Each round: 2 real + 1 fake, shuffled, user picks the fake, reveal correct
+  answer with real movies behind the truths
+- Light and fast to build, complements Blind Taste
+
+#### Mood Telephone
+Start with a seed movie. Pick a direction (warmer, darker, faster, slower,
+weirder, safer). App picks the movie closest in that direction in 18-dim
+space. Chain 5 steps. End: "You started at Paddington 2 and ended at
+Mulholland Drive. How?"
+
+**Implementation notes**:
+- Direction vectors: predefined unit vectors in 18-dim space
+- Each step: filter to movies within cone, pick closest by cosine similarity,
+  exclude previously-seen movies
+- Good exploration mechanic, low build cost
+
+#### The Compass
+Drag a pin on a 2D VA map. See 8 movies in that zone update in real time.
+Possibly better as a landing-page or /explore feature than a standalone game.
+
+#### Cinematic Horoscope (evolved Mood Mirror)
+5 sharper questions (down from 12). Each question maximally disambiguates the
+remaining candidate space (information-theoretic question selection).
+Shareable: "Tonight you are: Electric Joy. Your film: X."
+
+### Decision framework for the final 3
+Prioritise: (a) novelty not replicable elsewhere, (b) shareable artifact,
+(c) repeat-playability, (d) build cost, (e) dataset showcase quality.
+
+Narada's recommendation: **Mood Drift + Hierarchical Vibe Tree + Blind Taste**.
+Three modes: daily ritual, exploration, quick hit. Final choice deferred
+until shared infra + Blind Taste refactor land.

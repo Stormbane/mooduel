@@ -105,7 +105,7 @@ export default function ProfilePage() {
             Track your corrections, votes, and reputation.
           </p>
           <button
-            onClick={signInWithGitHub}
+            onClick={() => signInWithGitHub()}
             className={cn(
               "px-5 py-2.5 text-sm font-semibold border transition-colors cursor-pointer",
               "text-[#1ED760] border-[#1ED760]/30 hover:bg-[#1ED760]/5",

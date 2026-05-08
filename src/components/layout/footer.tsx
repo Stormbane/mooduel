@@ -3,9 +3,11 @@
 import Link from "next/link";
 
 const FOOTER_LINKS = [
+  { href: "/", label: "Home", color: "#E91E8C" },
   { href: "/games", label: "Games", color: "#8B5CF6" },
   { href: "/explore", label: "Explore", color: "#1ED760" },
   { href: "/dashboard", label: "Dashboard", color: "#38BDF8" },
+  { href: "/about", label: "About", color: "#F97316" },
 ];
 
 interface FooterProps {
