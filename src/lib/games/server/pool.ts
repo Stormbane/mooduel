@@ -211,3 +211,49 @@ export async function dealSingle(opts: {
     dimension: opts.dimension,
   };
 }
+
+export interface DeckMovie {
+  tmdb_id: number;
+  title: string;
+  year: number;
+  poster_path: string | null;
+  /** Raw dimension values keyed by pairwise dimension name. */
+  dims: Record<PairwiseDimension, number | null>;
+}
+
+/**
+ * Deals a face-up deck from the recognizable pool (no assignment — the
+ * card game is score-driven, not signal-collecting).
+ */
+export async function dealDeck(count: number): Promise<DeckMovie[]> {
+  const ids = await recognizableIds();
+  const picked = new Set<number>();
+  while (picked.size < Math.min(count, ids.length)) {
+    picked.add(ids[Math.floor(Math.random() * ids.length)]);
+  }
+  const { data, error } = await serviceClient
+    .from("movies")
+    .select(
+      "tmdb_id,title,year,poster_path,valence,arousal,dominance,absorption,hedonic,eudaimonic,psych_rich,comfort_level,conversation_potential",
+    )
+    .in("tmdb_id", [...picked]);
+  if (error) throw new Error(error.message);
+
+  return data.map((r) => ({
+    tmdb_id: r.tmdb_id,
+    title: r.title,
+    year: r.year,
+    poster_path: r.poster_path,
+    dims: {
+      valence: r.valence,
+      arousal: r.arousal,
+      dominance: r.dominance,
+      absorption: r.absorption,
+      hedonic: r.hedonic,
+      eudaimonic: r.eudaimonic,
+      psych_rich: r.psych_rich,
+      comfort_level: r.comfort_level,
+      conversation_potential: r.conversation_potential,
+    },
+  }));
+}

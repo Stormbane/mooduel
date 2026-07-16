@@ -61,7 +61,7 @@ const HUB_TILES: HubTile[] = [
   },
   {
     id: "card-game",
-    status: "soon",
+    status: "live",
     flagship: true,
     blurb:
       "Draft eight movies into a hand and play them trick by trick, mood against mood. Take on the house, then challenge a friend.",
@@ -126,7 +126,13 @@ function GameTile({ tile, game }: { tile: HubTile; game: GameConfig }) {
           className="text-[10px] font-semibold tracking-[0.2em] uppercase"
           style={{ color: accent }}
         >
-          {live ? "Now playing" : tile.flagship ? "The flagship · soon" : "Soon"}
+          {live
+            ? tile.flagship
+              ? "The flagship · now playing"
+              : "Now playing"
+            : tile.flagship
+              ? "The flagship · soon"
+              : "Soon"}
         </span>
         {live && (
           <span

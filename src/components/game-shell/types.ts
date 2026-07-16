@@ -115,6 +115,7 @@ export type SharePayload =
   | { game: "shape-of-stories"; pickedMovieId: number; shapes: string; agreed: number; rounds: number }
   | { game: "mood-bridge"; pickedMovieId: number; path: number[]; hops: number; par: number; number: number; usedHints: boolean }
   | { game: "dinner-party"; pickedMovieId: number; threaded: number; seats: number; grid: string }
+  | { game: "card-game"; pickedMovieId: number; won: "you" | "them" | "draw"; you: number; them: number; mode: string; grid: string }
   | { game: "blind-taste"; pickedMovieId: number; passedMovieIds: number[] }
   | { game: "vibe-tree"; pickedMovieId: number; path: string[] }
   | { game: "mood-drift"; pickedMovieId: number; targetMovieId: number; guessCount: number; solved: boolean; grid: string };
