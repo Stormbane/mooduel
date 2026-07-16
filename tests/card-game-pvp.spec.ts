@@ -10,9 +10,12 @@ import { test, expect, type Page } from "@playwright/test";
  * counter-leads the next (until trick 8 closes).
  */
 
+// Dev-server note: API calls run 0.7–3.5s locally (cold compiles, three
+// sequential Supabase reads per state fetch), so step timeouts are
+// generous. This measures correctness, not latency.
 async function playTurn(p: Page) {
   await p.reload();
-  await expect(p.getByTestId("submit-turn")).toBeVisible({ timeout: 20_000 });
+  await expect(p.getByTestId("submit-turn")).toBeVisible({ timeout: 45_000 });
 
   if ((await p.getByTestId("follow-card").count()) > 0) {
     await p.getByTestId("follow-card").first().click();
@@ -22,11 +25,11 @@ async function playTurn(p: Page) {
     await p.getByTestId("lead-card").first().click();
   }
   await p.getByTestId("submit-turn").click();
-  await expect(p.getByTestId("submit-turn")).toHaveCount(0, { timeout: 20_000 });
+  await expect(p.getByTestId("submit-turn")).toHaveCount(0, { timeout: 45_000 });
 }
 
 test("Card Game PvP: challenge link, sealed drafts, nine moves, verdict", async ({ browser }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(360_000);
   const ctxA = await browser.newContext();
   const ctxB = await browser.newContext();
   const a = await ctxA.newPage();
@@ -47,9 +50,10 @@ test("Card Game PvP: challenge link, sealed drafts, nine moves, verdict", async 
   await a.getByRole("button", { name: /LOCK IN THESE EIGHT/i }).click();
   await expect(a.getByText("Challenge dealt")).toBeVisible({ timeout: 20_000 });
 
-  // B follows the link and takes the seat
+  // B follows the link and takes the seat (first SSR of the match page —
+  // dev compile can take a while)
   await b.goto(matchUrl);
-  await expect(b.getByText(/You've been challenged/i)).toBeVisible({ timeout: 20_000 });
+  await expect(b.getByText(/You've been challenged/i)).toBeVisible({ timeout: 45_000 });
   await b.getByRole("button", { name: /ACCEPT THE CHALLENGE/i }).click();
   await expect(b.getByText("Your sealed twelve")).toBeVisible({ timeout: 20_000 });
   for (let i = 0; i < 8; i++) await b.getByTestId("sealed-card").nth(i).click();

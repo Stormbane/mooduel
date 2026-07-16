@@ -147,35 +147,57 @@ repairs the dataset's weak dimensions.
 
 ---
 
-## M4: The Game Slate (Phase 4 of the replatform plan)
-Build order chosen so each game exercises the newest foundation layer.
-To be built with high effort and max creative agency (Suti, 2026-07-17) —
-NOT in an autonomous loop. Rules/feel are open; the SDK + PvP skeleton
-(match_secrets, submit_move, signals) are the fixed floor.
+## M4: The Game Slate (Phase 4 of the replatform plan) ✅ (2026-07-17)
+Shipped in the xhigh build session per .ai/knowledge/game-build-brief.md.
+Commits 39f170f..cc5e184: five games + hub + games.mooduel.com identity +
+harmonization + verification (23/23 Playwright against the production
+build, including a live two-context PvP match over real Supabase).
 
-### 1. Hotter — pairwise mood duel
-- [ ] Two posters, one question ("Which is scarier?"), tap, streak
-- [ ] Emits pairwise signals via /api/games/pair + emitSignal (SDK ready)
-- [ ] "You vs the model" framing until consensus data accrues
-- [ ] Starts the calibration flywheel for arousal/conversation
+### 1. Hotter — pairwise mood duel ✅
+- [x] 12-pair runs, sync streaks, hot takes celebrated (dissent never
+      punished — protects signal honesty), dead heats = player tiebreak
+- [x] Pairwise signals via /api/games/pair + emitSignal; pair payload
+      gained canonical key + dimension score (SDK fix)
 
-### 2. Mooduel: The Card Game — the flagship PvP
-- [ ] Draft 8 movies, trick-taking over mood categories
-- [ ] House bot + async PvP via challenge links (skeleton ready)
-- [ ] Game rules on top of submit_move; hands via match_secrets/get_hand
+### 2. Mooduel: The Card Game — the flagship ✅
+- [x] Solo: snake draft 8-of-16 vs the house bot, eight tricks,
+      blind-simultaneous, each mood leadable once
+- [x] Async PvP via challenge links: sealed 8-of-12 drafts, bundled
+      follow+lead moves (9 moves / 8 tricks, leads split 4-4), cards in
+      match_secrets until trick resolution; engine validates legality in
+      service-role routes
 - [ ] Realtime live mode as fast-follow
 
-### 3. Shape of Stories — pick the arc
-- [ ] Six drawn Vonnegut/Reagan curves, pick the shape for a known movie
-- [ ] Emits categorical signals → rebuilds the collapsed arc dimension
+### 3. Shape of Stories — pick the arc ✅
+- [x] Six drawn Vonnegut curves (SVG pathLength draw), 8 shaped movies
+      per run, skips emit choice='skip'
+- [x] Categorical arc signals in exact emotional_arc vocabulary
+      (classifier collapsed: 64% man-in-a-hole — the game says so)
 
-### 4. Mood Bridge — daily A→B pathfinding
-- [ ] Get from Movie A to Movie B in ≤5 hops within mood-distance budget
-- [ ] Par scores, daily seed, shareable path
+### 4. Mood Bridge — daily A→B pathfinding ✅
+- [x] RMS mood distance over 9 dims; daily pair from the 0.38–0.50 gulf
+      band, budget = gulf/3.4, greedy-solver par; local-midnight dates
+- [x] Search hops with reach preview, hint rail (never target-sorted),
+      streaks, shareable path. Signal-free by design.
 
-### 5. The Dinner Party — persona matchmaking puzzle
-- [ ] Curate one film for four described emotional states
-- [ ] Zillmann MMT as a puzzle; scored against profiles
+### 5. The Dinner Party — persona matchmaking puzzle ✅
+- [x] 16 authored guests with MMT needs; shelf gated for a real answer +
+      a real trap; worst-violated need writes the reaction line
+- [x] Model's counter-pick revealed each party. Signal-free by design.
+
+### Hub + platform ✅
+- [x] /games marquee hub (costume tiles), games.mooduel.com host rewrite
+      in src/proxy.ts, per-game metadata + OG cards (accent spine)
+- [x] Harmonization: MotionConfig reduced-motion stage-wide,
+      luminance-aware accent button text, 44px touch floor,
+      NEXT_PUBLIC_API_BASE via apiUrl() (23 call sites — mobile floor)
+
+### Known follow-ups
+- [ ] Server pool caches pay 5–21s cold-start per instance (31 paged
+      Supabase reads) — needs a snapshot strategy before serverless deploy
+- [ ] PvP e2e writes real match rows — consider a cleanup sweep
+- [ ] Sound design hooks are stubbed (playCue) — v2 audio pass
+- [ ] games.mooduel.com DNS + Vercel domain config (ops, Suti)
 
 ### Earlier experiments (built, hidden from nav per 2026-04-25 decision)
 
