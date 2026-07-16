@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
 import { PageLayout } from "@/components/layout/page-layout";
-import { GAMES } from "@/components/game-shell/types";
+import { GAMES, type GameConfig, type GameId } from "@/components/game-shell/types";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
@@ -13,39 +13,60 @@ const fadeUp: Variants = {
 
 const stagger: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
+interface HubTile {
+  id: GameId;
+  status: "live" | "soon";
+  /** One-line hook. Lives here, not in the registry — the hub sells, the intro explains. */
+  blurb: string;
+  flagship?: boolean;
+}
+
 /**
- * Games that ship on the v1.0 landing. Vibe Tree and Mood Drift are in
- * build; they render a "coming soon" card until their page.tsx lands.
+ * The select screen. Live games up top, the rest of the slate as coming
+ * attractions in their own costume hues — a marquee, not a directory.
  */
-const V1_GAMES = [
+const HUB_TILES: HubTile[] = [
   {
     id: "hotter",
-    status: "live" as const,
+    status: "live",
     blurb:
       "Two posters, one question, and a model with opinions. Stay in sync as long as you can, or go down swinging with a hot take.",
   },
   {
     id: "blind-taste",
-    status: "live" as const,
+    status: "live",
     blurb:
       "Five vibe sentences. No titles. No posters. Pick the one you'd watch tonight, then see what you chose.",
   },
   {
-    id: "vibe-tree",
-    status: "soon" as const,
+    id: "shape-of-stories",
+    status: "soon",
     blurb:
-      "Navigate a tree of mood clusters, each named by the dataset. Descend branch by branch until one movie remains.",
+      "Six curves a story can take. Pick the shape of a movie you know and teach the model its arc.",
   },
   {
-    id: "mood-drift",
-    status: "soon" as const,
+    id: "mood-bridge",
+    status: "soon",
     blurb:
-      "A daily puzzle. Guess today's hidden movie from its mood signature. Six tries. Wordle for vibes.",
+      "Start at one movie, land on another. Five hops, and every hop has to stay within reach in mood. New bridge daily.",
   },
-] as const;
+  {
+    id: "dinner-party",
+    status: "soon",
+    blurb:
+      "Your four guests arrived in four different moods. Find the one film that works for the whole table.",
+  },
+  {
+    id: "card-game",
+    status: "soon",
+    flagship: true,
+    blurb:
+      "Draft eight movies into a hand and play them trick by trick, mood against mood. Take on the house, then challenge a friend.",
+  },
+];
 
 export default function GamesPage() {
   return (
@@ -62,8 +83,9 @@ export default function GamesPage() {
         >
           Games
         </motion.h1>
-        <motion.p variants={fadeUp} className="text-muted-foreground">
-          Different ways to discover movies through mood.
+        <motion.p variants={fadeUp} className="text-muted-foreground max-w-md mx-auto">
+          Ways to find what you&apos;re in the mood for. The model has
+          opinions. Every round you play sharpens them.
         </motion.p>
       </motion.div>
 
@@ -71,57 +93,71 @@ export default function GamesPage() {
         variants={stagger}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-16"
       >
-        {V1_GAMES.map((g) => {
-          const game = GAMES[g.id];
-          const disabled = g.status === "soon";
-          const inner = (
-            <>
-              <div className="flex items-center justify-between mb-2">
-                <h2
-                  className="font-[family-name:var(--font-display)] font-bold text-lg"
-                  style={{ color: game.accent.color }}
-                >
-                  {game.title}
-                </h2>
-                {disabled && (
-                  <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40">
-                    Coming soon
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground/70 leading-relaxed">
-                {g.blurb}
-              </p>
-            </>
-          );
-
-          return (
-            <motion.div key={game.id} variants={fadeUp}>
-              {disabled ? (
-                <div
-                  className="block rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] p-6 opacity-60 cursor-not-allowed"
-                  aria-disabled="true"
-                >
-                  {inner}
-                </div>
-              ) : (
-                <Link
-                  href={game.path}
-                  className="block rounded-[4px] border border-[oklch(0.25_0_0)] bg-[oklch(0.12_0_0)] p-6 transition-colors duration-150 hover:border-[oklch(0.35_0_0)] hover:bg-[oklch(0.14_0_0)]"
-                >
-                  {inner}
-                </Link>
-              )}
-            </motion.div>
-          );
-        })}
+        {HUB_TILES.map((t) => (
+          <motion.div
+            key={t.id}
+            variants={fadeUp}
+            className={t.flagship ? "sm:col-span-2" : undefined}
+          >
+            <GameTile tile={t} game={GAMES[t.id]} />
+          </motion.div>
+        ))}
       </motion.div>
-
-      <p className="text-center text-xs text-muted-foreground/30 mt-16">
-        More games on the way.
-      </p>
     </PageLayout>
+  );
+}
+
+function GameTile({ tile, game }: { tile: HubTile; game: GameConfig }) {
+  const accent = game.accent.color;
+  const live = tile.status === "live";
+
+  const inner = (
+    <div
+      className="relative h-full rounded-[4px] border p-6 transition-colors duration-150"
+      style={{
+        borderColor: `${accent}33`,
+        background: `radial-gradient(120% 130% at 0% 0%, ${accent}${live ? "14" : "0A"}, oklch(0.12 0 0) 62%)`,
+      }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <span
+          className="text-[10px] font-semibold tracking-[0.2em] uppercase"
+          style={{ color: accent }}
+        >
+          {live ? "Now playing" : tile.flagship ? "The flagship · soon" : "Soon"}
+        </span>
+        {live && (
+          <span
+            className="text-[11px] font-semibold tracking-wide transition-transform duration-150 group-hover:translate-x-0.5"
+            style={{ color: accent }}
+            aria-hidden
+          >
+            Play →
+          </span>
+        )}
+      </div>
+      <h2
+        className="font-[family-name:var(--font-display)] font-bold text-xl leading-snug"
+        style={{ color: accent }}
+      >
+        {game.title}
+      </h2>
+      <p className="mt-2 text-sm text-muted-foreground/70 leading-relaxed">
+        {tile.blurb}
+      </p>
+    </div>
+  );
+
+  if (!live) return <div className="h-full">{inner}</div>;
+
+  return (
+    <Link
+      href={game.path}
+      className="group block h-full transition-transform duration-150 ease-out hover:-translate-y-0.5 active:scale-[0.99]"
+    >
+      {inner}
+    </Link>
   );
 }

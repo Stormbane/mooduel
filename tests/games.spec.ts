@@ -13,23 +13,28 @@ async function waitForGameLoad(page: import("@playwright/test").Page) {
 }
 
 test.describe("Games Hub (/games)", () => {
-  test("shows all game cards", async ({ page }) => {
+  test("shows live tiles and the coming slate", async ({ page }) => {
     await page.goto("/games");
-    await expect(page.getByText("Games").first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("heading", { name: "Games" })).toBeVisible({ timeout: 10_000 });
 
-    await expect(page.getByText("Blind Taste Test")).toBeVisible();
-    await expect(page.getByText("Mood Roulette")).toBeVisible();
-    await expect(page.getByText("Mood Mirror")).toBeVisible();
-    await expect(page.getByText("Comfort Zone").first()).toBeVisible();
-    await expect(page.getByText("Movie Mood DJ")).toBeVisible();
-    await expect(page.getByText("Couples Mediator")).toBeVisible();
-    await expect(page.getByText("Vibe Search")).toBeVisible();
-    await expect(page.getByText("Mooduel").first()).toBeVisible();
+    // Live games are links
+    await expect(page.getByRole("link", { name: /Hotter/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Blind Taste Test/ })).toBeVisible();
+
+    // The rest of the slate is visible but not yet playable
+    for (const title of ["Shape of Stories", "Mood Bridge", "The Dinner Party", "Mooduel: The Card Game"]) {
+      await expect(page.getByText(title)).toBeVisible();
+      await expect(page.getByRole("link", { name: new RegExp(title) })).toHaveCount(0);
+    }
+    await expect(page.getByText("The flagship · soon")).toBeVisible();
   });
 
-  test("game cards are clickable links", async ({ page }) => {
+  test("live tiles navigate to their games", async ({ page }) => {
     await page.goto("/games");
-    await page.getByText("Blind Taste Test").click();
+    await page.getByRole("link", { name: /Hotter/ }).click();
+    await expect(page).toHaveURL(/\/games\/hotter/);
+    await page.goBack();
+    await page.getByRole("link", { name: /Blind Taste Test/ }).click();
     await expect(page).toHaveURL(/\/games\/blind-taste/);
   });
 });

@@ -9,9 +9,14 @@
 export type GameId =
   | "hotter"
   | "blind-taste"
+  | "shape-of-stories"
+  | "mood-bridge"
+  | "dinner-party"
+  | "card-game"
+  // legacy — hidden from nav; vibe-tree/mood-drift were never built,
+  // the rest keep live routes
   | "vibe-tree"
   | "mood-drift"
-  // legacy — hidden from nav but routes remain live
   | "roulette"
   | "mirror"
   | "comfort-zone"
@@ -39,6 +44,10 @@ export interface GameConfig {
 export const GAME_ACCENTS: Record<GameId, GameAccent> = {
   hotter: { color: "#FF4A1F", rgb: "255,74,31" },
   "blind-taste": { color: "#E91E8C", rgb: "233,30,140" },
+  "shape-of-stories": { color: "#22D3EE", rgb: "34,211,238" },
+  "mood-bridge": { color: "#FFB224", rgb: "255,178,36" },
+  "dinner-party": { color: "#2EBD85", rgb: "46,189,133" },
+  "card-game": { color: "#9F6EFF", rgb: "159,110,255" },
   "vibe-tree": { color: "#8B5CF6", rgb: "139,92,246" },
   "mood-drift": { color: "#1ED760", rgb: "30,215,96" },
   roulette: { color: "#8B5CF6", rgb: "139,92,246" },
@@ -63,20 +72,36 @@ export const GAMES: Record<GameId, GameConfig> = {
     accent: GAME_ACCENTS["blind-taste"],
     path: "/games/blind-taste",
   },
-  "vibe-tree": {
-    id: "vibe-tree",
-    title: "Vibe Tree",
-    tagline: "Navigate the mood landscape branch by branch until one movie remains.",
-    accent: GAME_ACCENTS["vibe-tree"],
-    path: "/games/vibe-tree",
+  "shape-of-stories": {
+    id: "shape-of-stories",
+    title: "Shape of Stories",
+    tagline: "Every movie draws a curve. Pick the one it left in you.",
+    accent: GAME_ACCENTS["shape-of-stories"],
+    path: "/games/shape-of-stories",
   },
-  "mood-drift": {
-    id: "mood-drift",
-    title: "Mood Drift",
-    tagline: "Guess today's movie by feel. Six tries. Wordle for vibes.",
-    accent: GAME_ACCENTS["mood-drift"],
-    path: "/games/mood-drift",
+  "mood-bridge": {
+    id: "mood-bridge",
+    title: "Mood Bridge",
+    tagline: "From one movie to another in five mood-sized steps. New puzzle daily.",
+    accent: GAME_ACCENTS["mood-bridge"],
+    path: "/games/mood-bridge",
   },
+  "dinner-party": {
+    id: "dinner-party",
+    title: "The Dinner Party",
+    tagline: "Four guests, four moods, one film that has to land for everyone.",
+    accent: GAME_ACCENTS["dinner-party"],
+    path: "/games/dinner-party",
+  },
+  "card-game": {
+    id: "card-game",
+    title: "Mooduel: The Card Game",
+    tagline: "Draft eight movies and play them like a hand. Feelings are trump.",
+    accent: GAME_ACCENTS["card-game"],
+    path: "/games/card-game",
+  },
+  "vibe-tree": { id: "vibe-tree", title: "Vibe Tree", tagline: "", accent: GAME_ACCENTS["vibe-tree"], path: "/games/vibe-tree", hidden: true },
+  "mood-drift": { id: "mood-drift", title: "Mood Drift", tagline: "", accent: GAME_ACCENTS["mood-drift"], path: "/games/mood-drift", hidden: true },
   roulette: { id: "roulette", title: "Mood Roulette", tagline: "", accent: GAME_ACCENTS.roulette, path: "/games/roulette", hidden: true },
   mirror: { id: "mirror", title: "Mood Mirror", tagline: "", accent: GAME_ACCENTS.mirror, path: "/games/mirror", hidden: true },
   "comfort-zone": { id: "comfort-zone", title: "Comfort Zone", tagline: "", accent: GAME_ACCENTS["comfort-zone"], path: "/games/comfort-zone", hidden: true },
