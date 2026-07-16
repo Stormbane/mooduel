@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +8,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { GamePage } from "@/components/game-shell/game-page";
 import { IntroScreen } from "@/components/game-shell/intro-screen";
 import { ResultScreen } from "@/components/game-shell/result-screen";
-import { GAMES } from "@/components/game-shell/types";
+import { GAMES, accentTextColor } from "@/components/game-shell/types";
 import { ensureSession, emitSignal } from "@/lib/games/client/signals";
 import { storageGet, storageSet } from "@/lib/games/client/storage";
 import {
@@ -26,6 +27,7 @@ import type { SlimMoodMovie } from "@/lib/mood-data/types";
 
 const GAME = GAMES["shape-of-stories"];
 const ACCENT = GAME.accent.color;
+const ACCENT_TEXT = accentTextColor(ACCENT);
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
 
 interface Single {
@@ -46,7 +48,7 @@ type DealError = "cap" | "fail" | null;
 
 async function fetchSingle(): Promise<Single> {
   const res = await fetch(
-    `/api/games/single?dimension=arc&game=shape-of-stories&v=1&p=${SOS_PROMPT_VERSION}`,
+    apiUrl(`/api/games/single?dimension=arc&game=shape-of-stories&v=1&p=${SOS_PROMPT_VERSION}`),
   );
   if (!res.ok) throw new Error(String(res.status));
   return res.json();
@@ -144,7 +146,7 @@ export default function ShapeOfStoriesPage() {
     setPhase("result");
     const last = finalRecords[finalRecords.length - 1];
     if (last) {
-      fetch(`/api/movies?ids=${last.movieId}`)
+      fetch(apiUrl(`/api/movies?ids=${last.movieId}`))
         .then((r) => (r.ok ? r.json() : null))
         .then((data) => setResultMovie(data?.movies?.[0] ?? null))
         .catch(() => setResultMovie(null));
@@ -491,8 +493,8 @@ function DealFailed({ onRetry }: { onRetry: () => void }) {
       </p>
       <button
         onClick={onRetry}
-        className="rounded-[4px] px-6 py-2.5 text-sm font-semibold tracking-wide text-white transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
-        style={{ backgroundColor: ACCENT }}
+        className="rounded-[4px] px-6 py-2.5 text-sm font-semibold tracking-wide transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
+        style={{ backgroundColor: ACCENT, color: ACCENT_TEXT }}
       >
         Deal another
       </button>
@@ -566,8 +568,8 @@ function GalleryResult({
         <div className="flex justify-center mt-8">
           <button
             onClick={onPlayAgain}
-            className="rounded-[4px] px-6 py-2.5 text-sm font-semibold tracking-wide text-white transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
-            style={{ backgroundColor: ACCENT }}
+            className="rounded-[4px] px-6 py-2.5 text-sm font-semibold tracking-wide transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
+            style={{ backgroundColor: ACCENT, color: ACCENT_TEXT }}
           >
             Draw eight more
           </button>

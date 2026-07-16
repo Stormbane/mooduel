@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -52,7 +53,7 @@ export default function DinnerPartyPage() {
   const loadParties = useCallback(() => {
     setParties(null);
     setLoadError(false);
-    fetch("/api/games/party?count=3")
+    fetch(apiUrl("/api/games/party?count=3"))
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data) => setParties(data.parties))
       .catch(() => setLoadError(true));
@@ -96,7 +97,7 @@ export default function DinnerPartyPage() {
     if (partyIdx + 1 >= parties.length) {
       const best = records.reduce((a, b) => (b.served.total > a.served.total ? b : a));
       setPhase("result");
-      fetch(`/api/movies?ids=${best.served.id}`)
+      fetch(apiUrl(`/api/movies?ids=${best.served.id}`))
         .then((r) => (r.ok ? r.json() : null))
         .then((data) => setChampion(data?.movies?.[0] ?? null))
         .catch(() => setChampion(null));

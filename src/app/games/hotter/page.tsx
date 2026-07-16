@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -90,7 +91,7 @@ function readStatsSnapshot(): HotterStats | null {
 }
 
 async function fetchPair(): Promise<Pair> {
-  const res = await fetch(`/api/games/pair?dimension=${randomDimension()}&game=hotter&v=1`);
+  const res = await fetch(apiUrl(`/api/games/pair?dimension=${randomDimension()}&game=hotter&v=1`));
   if (!res.ok) throw new Error(String(res.status));
   return res.json();
 }
@@ -180,7 +181,7 @@ export default function HotterPage() {
       setPhase("result");
       const c = championRound(finalRecords);
       if (c) {
-        fetch(`/api/movies?ids=${c.pickedId}`)
+        fetch(apiUrl(`/api/movies?ids=${c.pickedId}`))
           .then((r) => (r.ok ? r.json() : null))
           .then((data) => setChampion(data?.movies?.[0] ?? null))
           .catch(() => setChampion(null));

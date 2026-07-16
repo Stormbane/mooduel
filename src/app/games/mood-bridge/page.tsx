@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -46,7 +47,7 @@ export default function MoodBridgePage() {
   useEffect(() => {
     // en-CA formats as YYYY-MM-DD in the player's own timezone
     const localDate = new Date().toLocaleDateString("en-CA");
-    fetch(`/api/games/bridge/daily?date=${localDate}`)
+    fetch(apiUrl(`/api/games/bridge/daily?date=${localDate}`))
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then(setPuzzle)
       .catch(() => setPuzzleError(true));
@@ -102,7 +103,7 @@ export default function MoodBridgePage() {
     }
 
     setPhase("result");
-    fetch(`/api/movies?ids=${puzzle.target.id}`)
+    fetch(apiUrl(`/api/movies?ids=${puzzle.target.id}`))
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => setResultMovie(data?.movies?.[0] ?? null))
       .catch(() => setResultMovie(null));
@@ -290,7 +291,7 @@ function Node({
           />
         ) : (
           <div className="flex h-full items-center justify-center p-0.5 bg-[oklch(0.14_0_0)]">
-            <p className="text-center text-[7px] font-bold text-foreground/70 leading-tight">
+            <p className="text-center text-[8px] font-bold text-foreground/70 leading-tight">
               {movie.t}
             </p>
           </div>
@@ -393,7 +394,7 @@ function Workbench({
     setRailLoading(true);
     try {
       const res = await fetch(
-        `/api/games/bridge/near?from=${current.id}&date=${puzzle.date}`,
+        apiUrl(`/api/games/bridge/near?from=${current.id}&date=${puzzle.date}`),
       );
       const data = res.ok ? await res.json() : null;
       setRail((data?.movies ?? []).filter((m: BridgeMovie) => !pathIds.has(m.id) && m.id !== puzzle.target.id));
@@ -421,7 +422,7 @@ function Workbench({
     setSearching(true);
     debounceRef.current = window.setTimeout(async () => {
       try {
-        const res = await fetch(`/api/movies?search=${encodeURIComponent(q)}&limit=8`);
+        const res = await fetch(apiUrl(`/api/movies?search=${encodeURIComponent(q)}&limit=8`));
         const data = res.ok ? await res.json() : null;
         const movies: SlimMoodMovie[] = data?.movies ?? [];
         setRows(

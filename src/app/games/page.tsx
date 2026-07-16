@@ -8,7 +8,7 @@ import { GAMES, type GameConfig, type GameId } from "@/components/game-shell/typ
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
 const stagger: Variants = {

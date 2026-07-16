@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -80,7 +81,7 @@ export default function CardGamePage() {
     setTheirPlayed(null);
     setChampion(null);
     try {
-      const res = await fetch("/api/games/deck?count=16");
+      const res = await fetch(apiUrl("/api/games/deck?count=16"));
       if (!res.ok) throw new Error();
       const data = await res.json();
       setPool((data.deck as DeckMovieShape[]).map(deckToCard));
@@ -148,7 +149,7 @@ export default function CardGamePage() {
         if (nextTricks.length >= TRICKS) {
           setPhase("result");
           const mvp = mvpCard(nextTricks) ?? record.yourCard;
-          fetch(`/api/movies?ids=${mvp.id}`)
+          fetch(apiUrl(`/api/movies?ids=${mvp.id}`))
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => setChampion(data?.movies?.[0] ?? null))
             .catch(() => setChampion(null));
@@ -204,7 +205,7 @@ export default function CardGamePage() {
     setChallenging(true);
     try {
       await ensureSession();
-      const res = await fetch("/api/games/match", { method: "POST" });
+      const res = await fetch(apiUrl("/api/games/match"), { method: "POST" });
       if (!res.ok) throw new Error();
       const data = await res.json();
       router.push(data.url);

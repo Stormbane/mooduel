@@ -1,3 +1,6 @@
+"use client";
+
+import { MotionConfig } from "framer-motion";
 import { NavBar } from "./nav-bar";
 import { Footer } from "./footer";
 
@@ -19,15 +22,19 @@ export function PageLayout({
   hideFooter = false,
 }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <NavBar
-        currentPage={currentPage}
-        maxWidth={navMaxWidth || maxWidth}
-      />
-      <main className={`relative z-10 px-6 pb-24 ${maxWidth} mx-auto`}>
-        {children}
-      </main>
-      {!hideFooter && <Footer maxWidth={maxWidth} />}
-    </div>
+    // reducedMotion="user": transform animations obey the OS-level
+    // prefers-reduced-motion setting across every page on the stage
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-background text-foreground">
+        <NavBar
+          currentPage={currentPage}
+          maxWidth={navMaxWidth || maxWidth}
+        />
+        <main className={`relative z-10 px-6 pb-24 ${maxWidth} mx-auto`}>
+          {children}
+        </main>
+        {!hideFooter && <Footer maxWidth={maxWidth} />}
+      </div>
+    </MotionConfig>
   );
 }

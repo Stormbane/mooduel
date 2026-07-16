@@ -1,7 +1,8 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useState } from "react";
-import type { SharePayload } from "@/components/game-shell/types";
+import { accentTextColor, type SharePayload } from "@/components/game-shell/types";
 
 interface ShareButtonProps {
   game: string;
@@ -32,7 +33,7 @@ export function ShareButton({
   const handleShare = useCallback(async () => {
     setPhase("creating");
     try {
-      const res = await fetch("/api/share", {
+      const res = await fetch(apiUrl("/api/share"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ game, payload }),
@@ -72,8 +73,8 @@ export function ShareButton({
     <button
       onClick={handleShare}
       disabled={phase === "creating"}
-      className="rounded-[4px] px-5 py-2.5 text-sm font-semibold tracking-wide text-white transition-transform duration-100 hover:brightness-110 active:scale-[0.97] disabled:opacity-60"
-      style={{ backgroundColor: accent }}
+      className="rounded-[4px] px-5 py-2.5 text-sm font-semibold tracking-wide transition-transform duration-100 hover:brightness-110 active:scale-[0.97] disabled:opacity-60"
+      style={{ backgroundColor: accent, color: accentTextColor(accent) }}
     >
       {text}
     </button>

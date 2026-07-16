@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { useState, useEffect } from "react";
 import type { SlimMoodMovie } from "./types";
 
@@ -10,7 +11,7 @@ async function fetchMoodData(): Promise<SlimMoodMovie[]> {
   if (cachedData) return cachedData;
   if (loadingPromise) return loadingPromise;
 
-  loadingPromise = fetch("/api/movies/pool")
+  loadingPromise = fetch(apiUrl("/api/movies/pool"))
     .then((r) => r.json())
     .then((data: SlimMoodMovie[]) => {
       cachedData = data;

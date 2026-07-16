@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { GameConfig } from "./types";
+import { accentTextColor, type GameConfig } from "./types";
 
 interface IntroScreenProps {
   game: GameConfig;
@@ -54,8 +54,8 @@ export function IntroScreen({
       )}
       <button
         onClick={onStart}
-        className="rounded-[4px] px-8 py-3 text-sm font-semibold tracking-wide text-white transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
-        style={{ backgroundColor: game.accent.color }}
+        className="rounded-[4px] px-8 py-3 text-sm font-semibold tracking-wide transition-transform duration-100 hover:brightness-110 active:scale-[0.97]"
+        style={{ backgroundColor: game.accent.color, color: accentTextColor(game.accent.color) }}
       >
         {ctaLabel}
       </button>

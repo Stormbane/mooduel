@@ -13,20 +13,21 @@ async function waitForGameLoad(page: import("@playwright/test").Page) {
 }
 
 test.describe("Games Hub (/games)", () => {
-  test("shows live tiles and the coming slate", async ({ page }) => {
+  test("shows the full slate, all live", async ({ page }) => {
     await page.goto("/games");
     await expect(page.getByRole("heading", { name: "Games" })).toBeVisible({ timeout: 10_000 });
 
-    // Live games are links
-    await expect(page.getByRole("link", { name: /Hotter/ })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Blind Taste Test/ })).toBeVisible();
-
-    // The rest of the slate is visible but not yet playable
-    for (const title of ["Shape of Stories", "Mood Bridge", "The Dinner Party", "Mooduel: The Card Game"]) {
-      await expect(page.getByText(title)).toBeVisible();
-      await expect(page.getByRole("link", { name: new RegExp(title) })).toHaveCount(0);
+    for (const title of [
+      "Hotter",
+      "Blind Taste Test",
+      "Shape of Stories",
+      "Mood Bridge",
+      "The Dinner Party",
+      "Mooduel: The Card Game",
+    ]) {
+      await expect(page.getByRole("link", { name: new RegExp(title) })).toBeVisible();
     }
-    await expect(page.getByText("The flagship · soon")).toBeVisible();
+    await expect(page.getByText("The flagship · now playing")).toBeVisible();
   });
 
   test("live tiles navigate to their games", async ({ page }) => {
@@ -110,16 +111,16 @@ test.describe("Mood Roulette", () => {
   test("loads and shows spin button", async ({ page }) => {
     await page.goto("/games/roulette");
     await waitForGameLoad(page);
-    await expect(page.getByText("PULL THE LEVER")).toBeVisible();
+    await expect(page.getByRole("button", { name: "PULL THE LEVER" })).toBeVisible();
   });
 
   test("spinning produces results", async ({ page }) => {
     await page.goto("/games/roulette");
     await waitForGameLoad(page);
-    await page.getByText("PULL THE LEVER").click();
+    await page.getByRole("button", { name: "PULL THE LEVER" }).click();
 
     // Wait for spin to complete
-    await expect(page.getByText("SPIN AGAIN")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("button", { name: "SPIN AGAIN" })).toBeVisible({ timeout: 15_000 });
   });
 });
 

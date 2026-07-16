@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "@/lib/games/client/api";
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
@@ -69,7 +70,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
   const refresh = useCallback(async () => {
     try {
       await sessionReady.current;
-      const res = await fetch(`/api/games/match/${code}`);
+      const res = await fetch(apiUrl(`/api/games/match/${code}`));
       if (res.status === 404) {
         setError("This table doesn't exist. Check the link.");
         return;
@@ -117,7 +118,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
       relative.filter((t) => t.winner === "you").sort((a, b) => b.margin - a.margin)[0]?.yourCard ??
       relative[0]?.yourCard;
     if (!mvp) return;
-    fetch(`/api/movies?ids=${mvp.id}`)
+    fetch(apiUrl(`/api/movies?ids=${mvp.id}`))
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => setChampion(data?.movies?.[0] ?? null))
       .catch(() => setChampion(null));
@@ -127,7 +128,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
     setBusy(true);
     try {
       await sessionReady.current;
-      const res = await fetch(`/api/games/match/${code}/join`, { method: "POST" });
+      const res = await fetch(apiUrl(`/api/games/match/${code}/join`), { method: "POST" });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         setNotice(data?.error ?? "Couldn't take the seat.");
@@ -144,7 +145,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
     async (ids: number[]) => {
       setBusy(true);
       try {
-        const res = await fetch(`/api/games/match/${code}/hand`, {
+        const res = await fetch(apiUrl(`/api/games/match/${code}/hand`), {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ cardIds: ids }),
@@ -168,7 +169,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
       if (!state) return;
       setBusy(true);
       try {
-        const res = await fetch(`/api/games/match/${code}/move`, {
+        const res = await fetch(apiUrl(`/api/games/match/${code}/move`), {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
@@ -198,7 +199,7 @@ export default function PvpMatchPage({ params }: { params: Promise<{ code: strin
 
   const forfeit = useCallback(async () => {
     if (!window.confirm("Concede the table?")) return;
-    await fetch(`/api/games/match/${code}/forfeit`, { method: "POST" });
+    await fetch(apiUrl(`/api/games/match/${code}/forfeit`), { method: "POST" });
     void refresh();
   }, [code, refresh]);
 
@@ -644,7 +645,7 @@ function ActiveTable({
                         key={c}
                         data-testid="lead-category"
                         onClick={() => setLeadCategory(c)}
-                        className="rounded-[4px] border px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[36px]"
+                        className="rounded-[4px] border px-3 py-2 text-xs font-semibold transition-colors cursor-pointer min-h-[44px]"
                         style={{
                           borderColor: leadCategory === c ? ACCENT : "oklch(0.28 0 0)",
                           color: leadCategory === c ? ACCENT : "rgba(255,255,255,0.75)",
@@ -707,7 +708,7 @@ function ActiveTable({
               </p>
               <button
                 onClick={onRefresh}
-                className="mt-3 min-h-[36px] px-3 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                className="mt-3 min-h-[44px] px-4 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
               >
                 Check now
               </button>
@@ -722,7 +723,7 @@ function ActiveTable({
         </p>
         <button
           onClick={onForfeit}
-          className="min-h-[36px] px-2 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+          className="min-h-[44px] px-3 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors"
         >
           Concede
         </button>

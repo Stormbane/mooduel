@@ -1,5 +1,7 @@
 "use client";
 
+import { apiUrl } from "./api";
+
 /**
  * Client signal emitter: fire-and-forget with safe retry.
  *
@@ -23,7 +25,7 @@ async function flush(): Promise<void> {
   flushing = true;
   const batch = queue.slice(0, 20);
   try {
-    const res = await fetch("/api/games/signal", {
+    const res = await fetch(apiUrl("/api/games/signal"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ events: batch }),
@@ -43,7 +45,7 @@ async function flush(): Promise<void> {
 /** Ensure a session exists (idempotent; call once on game mount). */
 export async function ensureSession(): Promise<string | null> {
   try {
-    const res = await fetch("/api/games/session");
+    const res = await fetch(apiUrl("/api/games/session"));
     return res.ok ? (await res.json()).sessionId : null;
   } catch {
     return null;
@@ -60,7 +62,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("pagehide", () => {
     if (queue.length === 0) return;
     navigator.sendBeacon?.(
-      "/api/games/signal",
+      apiUrl("/api/games/signal"),
       new Blob([JSON.stringify({ events: queue.slice(0, 20) })], { type: "application/json" })
     );
   });
