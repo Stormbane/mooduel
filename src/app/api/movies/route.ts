@@ -23,6 +23,35 @@ const supabase = createClient(
  */
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
+
+  // Direct lookup by tmdb ids (bypasses pagination/filters) — used by game
+  // result screens that need full mood records for a handful of movies.
+  const idsParam = params.get("ids");
+  if (idsParam) {
+    const ids = idsParam
+      .split(",")
+      .map((s) => parseInt(s, 10))
+      .filter(Number.isFinite)
+      .slice(0, 50);
+    if (ids.length === 0) {
+      return NextResponse.json({ movies: [], total: 0, page: 1, limit: 0 });
+    }
+    const { data, error } = await supabase
+      .from("movies")
+      .select("*")
+      .in("tmdb_id", ids);
+    if (error) {
+      console.error("[movies:GET ids]", error.message);
+      return NextResponse.json({ error: "Failed to fetch movies" }, { status: 500 });
+    }
+    return NextResponse.json({
+      movies: (data || []).map(toSlim),
+      total: data?.length || 0,
+      page: 1,
+      limit: ids.length,
+    });
+  }
+
   const page = Math.max(1, parseInt(params.get("page") || "1"));
   const limit = Math.min(200, Math.max(1, parseInt(params.get("limit") || "60")));
   const rawSearch = params.get("search")?.trim();

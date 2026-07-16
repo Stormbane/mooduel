@@ -9,12 +9,8 @@
  * re-aggregation can distinguish sampling regimes.
  */
 import { serviceClient } from "./service-client";
+import type { PairwiseDimension } from "../dimensions";
 
-export const PAIRWISE_DIMENSIONS = [
-  "valence", "arousal", "dominance", "absorption", "hedonic", "eudaimonic",
-  "psych_rich", "comfort_level", "conversation_potential",
-] as const;
-export type PairwiseDimension = (typeof PAIRWISE_DIMENSIONS)[number];
 export const POLICY_VERSION = "v1-uniform";
 
 let idCache: number[] | null = null;
@@ -39,10 +35,22 @@ async function pooledIds(): Promise<number[]> {
   return ids;
 }
 
+export interface DealtPairMovie {
+  /** Canonical assignment slot — submit_signal only accepts 'a' | 'b'. */
+  key: "a" | "b";
+  tmdb_id: number;
+  title: string;
+  year: number;
+  poster_path: string | null;
+  genres: string[];
+  /** Model score on the dealt dimension (null if unscored). */
+  score: number | null;
+}
+
 export interface DealtPair {
   assignmentId: string;
   /** movies in DISPLAY order (already shuffled server-side) */
-  movies: { tmdb_id: number; title: string; year: number; poster_path: string | null; genres: string[] }[];
+  movies: DealtPairMovie[];
   dimension: PairwiseDimension;
 }
 
@@ -79,15 +87,27 @@ export async function dealPair(opts: {
 
   const { data: movies, error: mErr } = await serviceClient
     .from("movies")
-    .select("tmdb_id,title,year,poster_path,genres")
+    .select(`tmdb_id,title,year,poster_path,genres,${opts.dimension}`)
     .in("tmdb_id", [a, b]);
   if (mErr) throw new Error(mErr.message);
 
-  const byId = new Map(movies.map((m) => [m.tmdb_id, m]));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const byId = new Map((movies as any[]).map((m) => [m.tmdb_id, m]));
   const ordered = displayedOrder === "ab" ? [a, b] : [b, a];
   return {
     assignmentId: assignmentId as string,
-    movies: ordered.map((id) => byId.get(id)!),
+    movies: ordered.map((id) => {
+      const m = byId.get(id)!;
+      return {
+        key: (id === a ? "a" : "b") as "a" | "b",
+        tmdb_id: m.tmdb_id,
+        title: m.title,
+        year: m.year,
+        poster_path: m.poster_path,
+        genres: m.genres,
+        score: m[opts.dimension] ?? null,
+      };
+    }),
     dimension: opts.dimension,
   };
 }

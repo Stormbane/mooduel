@@ -7,6 +7,7 @@
  */
 
 export type GameId =
+  | "hotter"
   | "blind-taste"
   | "vibe-tree"
   | "mood-drift"
@@ -36,6 +37,7 @@ export interface GameConfig {
 
 /** Accents keyed by GameId. CSS custom properties remain the source of truth. */
 export const GAME_ACCENTS: Record<GameId, GameAccent> = {
+  hotter: { color: "#FF4A1F", rgb: "255,74,31" },
   "blind-taste": { color: "#E91E8C", rgb: "233,30,140" },
   "vibe-tree": { color: "#8B5CF6", rgb: "139,92,246" },
   "mood-drift": { color: "#1ED760", rgb: "30,215,96" },
@@ -47,6 +49,13 @@ export const GAME_ACCENTS: Record<GameId, GameAccent> = {
 };
 
 export const GAMES: Record<GameId, GameConfig> = {
+  hotter: {
+    id: "hotter",
+    title: "Hotter",
+    tagline: "Two movies. One question. You against the model.",
+    accent: GAME_ACCENTS.hotter,
+    path: "/games/hotter",
+  },
   "blind-taste": {
     id: "blind-taste",
     title: "Blind Taste Test",
@@ -77,6 +86,7 @@ export const GAMES: Record<GameId, GameConfig> = {
 
 /** Share payload schema per game. Keep narrow and stable — these persist forever. */
 export type SharePayload =
+  | { game: "hotter"; pickedMovieId: number; vsMovieId: number; dimension: string; agreed: boolean; syncs: number; takes: number; rounds: number; bestStreak: number; grid: string }
   | { game: "blind-taste"; pickedMovieId: number; passedMovieIds: number[] }
   | { game: "vibe-tree"; pickedMovieId: number; path: string[] }
   | { game: "mood-drift"; pickedMovieId: number; targetMovieId: number; guessCount: number; solved: boolean; grid: string };

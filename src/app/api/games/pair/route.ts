@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken, SESSION_COOKIE } from "@/lib/games/server/session";
 import { getUserId, ipHash } from "@/lib/games/server/service-client";
-import { dealPair, PAIRWISE_DIMENSIONS, type PairwiseDimension } from "@/lib/games/server/pool";
+import { dealPair } from "@/lib/games/server/pool";
+import { PAIRWISE_DIMENSIONS, type PairwiseDimension } from "@/lib/games/dimensions";
 
 /**
  * GET /api/games/pair?dimension=arousal&game=hotter&v=1

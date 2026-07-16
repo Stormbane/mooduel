@@ -22,6 +22,12 @@ const stagger: Variants = {
  */
 const V1_GAMES = [
   {
+    id: "hotter",
+    status: "live" as const,
+    blurb:
+      "Two posters, one question, and a model with opinions. Stay in sync as long as you can, or go down swinging with a hot take.",
+  },
+  {
     id: "blind-taste",
     status: "live" as const,
     blurb:
