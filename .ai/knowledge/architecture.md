@@ -184,3 +184,54 @@ create table user_profiles (
   updated_at timestamptz default now()
 );
 ```
+
+## Calibration Platform (added 2026-07-17)
+
+Full design + two-round Codex review log: `calibration-replatform-plan.md`.
+Core idea: games are calibration engines — every play is a label.
+
+### Data provenance
+- `data/movie-mood-scores.jsonl` — canonical classifier output, never mutated
+- `data/patches/` — enum-repair ledger (mechanical + LLM), materialized maps
+- `score_patches` (supabase/003) — the ledger in DB, service-role writes only
+- `movie_scores_baseline` (supabase/003) — immutable normalized LLM prior
+- `data/movie-enrichment.jsonl` — posters + RT/IMDB snapshot; with the
+  canonical JSONL, `scripts/seed-movies.ts` rebuilds the movies table from
+  repo artifacts alone
+- `scripts/export-dataset.ts --version X.Y.Z` — snapshot-bound release with
+  sha256 manifest; refuses to clobber existing versions
+
+### Signal pipeline (supabase/004, 006)
+- `assignments` — server-dealt comparisons (session + IP caps in the RPC)
+- `calibration_signals` — append-only; deny-by-default RLS both tables
+- `submit_signal(assignment_id, client_event_id, choice, session, user)` —
+  the only write path; context copied from the locked assignment, latency
+  server-computed, idempotent on client_event_id
+- Routes: `/api/games/session` (signed httpOnly anon sessions),
+  `/api/games/pair`, `/api/games/signal` — service-role only; the RPCs are
+  revoked from anon/authenticated
+- Client: `src/lib/games/client/signals.ts` — fire-and-forget emitter,
+  idempotent retry, pagehide beacon
+
+### Aggregation + promotion (supabase/005, scripts/calibration/)
+- `bt.mjs` — regularized Bayesian Bradley-Terry, PAVA isotonic anchor
+  mapping, precision-based shrinkage (zero votes → prior untouched),
+  categorical majority. Synthetic test: `test-bt.mjs` (rho=0.976 recovery)
+- `aggregate.mjs run` — writes complete immutable runs to
+  `calibration_runs` + `movie_scores_calibrated` (PK run_id, movie_id);
+  never touches serving columns
+- `promote_calibration_run()` — advisory-locked, set-equality proven both
+  directions, row-count asserted, single transaction
+- `.github/workflows/calibration.yml` — weekly unpromoted runs; promotion
+  is manual until the shadow gate passes
+
+### PvP skeleton (supabase/006)
+- `matches` / `match_players` / `match_secrets` / `match_moves`
+- `match_secrets` has NO RLS policies in any direction — hands are never
+  client-readable; players see their own via `get_hand()` through
+  service-role routes
+- `create_match` / `join_match` (single-claim invite, one-identity-one-seat)
+  / `submit_move` (turn + optimistic version + idempotency + deadline
+  forfeit) / `forfeit_match`
+- Game rules (dealing, trick resolution, scoring) intentionally NOT here —
+  they belong to the Phase 4 game build

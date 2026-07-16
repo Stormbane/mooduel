@@ -30,10 +30,12 @@
 - [x] Classifier v2 prompt + schema (18 dimensions)
 - [x] test-10-v2 validated (10/10 passed, all dimensions sensible)
 - [x] Batch classifier script ready (`batch-classify.mjs`)
-- [ ] **Top up Anthropic API credits**
-- [ ] Run batch classification (30K movies via Haiku, ~$15-40)
-- [ ] Validate: spot-check 100 random scores, distribution sanity
-- [ ] Quality report: histograms per dimension, outlier detection
+- [x] Batch classification RAN 2026-03-20: 30,611 movies, 4 batches
+      (canonical output: data/movie-mood-scores.jsonl)
+- [x] Distribution analysis done 2026-07-17 (see audit): vibe sentences
+      30,609/30,611 unique; known issues → arc mode collapse (64.5%
+      man-in-a-hole), arousal inflation, enum leakage (~1,200 rows),
+      0.05-grid quantization. Fixes tracked in M2.5 below.
 
 ### Phase 3: Integration with Mooduel Game ✅
 - [x] Supabase database: 5 tables (movies, profiles, corrections, votes, reputation_events)
@@ -58,6 +60,46 @@
 - [ ] Mood-guided TMDB discover by VA quadrant
 - [ ] Pool replenishment between rounds
 - [ ] Popularity floor curve per round
+
+---
+
+## M2.5: Calibration Replatform (2026-07-17)
+Full design + review log: `.ai/knowledge/calibration-replatform-plan.md`
+Core idea: games are calibration engines — every play is a label that
+repairs the dataset's weak dimensions.
+
+### Foundations ✅ (Phases 0–3 of the plan, all committed + smoke-tested)
+- [x] Phase 0 release blockers: build fix, LICENSE, avatar hosts,
+      .env.example, README schema reconciliation, dataset binaries untracked
+- [x] Enum patch ledger: 11,876 mechanical patches, 1,213 fields queued
+      for LLM repair (`scripts/data-pipeline/10-normalize-enums.mjs`)
+- [x] score_patches + movie_scores_baseline tables (supabase/003)
+- [x] Validated apply script (`11-apply-patches.mjs`, dry-run clean)
+- [x] Reproducible seed: enrichment snapshot + rewritten seed-movies.ts
+- [x] Snapshot-bound manifest export (`export-dataset.ts --version`)
+- [x] Signals trust boundary: assignments + calibration_signals,
+      deal/submit RPCs, session + IP caps (supabase/004, 006)
+- [x] Bayesian BT aggregation engine + synthetic test (rho=0.976)
+      (`scripts/calibration/`), weekly GitHub Action (unpromoted runs)
+- [x] Atomic run promotion: set-equality proven, advisory-locked (supabase/005)
+- [x] Games SDK: signed anon sessions, pool service, /api/games/* routes,
+      idempotent client emitter (`src/lib/games/`)
+- [x] PvP concurrency skeleton: match_secrets (never client-readable),
+      single-claim invites, versioned idempotent moves, deadline forfeit
+
+### Blocked on Suti
+- [ ] Fresh ANTHROPIC_API_KEY (current 401) → run:
+      reclassify-enums.mjs submit/fetch → 11-apply-patches.mjs →
+      export-dataset.ts --version 1.0.1 → upload HF (v1.0.1)
+- [ ] GitHub repo secrets for calibration Action
+      (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+- [ ] SESSION_TOKEN_SECRET in production env at deploy
+- [ ] Buy Me a Coffee link in FUNDING.yml (account pending)
+
+### Calibration gate (after Hotter ships)
+- [ ] 2–4 week shadow run; replay/abuse tests; BT connectivity diagnostics
+- [ ] Anchor set (~300 movies) for isotonic scale mapping
+- [ ] First promotion + freeze event schema v1 → unblocks dataset v1.1
 
 ---
 
@@ -105,37 +147,67 @@
 
 ---
 
-## M4: More Games
+## M4: The Game Slate (Phase 4 of the replatform plan)
+Build order chosen so each game exercises the newest foundation layer.
+To be built with high effort and max creative agency (Suti, 2026-07-17) —
+NOT in an autonomous loop. Rules/feel are open; the SDK + PvP skeleton
+(match_secrets, submit_move, signals) are the fixed floor.
 
-### Mood Drift (Daily Game — Wordle for Movies)
+### 1. Hotter — pairwise mood duel
+- [ ] Two posters, one question ("Which is scarier?"), tap, streak
+- [ ] Emits pairwise signals via /api/games/pair + emitSignal (SDK ready)
+- [ ] "You vs the model" framing until consensus data accrues
+- [ ] Starts the calibration flywheel for arousal/conversation
+
+### 2. Mooduel: The Card Game — the flagship PvP
+- [ ] Draft 8 movies, trick-taking over mood categories
+- [ ] House bot + async PvP via challenge links (skeleton ready)
+- [ ] Game rules on top of submit_move; hands via match_secrets/get_hand
+- [ ] Realtime live mode as fast-follow
+
+### 3. Shape of Stories — pick the arc
+- [ ] Six drawn Vonnegut/Reagan curves, pick the shape for a known movie
+- [ ] Emits categorical signals → rebuilds the collapsed arc dimension
+
+### 4. Mood Bridge — daily A→B pathfinding
+- [ ] Get from Movie A to Movie B in ≤5 hops within mood-distance budget
+- [ ] Par scores, daily seed, shareable path
+
+### 5. The Dinner Party — persona matchmaking puzzle
+- [ ] Curate one film for four described emotional states
+- [ ] Zillmann MMT as a puzzle; scored against profiles
+
+### Earlier experiments (built, hidden from nav per 2026-04-25 decision)
+
+#### Mood Drift (Daily Game — Wordle for Movies)
 - [ ] Daily target mood profile (hidden VA + arc)
 - [ ] 6 guesses: name a movie, see distance to target
 - [ ] Shareable results grid ("Hereditary → Paddington in 4 moves")
 - [ ] Daily reset, streak tracking
 
-### Blind Taste Test (Vibe Sentences Only)
+#### Blind Taste Test (Vibe Sentences Only)
 - [ ] Show 5 vibe sentences, no titles/posters/metadata
 - [ ] User picks which movie they'd watch
 - [ ] Reveal movie after choice
 - [ ] Track hit rate: does vibe language predict satisfaction?
 
-### Mood Roulette
+#### Mood Roulette
 - [ ] Slot machine: 3 reels (emotional arc × watch context × wild card)
 - [ ] Pull lever, see matching movies
 - [ ] Shareable: "I got icarus + solo + devastating"
 
-### Emotional Journey Planner (Movie Marathon Builder)
+#### Emotional Journey Planner (Movie Marathon Builder)
 - [ ] Draw emotional arc on VA graph
 - [ ] App sequences 3-5 movies along that trajectory
 - [ ] Presets: "Rainy Weekend", "Halloween Night", "Date Night Arc"
 - [ ] Respects pacing transitions between films
 
-### Couples Movie Mediator
+#### Couples Movie Mediator
 - [ ] Two players input mood independently (same color/vibe/emotion flow)
 - [ ] App finds movie at intersection of both mood profiles
 - [ ] Filtered by "date" watch context, comfort level, conversation potential
 
-### Vibe Search Engine
+#### Vibe Search Engine
 - [ ] Natural language input: "something that feels like a rainy Sunday"
 - [ ] Semantic similarity against vibe sentences + mood tags
 - [ ] Embedding model (transformers.js client-side or server-side)

@@ -27,6 +27,8 @@ These are textbooks. Look things up, don't pre-load.
 - .ai/knowledge/architecture.md
 - .ai/knowledge/glossary.md
 - .ai/knowledge/conventions.md
+- .ai/knowledge/calibration-replatform-plan.md — calibration platform design
+  (reviewed), foundation status, and the Phase 4 game slate
 
 ## Memory
 
