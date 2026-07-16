@@ -49,7 +49,7 @@ const HUB_TILES: HubTile[] = [
   },
   {
     id: "mood-bridge",
-    status: "soon",
+    status: "live",
     blurb:
       "Start at one movie, land on another. Five hops, and every hop has to stay within reach in mood. New bridge daily.",
   },
