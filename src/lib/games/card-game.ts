@@ -217,3 +217,18 @@ export function botFollow(
   if (winners.length > 0) return worst(winners, category);
   return worst(botCards, category);
 }
+
+/** Deck payload shape shared by /api/games/deck and match configs. */
+export interface DeckMovieShape {
+  tmdb_id: number;
+  title: string;
+  year: number;
+  poster_path: string | null;
+  dims: Record<Category, number | null>;
+}
+
+export function deckToCard(m: DeckMovieShape): Card {
+  const scores = {} as Record<Category, number>;
+  for (const c of CATEGORIES) scores[c] = toCardScore(c, m.dims[c]);
+  return { id: m.tmdb_id, t: m.title, y: m.year, pp: m.poster_path, scores };
+}

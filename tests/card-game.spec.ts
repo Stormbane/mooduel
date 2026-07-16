@@ -77,7 +77,7 @@ test("Card Game: draft eight, play eight tricks, reach a verdict", async ({ page
   }
 
   // Verdict + trick log + share flow
-  await expect(page.getByText(/The night is yours|The house wins|Dead heat/)).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByText(/The night is yours|the house wins|Dead heat/i).first()).toBeVisible({ timeout: 25_000 });
   await expect(page.getByText("The tricks")).toBeVisible();
   await expect(page.getByRole("button", { name: "Share" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Rematch/i })).toBeVisible();
