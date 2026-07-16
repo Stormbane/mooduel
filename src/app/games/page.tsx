@@ -43,7 +43,7 @@ const HUB_TILES: HubTile[] = [
   },
   {
     id: "shape-of-stories",
-    status: "soon",
+    status: "live",
     blurb:
       "Six curves a story can take. Pick the shape of a movie you know and teach the model its arc.",
   },

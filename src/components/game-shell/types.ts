@@ -112,6 +112,7 @@ export const GAMES: Record<GameId, GameConfig> = {
 /** Share payload schema per game. Keep narrow and stable — these persist forever. */
 export type SharePayload =
   | { game: "hotter"; pickedMovieId: number; vsMovieId: number; dimension: string; agreed: boolean; syncs: number; takes: number; rounds: number; bestStreak: number; grid: string }
+  | { game: "shape-of-stories"; pickedMovieId: number; shapes: string; agreed: number; rounds: number }
   | { game: "blind-taste"; pickedMovieId: number; passedMovieIds: number[] }
   | { game: "vibe-tree"; pickedMovieId: number; path: string[] }
   | { game: "mood-drift"; pickedMovieId: number; targetMovieId: number; guessCount: number; solved: boolean; grid: string };

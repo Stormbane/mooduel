@@ -8,3 +8,7 @@ export const PAIRWISE_DIMENSIONS = [
   "psych_rich", "comfort_level", "conversation_potential",
 ] as const;
 export type PairwiseDimension = (typeof PAIRWISE_DIMENSIONS)[number];
+
+/** Dimensions collected as single-movie categorical judgments. */
+export const CATEGORICAL_DIMENSIONS = ["arc"] as const;
+export type CategoricalDimension = (typeof CATEGORICAL_DIMENSIONS)[number];

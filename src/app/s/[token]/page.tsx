@@ -134,6 +134,7 @@ export default async function SharePage(
 
   const eyebrowByGame: Record<string, string> = {
     hotter: "Hotter · hottest take",
+    "shape-of-stories": "Shape of Stories · gallery",
     "blind-taste": "Blind Taste Test · pick",
     "vibe-tree": "Vibe Tree · destination",
     "mood-drift": "Mood Drift · today",
