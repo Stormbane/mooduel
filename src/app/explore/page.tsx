@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { PageLayout } from "@/components/layout/page-layout";
@@ -60,7 +60,7 @@ function FilterRow({
   );
 }
 
-export default function ExplorePage() {
+function ExploreContent() {
   const [search, setSearch] = useState("");
   const [contextFilter, setContextFilter] = useState<string[]>([]);
   const [endingFilter, setEndingFilter] = useState<string[]>([]);
@@ -299,5 +299,13 @@ export default function ExplorePage() {
         {movies.length.toLocaleString()} of {total.toLocaleString()} movies
       </div>
     </PageLayout>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense>
+      <ExploreContent />
+    </Suspense>
   );
 }
