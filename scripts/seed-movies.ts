@@ -1,14 +1,23 @@
 /**
- * Seed the Supabase movies table from mood-data.json using the REST API.
+ * Seed the Supabase movies table from the canonical classifier output.
  *
- * PREREQUISITE: Run supabase/all_migrations.sql in the Supabase Dashboard SQL Editor first.
+ * Reads (in priority order):
+ *   data/movie-mood-scores-v1.0.1.jsonl  — normalized artifact, if present
+ *   data/movie-mood-scores.jsonl         — canonical classifier output
+ * plus data/movie-enrichment.jsonl        — posters + RT/IMDB scores
+ *
+ * Everything comes from committed repo artifacts: JSONL -> Supabase is one
+ * command with no ghost files (the old public/mood-data.json is gone).
+ *
+ * PREREQUISITE: run supabase/all_migrations.sql (+ 003_score_provenance.sql).
  *
  * Usage: npx tsx scripts/seed-movies.ts
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync } from "fs";
+import { createReadStream, existsSync, readFileSync } from "fs";
 import { resolve } from "path";
+import { createInterface } from "readline";
 import { config } from "dotenv";
 
 config({ path: resolve(__dirname, "../.env.local") });
@@ -18,135 +27,123 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-interface SlimMovie {
-  id: number;
-  t: string;
-  y: number;
-  g: string[];
-  rt: number | null;
-  r: number | null;
-  v: string;
-  va: number;
-  ar: number;
-  do: number;
-  ab: number;
-  he: number;
-  eu: number;
-  pr: number;
-  arc: string;
-  em: string[];
-  tags: string[];
-  wc: string[];
-  pa: string;
-  end: string;
-  co: number;
-  warn: string[];
-  conv: number;
-  rtc?: number;
-  rta?: number;
-  imdb?: number;
-  pp?: string;
+/** Canonical classifier record (camelCase, full names) */
+interface ScoreRecord {
+  tmdbId: number;
+  title: string;
+  year: number;
+  genres: string[];
+  runtime: number | null;
+  tmdbRating: number | null;
+  valence: number;
+  arousal: number;
+  dominance: number;
+  absorptionPotential: number;
+  hedonicValence: number;
+  eudaimonicValence: number;
+  psychologicallyRichValence: number;
+  emotionalArc: string;
+  dominantEmotions: string[];
+  moodTags: string[];
+  watchContext: string[];
+  vibeSentence: string;
+  pacing: string;
+  endingType: string;
+  comfortLevel: number;
+  emotionalSafetyWarnings: string[];
+  conversationPotential: number;
 }
 
-function toRow(m: SlimMovie) {
+interface Enrichment {
+  posterPath: string | null;
+  rtCritic: number | null;
+  rtAudience: number | null;
+  imdbRating: number | null;
+}
+
+function toRow(m: ScoreRecord, e: Enrichment | undefined) {
   return {
-    tmdb_id: m.id,
-    title: m.t,
-    year: m.y,
-    genres: m.g,
-    runtime: m.rt,
-    tmdb_rating: m.r,
-    poster_path: m.pp || null,
-    valence: m.va,
-    arousal: m.ar,
-    dominance: m.do,
-    absorption: m.ab,
-    hedonic: m.he,
-    eudaimonic: m.eu,
-    psych_rich: m.pr,
-    emotional_arc: m.arc,
-    dominant_emotions: m.em,
-    mood_tags: m.tags,
-    watch_context: m.wc,
-    vibe_sentence: m.v,
-    pacing: m.pa,
-    ending_type: m.end,
-    comfort_level: m.co,
-    safety_warnings: m.warn,
-    conversation_potential: m.conv,
-    rt_critic: m.rtc ?? null,
-    rt_audience: m.rta ?? null,
-    imdb_rating: m.imdb ?? null,
+    tmdb_id: m.tmdbId,
+    title: m.title,
+    year: m.year,
+    genres: m.genres,
+    runtime: m.runtime,
+    tmdb_rating: m.tmdbRating,
+    poster_path: e?.posterPath ?? null,
+    valence: m.valence,
+    arousal: m.arousal,
+    dominance: m.dominance,
+    absorption: m.absorptionPotential,
+    hedonic: m.hedonicValence,
+    eudaimonic: m.eudaimonicValence,
+    psych_rich: m.psychologicallyRichValence,
+    emotional_arc: m.emotionalArc,
+    dominant_emotions: m.dominantEmotions,
+    mood_tags: m.moodTags,
+    watch_context: m.watchContext,
+    vibe_sentence: m.vibeSentence,
+    pacing: m.pacing,
+    ending_type: m.endingType,
+    comfort_level: m.comfortLevel,
+    safety_warnings: m.emotionalSafetyWarnings,
+    conversation_potential: m.conversationPotential,
+    rt_critic: e?.rtCritic ?? null,
+    rt_audience: e?.rtAudience ?? null,
+    imdb_rating: e?.imdbRating ?? null,
   };
 }
 
 async function seed() {
-  console.log("Loading mood-data.json...");
-  const raw = readFileSync(
-    resolve(__dirname, "../public/mood-data.json"),
-    "utf-8"
-  );
-  const movies: SlimMovie[] = JSON.parse(raw);
-  console.log(`Loaded ${movies.length} movies.`);
+  const patched = resolve(__dirname, "../data/movie-mood-scores-v1.0.1.jsonl");
+  const canonical = resolve(__dirname, "../data/movie-mood-scores.jsonl");
+  const src = existsSync(patched) ? patched : canonical;
+  console.log(`Source: ${src}`);
 
-  // Check if table exists
-  const { error: checkErr } = await supabase
-    .from("movies")
-    .select("tmdb_id")
-    .limit(1);
-  if (checkErr) {
-    console.error(
-      "Movies table not found. Run supabase/all_migrations.sql in the Supabase Dashboard SQL Editor first."
-    );
-    console.error("Error:", checkErr.message);
-    process.exit(1);
+  const enrichment = new Map<number, Enrichment>();
+  const enrichmentPath = resolve(__dirname, "../data/movie-enrichment.jsonl");
+  if (existsSync(enrichmentPath)) {
+    for (const line of readFileSync(enrichmentPath, "utf-8").trim().split("\n")) {
+      const e = JSON.parse(line);
+      enrichment.set(e.tmdbId, e);
+    }
+    console.log(`Enrichment loaded: ${enrichment.size} rows`);
+  } else {
+    console.warn("No data/movie-enrichment.jsonl — posters/RT/IMDB will be null");
   }
 
-  // Check existing count
+  const BATCH = 500;
+  let batch: ReturnType<typeof toRow>[] = [];
+  let processed = 0;
+  let errors = 0;
+
+  const flush = async () => {
+    if (!batch.length) return;
+    const { error } = await supabase.from("movies").upsert(batch, { onConflict: "tmdb_id" });
+    if (error) {
+      console.error(`  batch @${processed} failed:`, error.message.slice(0, 140));
+      errors++;
+    }
+    processed += batch.length;
+    if (processed % 5000 < BATCH) console.log(`  ${processed} processed (${errors} errored batches)`);
+    batch = [];
+  };
+
+  const rl = createInterface({ input: createReadStream(src) });
+  for await (const line of rl) {
+    const m: ScoreRecord = JSON.parse(line);
+    batch.push(toRow(m, enrichment.get(m.tmdbId)));
+    if (batch.length >= BATCH) await flush();
+  }
+  await flush();
+
   const { count } = await supabase
     .from("movies")
     .select("tmdb_id", { count: "exact", head: true });
-  if (count && count > 0) {
-    console.log(`Table already has ${count} rows. Upserting...`);
-  }
-
-  // Insert in batches of 500 (Supabase REST API limit is ~1000 per request)
-  const BATCH = 500;
-  let inserted = 0;
-  let errors = 0;
-
-  for (let i = 0; i < movies.length; i += BATCH) {
-    const batch = movies.slice(i, i + BATCH).map(toRow);
-
-    const { error } = await supabase.from("movies").upsert(batch, {
-      onConflict: "tmdb_id",
-    });
-
-    if (error) {
-      console.error(
-        `  Batch ${i}-${i + batch.length} failed:`,
-        error.message.slice(0, 120)
-      );
-      errors++;
-    } else {
-      inserted += batch.length;
-    }
-
-    // Progress every 10 batches
-    if (i % (BATCH * 10) === 0 || i + BATCH >= movies.length) {
-      console.log(
-        `  ${Math.min(inserted + errors * BATCH, movies.length)}/${movies.length} processed (${errors} errors)...`
-      );
-    }
-  }
-
-  // Verify
-  const { count: finalCount } = await supabase
-    .from("movies")
-    .select("tmdb_id", { count: "exact", head: true });
-
-  console.log(`\nDone. ${finalCount} movies in database.`);
-  if (errors > 0) console.log(`${errors} batches had errors.`);
+  console.log(`\nDone. ${count} movies in database (${errors} errored batches).`);
+  if (errors > 0) process.exit(1);
 }
 
-seed().catch(console.error);
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
