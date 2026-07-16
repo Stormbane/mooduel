@@ -1,0 +1,39 @@
+# Weekly calibration aggregation (Phase 2d).
+# Creates a completed-but-unpromoted run every Monday. Promotion stays a
+# deliberate manual step (workflow_dispatch with a run_id) until the
+# shadow-run gate in the replatform plan has passed.
+#
+# Required repo secrets: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+
+name: calibration
+
+on:
+  schedule:
+    - cron: "0 18 * * 1" # Mondays 18:00 UTC
+  workflow_dispatch:
+    inputs:
+      promote_run_id:
+        description: "Run ID to promote (leave empty to create a new run)"
+        required: false
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    concurrency: calibration # never two runs at once
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Write env
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+      - name: Aggregate or promote
+        run: |
+          if [ -n "${{ github.event.inputs.promote_run_id }}" ]; then
+            node scripts/calibration/aggregate.mjs promote "${{ github.event.inputs.promote_run_id }}"
+          else
+            node scripts/calibration/aggregate.mjs run
+          fi
