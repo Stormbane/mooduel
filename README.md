@@ -16,7 +16,7 @@ Mooduel is two things in one repo:
 
 1. **A playful mood-detection app.** You play short games (pick a colour, react to a painting, swipe through vibes) and the app builds a live profile of your current emotional state. Then it matches that profile against 30,000+ movies and runs a tournament bracket so you finish with one film picked for the mood you're actually in, not the mood you wish you were in.
 
-2. **An open psychology dataset.** Every movie in the database is scored across 18 dimensions drawn from affect research (PAD, Russell's circumplex), media psychology (Zillmann's MMT, Oliver & Bartsch hedonic/eudaimonic/psychologically-rich), and narrative theory (Reagan emotional arcs, Plutchik). Scored once by Claude Haiku from plot, reviews, and crowd tags. Continuously refined by the community.
+2. **An open psychology dataset.** Every movie in the database is scored across 18 dimensions drawn from affect research (PAD, Russell's circumplex), media psychology (Zillmann's MMT, Oliver & Bartsch hedonic/eudaimonic/psychologically-rich), and narrative theory (Reagan emotional arcs, Plutchik). Scored once by Claude Haiku 4.5 from plot, reviews, and crowd tags. Continuously refined by the community.
 
 The dataset powers the app. The app generates feedback that improves the dataset. Both ship together under open licenses so anyone can use either piece for research, recommenders, or their own experiments.
 
@@ -60,20 +60,29 @@ ds = load_dataset("fractalintelligence/mooduel-v1.0", split="train")
 | `valence` | number | -1 to +1 | Pleasure–displeasure of viewing experience |
 | `arousal` | number | -1 to +1 | Calm–intense activation level |
 | `dominance` | number | -1 to +1 | Overwhelming–empowering viewer agency |
-| `absorptionPotential` | number | 0–1 | How cognitively consuming (Zillmann MMT) |
-| `hedonicValence` | number | 0–1 | Fun, pleasure, entertainment value |
-| `eudaimonicValence` | number | 0–1 | Meaning, insight, being moved |
-| `psychologicallyRichValence` | number | 0–1 | Novelty, complexity, perspective-broadening |
-| `emotionalArc` | enum | 7 types | Story shape (cinderella, man-in-a-hole, oedipus, etc.) |
-| `dominantEmotions` | string[] | 2–3 | Top emotions from Plutchik's wheel |
-| `moodTags` | string[] | 3–6 | Thematic tags for semantic matching |
-| `watchContext` | enum[] | 1–3 | Best setting: solo, date, friends, family |
-| `vibeSentence` | string | ≤12 words | What watching this movie *feels* like |
-| `pacing` | enum | 8 types | slow-burn, building, steady, accelerating, relentless, meandering, staccato, episodic |
-| `endingType` | enum | 9 types | triumphant, bittersweet, devastating, ambiguous, twist, uplifting, unsettling, cathartic, pyrrhic |
-| `comfortLevel` | number | 0–1 | Emotional safety: cozy vs. transgressive |
-| `emotionalSafetyWarnings` | string[] | 0–3 | Content that could blindside vulnerable viewers |
-| `conversationPotential` | number | 0–1 | How much people want to discuss it after |
+| `absorption` | number | 0–1 | How cognitively consuming (Zillmann MMT) |
+| `hedonic` | number | 0–1 | Fun, pleasure, entertainment value |
+| `eudaimonic` | number | 0–1 | Meaning, insight, being moved |
+| `psych_rich` | number | 0–1 | Novelty, complexity, perspective-broadening |
+| `emotional_arc` | enum | 6 shapes | rags-to-riches, riches-to-rags, man-in-a-hole, icarus, cinderella, oedipus (Reagan et al.) |
+| `dominant_emotions` | string[] | 2–3 | Top emotions from Plutchik's wheel |
+| `mood_tags` | string[] | 3–6 | Thematic tags for semantic matching |
+| `watch_context` | enum[] | 1–3 | Best setting: solo, date, friends, family |
+| `vibe_sentence` | string | ≤12 words | What watching this movie *feels* like |
+| `pacing` | enum | 5 types | slow-burn, building, steady, relentless, episodic |
+| `ending_type` | enum | 7 types | triumphant, bittersweet, devastating, ambiguous, twist, uplifting, unsettling |
+| `comfort_level` | number | 0–1 | Emotional safety: cozy vs. transgressive |
+| `safety_warnings` | string[] | 0–3 | Content that could blindside vulnerable viewers |
+| `conversation_potential` | number | 0–1 | How much people want to discuss it after |
+
+The classifier also produces an 18th field, `reasoning` (a short scoring
+rationale per movie), which is retained internally but not part of the
+published dataset.
+
+**Known v1.0 quirk:** a small fraction of rows (~4%) contain
+out-of-vocabulary enum values (for example, pacing words appearing in
+`emotional_arc`). These are being normalized for v1.0.1 — validate enum
+fields against the lists above if your use case is strict.
 
 ### Sample Vibe Sentences
 
@@ -150,7 +159,7 @@ The goal is a dataset that gets sharper with every player, not a static snapshot
 git clone https://github.com/Stormbane/mooduel.git
 cd mooduel
 npm install
-cp .env.example .env.local  # add TMDB key + Supabase URL/keys
+cp .env.example .env.local  # add TMDB read access token + Supabase URL/keys
 npm run dev
 ```
 
