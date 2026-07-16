@@ -207,7 +207,8 @@ create table calibration_signals (
 5. Exports (Phase 1d) reference a promoted run_id, so a concurrent export
    can never mix calibration versions.
 
-## Phase 3 — Game platform SDK
+## Phase 3 — Game platform SDK ✅ (foundations done 2026-07-17;
+## see status note at the top of the Review log for what remains gated)
 
 Consolidate into `src/lib/games/` (the existing `game-shell` components
 stay the visual chrome):
@@ -315,6 +316,30 @@ pairwise votes, 10K+ arc votes):
    latency filtering; authenticated signals weighted higher via reputation.
 4. Card game v1 ships **house bot + async PvP via challenge links**;
    live Realtime mode is a fast-follow.
+
+## Status (2026-07-17, end of foundations loop)
+
+Done: Phase 0 ✅ · Phase 1a ledger + 1b tables + 1c seed + 1d export ✅ ·
+Phase 2 trust boundary, signals, run tables, aggregation engine, atomic
+promotion, weekly Action ✅ · Phase 3 SDK (session tokens, pool/assignment
+service, signal routes, client emitter) + PvP concurrency skeleton ✅.
+All DB objects smoke-tested against the live project.
+
+Blocked on Suti:
+- Fresh ANTHROPIC_API_KEY in .env.local (current returns 401) → then:
+  `node scripts/mood-classifier/reclassify-enums.mjs submit|fetch
+  normalize-2026-07-16-e4c44a` → `node scripts/data-pipeline/11-apply-patches.mjs
+  --run normalize-2026-07-16-e4c44a` → baseline snapshots automatically →
+  `npx tsx scripts/export-dataset.ts --version 1.0.1` → upload to HF.
+- GitHub repo secrets for the calibration Action (NEXT_PUBLIC_SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY).
+- SESSION_TOKEN_SECRET in production env when deploying.
+
+Deliberately left for the Phase 4 creative build: game rules inside the
+PvP skeleton (hand dealing, trick resolution, scoring), the Hotter UI and
+every other game, pair-policy v2 (informativeness-weighted sampling), the
+anchor set, and shared streak/daily helpers (build them alongside the
+first daily game that needs them).
 
 ## Review log
 
