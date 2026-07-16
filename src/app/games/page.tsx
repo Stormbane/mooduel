@@ -55,7 +55,7 @@ const HUB_TILES: HubTile[] = [
   },
   {
     id: "dinner-party",
-    status: "soon",
+    status: "live",
     blurb:
       "Your four guests arrived in four different moods. Find the one film that works for the whole table.",
   },

@@ -136,6 +136,7 @@ export default async function SharePage(
     hotter: "Hotter · hottest take",
     "shape-of-stories": "Shape of Stories · gallery",
     "mood-bridge": "Mood Bridge · crossing",
+    "dinner-party": "The Dinner Party · best pour",
     "blind-taste": "Blind Taste Test · pick",
     "vibe-tree": "Vibe Tree · destination",
     "mood-drift": "Mood Drift · today",
