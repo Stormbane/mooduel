@@ -13,30 +13,20 @@ async function waitForGameLoad(page: import("@playwright/test").Page) {
 }
 
 test.describe("Games Hub (/games)", () => {
-  test("shows the full slate, all live", async ({ page }) => {
+  test("the marquee is the card game (focus decision 2026-07-17)", async ({ page }) => {
     await page.goto("/games");
     await expect(page.getByRole("heading", { name: "Games" })).toBeVisible({ timeout: 10_000 });
-
-    for (const title of [
-      "Hotter",
-      "Blind Taste Test",
-      "Shape of Stories",
-      "Mood Bridge",
-      "The Dinner Party",
-      "Mooduel: The Card Game",
-    ]) {
-      await expect(page.getByRole("link", { name: new RegExp(title) })).toBeVisible();
-    }
+    await expect(page.getByRole("link", { name: /Mooduel: The Card Game/ })).toBeVisible();
     await expect(page.getByText("The flagship · now playing")).toBeVisible();
+    // de-listed slate games are off the marquee but their routes stay live
+    await expect(page.getByRole("link", { name: /Hotter/ })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Mood Bridge/ })).toHaveCount(0);
   });
 
-  test("live tiles navigate to their games", async ({ page }) => {
+  test("the card game tile navigates", async ({ page }) => {
     await page.goto("/games");
-    await page.getByRole("link", { name: /Hotter/ }).click();
-    await expect(page).toHaveURL(/\/games\/hotter/);
-    await page.goBack();
-    await page.getByRole("link", { name: /Blind Taste Test/ }).click();
-    await expect(page).toHaveURL(/\/games\/blind-taste/);
+    await page.getByRole("link", { name: /Mooduel: The Card Game/ }).click();
+    await expect(page).toHaveURL(/\/games\/card-game/);
   });
 });
 

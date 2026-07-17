@@ -25,40 +25,12 @@ interface HubTile {
 }
 
 /**
- * The select screen. Live games up top, the rest of the slate as coming
- * attractions in their own costume hues — a marquee, not a directory.
+ * The select screen. Focus decision 2026-07-17: the card game is the
+ * product; earlier slate games stay route-live but off the marquee
+ * (same convention as the pre-replatform experiments). Seen It joins
+ * as onboarding when it ships.
  */
 const HUB_TILES: HubTile[] = [
-  {
-    id: "hotter",
-    status: "live",
-    blurb:
-      "Two posters, one question, and a model with opinions. Stay in sync as long as you can, or go down swinging with a hot take.",
-  },
-  {
-    id: "blind-taste",
-    status: "live",
-    blurb:
-      "Five vibe sentences. No titles. No posters. Pick the one you'd watch tonight, then see what you chose.",
-  },
-  {
-    id: "shape-of-stories",
-    status: "live",
-    blurb:
-      "Six curves a story can take. Pick the shape of a movie you know and teach the model its arc.",
-  },
-  {
-    id: "mood-bridge",
-    status: "live",
-    blurb:
-      "Start at one movie, land on another. Five hops, and every hop has to stay within reach in mood. New bridge daily.",
-  },
-  {
-    id: "dinner-party",
-    status: "live",
-    blurb:
-      "Your four guests arrived in four different moods. Find the one film that works for the whole table.",
-  },
   {
     id: "card-game",
     status: "live",
