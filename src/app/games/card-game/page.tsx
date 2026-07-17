@@ -23,12 +23,17 @@ import {
   mvpCard,
   botDraftPick,
   botLead,
+  botLeadLowball,
   botFollow,
+  buildModifierSchedule,
+  MODIFIER_COPY,
   type Card,
   type Category,
   type TrickRecord,
+  type TrickModifier,
   type DeckMovieShape,
 } from "@/lib/games/card-game";
+import { houseLine, houseReaction, type HouseEvent } from "@/lib/games/house-voice";
 import type { SlimMoodMovie } from "@/lib/mood-data/types";
 
 const GAME = GAMES["card-game"];
@@ -72,12 +77,34 @@ export default function CardGamePage() {
   const [houseThinking, setHouseThinking] = useState(false);
 
   const [champion, setChampion] = useState<SlimMoodMovie | null>(null);
+  const [modifiers, setModifiers] = useState<TrickModifier[]>([]);
+  const [chat, setChat] = useState<{ id: number; text: string }[]>([]);
+  const [floaters, setFloaters] = useState<{ id: number; emoji: string; side: "you" | "house" }[]>([]);
+  const chatId = useRef(0);
+  const floatId = useRef(0);
+  const announcedTrick = useRef(-1);
+  const matchPointSaid = useRef(false);
   const timers = useRef<number[]>([]);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
   const later = useCallback((fn: () => void, ms: number) => {
     timers.current.push(window.setTimeout(fn, ms));
   }, []);
+
+  const react = useCallback((emoji: string, side: "you" | "house") => {
+    const id = ++floatId.current;
+    setFloaters((f) => [...f, { id, emoji, side }]);
+    window.setTimeout(() => setFloaters((f) => f.filter((x) => x.id !== id)), 1400);
+  }, []);
+
+  const say = useCallback(
+    (e: HouseEvent) => {
+      setChat((c) => [...c.slice(-2), { id: ++chatId.current, text: houseLine(e) }]);
+      const r = houseReaction(e);
+      if (r) react(r, "house");
+    },
+    [react],
+  );
 
   const order = draftOrder();
 
@@ -93,6 +120,11 @@ export default function CardGamePage() {
     setYourPlayed(null);
     setTheirPlayed(null);
     setChampion(null);
+    setModifiers(buildModifierSchedule());
+    setChat([{ id: ++chatId.current, text: houseLine("matchStart") }]);
+    setFloaters([]);
+    announcedTrick.current = -1;
+    matchPointSaid.current = false;
     try {
       const prefer = knownIdsForDealing();
       const res = await fetch(
@@ -116,8 +148,9 @@ export default function CardGamePage() {
       setTheirHand(them);
       setLeader("you");
       setPhase("tricks");
+      say("draftDone");
     },
-    [],
+    [say],
   );
 
   const draftPick = useCallback(
@@ -143,7 +176,10 @@ export default function CardGamePage() {
       const remaining = pool.filter((c) => !owners.has(c.id));
       const botHand = pool.filter((c) => owners.get(c.id) === "them");
       const pick = botDraftPick(remaining, botHand);
-      later(() => draftPick(pick, true), BOT_MS / 2);
+      later(() => {
+        draftPick(pick, true);
+        if (draftIdx === 2) say("houseDraftGood");
+      }, BOT_MS / 2);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, pool, draftIdx]);
@@ -153,6 +189,21 @@ export default function CardGamePage() {
   const applyTrick = useCallback(
     (record: TrickRecord, you: Card[], them: Card[]) => {
       setReveal(record);
+
+      // the house has opinions about every outcome
+      const big = record.margin >= 25;
+      say(
+        record.winner === "draw"
+          ? "drawTrick"
+          : record.winner === "you"
+            ? big
+              ? "youWinBig"
+              : "youWinSmall"
+            : big
+              ? "houseWinBig"
+              : "houseWinSmall",
+      );
+
       later(() => {
         const nextTricks = [...tricks, record];
         setTricks(nextTricks);
@@ -164,6 +215,14 @@ export default function CardGamePage() {
         setTheirPlayed(null);
         if (nextTricks.length >= TRICKS) {
           setPhase("result");
+          const finalScore = tallyMatch(nextTricks);
+          say(
+            finalScore.you > finalScore.them
+              ? "youWin"
+              : finalScore.them > finalScore.you
+                ? "houseWins"
+                : "matchDraw",
+          );
           const mvp = mvpCard(nextTricks) ?? record.yourCard;
           fetch(apiUrl(`/api/movies?ids=${mvp.id}`))
             .then((r) => (r.ok ? r.json() : null))
@@ -171,19 +230,42 @@ export default function CardGamePage() {
             .catch(() => setChampion(null));
         } else {
           setLeader(record.winner === "them" ? "them" : "you");
+          const tail = nextTricks.slice(-3);
+          if (tail.length === 3 && tail.every((t) => t.winner === "you")) say("youStreak");
+          const sc = tallyMatch(nextTricks);
+          if (!matchPointSaid.current && (sc.you >= 4 || sc.them >= 4)) {
+            matchPointSaid.current = true;
+            say(sc.you >= 4 ? "matchPointYou" : "matchPointHouse");
+          }
         }
       }, 1900);
     },
-    [tricks, later],
+    [tricks, later, say],
   );
+
+  // Announce the round twist as each trick opens (once per trick —
+  // effects double-fire in dev)
+  useEffect(() => {
+    if (phase !== "tricks" || tricks.length >= TRICKS) return;
+    if (announcedTrick.current === tricks.length) return;
+    announcedTrick.current = tricks.length;
+    const m = modifiers[tricks.length];
+    if (m && m !== "standard") say(m);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, tricks.length]);
 
   // House leads when it holds the lead
   useEffect(() => {
     if (phase !== "tricks" || leader !== "them" || reveal || theirPlayed) return;
     if (tricks.length >= TRICKS || theirHand.length === 0) return;
     setHouseThinking(true);
+    const mod = modifiers[tricks.length] ?? "standard";
     later(() => {
-      const lead = botLead(theirHand, yourHand, legalLeads(tricks));
+      const legal = legalLeads(tricks);
+      const lead =
+        mod === "lowball"
+          ? botLeadLowball(theirHand, yourHand, legal)
+          : botLead(theirHand, yourHand, legal);
       setActiveCategory(lead.category);
       setTheirPlayed(lead.card);
       setHouseThinking(false);
@@ -197,25 +279,32 @@ export default function CardGamePage() {
       setYourPlayed(card);
       const you = yourHand.filter((c) => c.id !== card.id);
 
+      const mod = modifiers[tricks.length] ?? "standard";
       if (leader === "you") {
         setHouseThinking(true);
         later(() => {
-          const theirs = botFollow(theirHand, yourHand, activeCategory);
+          const theirs = botFollow(theirHand, yourHand, activeCategory, undefined, mod);
           setTheirPlayed(theirs);
           setHouseThinking(false);
-          const record = scoreTrick(activeCategory, "you", card, theirs);
+          const record = scoreTrick(activeCategory, "you", card, theirs, mod);
           applyTrick(record, you, theirHand.filter((c) => c.id !== theirs.id));
         }, BOT_MS);
       } else {
         const theirs = theirPlayed!;
-        const record = scoreTrick(activeCategory, "them", card, theirs);
+        const record = scoreTrick(activeCategory, "them", card, theirs, mod);
         applyTrick(record, you, theirHand.filter((c) => c.id !== theirs.id));
       }
     },
-    [activeCategory, reveal, yourPlayed, yourHand, theirHand, theirPlayed, leader, applyTrick, later],
+    [activeCategory, reveal, yourPlayed, yourHand, theirHand, theirPlayed, leader, applyTrick, later, modifiers, tricks.length],
   );
 
   const score = tallyMatch(tricks);
+  const currentModifier: TrickModifier =
+    phase === "tricks" ? (modifiers[tricks.length] ?? "standard") : "standard";
+  // blind = the follower can't see the mood; when the house leads a blind
+  // trick, that follower is you
+  const youAreBlind =
+    currentModifier === "blind" && leader === "them" && !reveal;
 
   const createChallenge = useCallback(async () => {
     setChallenging(true);
@@ -373,6 +462,14 @@ export default function CardGamePage() {
             <div className="mb-3 flex items-baseline justify-between">
               <p className="font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase tabular-nums">
                 Trick {Math.min(tricks.length + 1, TRICKS)} of {TRICKS}
+                {currentModifier !== "standard" && (
+                  <span
+                    className="ml-2 rounded-[3px] border px-1.5 py-0.5 text-[9px] font-bold"
+                    style={{ borderColor: `${ACCENT}88`, color: ACCENT }}
+                  >
+                    {MODIFIER_COPY[currentModifier].name.toUpperCase()}
+                  </span>
+                )}
               </p>
               <p className="font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[0.2em] uppercase tabular-nums">
                 <span style={{ color: ACCENT }}>You {score.you}</span>
@@ -382,7 +479,25 @@ export default function CardGamePage() {
             </div>
 
             {/* The table */}
-            <div className="rounded-[4px] border border-[oklch(0.22_0_0)] bg-[oklch(0.1_0_0)] p-4">
+            <div className="relative rounded-[4px] border border-[oklch(0.22_0_0)] bg-[oklch(0.1_0_0)] p-4">
+              {/* emoji reactions float up over their side of the table */}
+              <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+                <AnimatePresence>
+                  {floaters.map((f) => (
+                    <motion.span
+                      key={f.id}
+                      initial={{ opacity: 0, y: 8, scale: 0.7 }}
+                      animate={{ opacity: [0, 1, 1, 0], y: -64, scale: 1.15 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1.3, ease: "easeOut" }}
+                      className="absolute bottom-10 text-2xl"
+                      style={{ left: f.side === "you" ? "22%" : "70%" }}
+                    >
+                      {f.emoji}
+                    </motion.span>
+                  ))}
+                </AnimatePresence>
+              </div>
               <div className="min-h-[1.75rem] text-center mb-3" aria-live="polite">
                 <AnimatePresence mode="wait">
                   {reveal ? (
@@ -402,7 +517,7 @@ export default function CardGamePage() {
                     >
                       {reveal.winner === "draw"
                         ? `Dead even on ${categoryLabel(reveal.category).toLowerCase()}.`
-                        : `${reveal.winner === "you" ? "You take" : "The house takes"} ${categoryLabel(reveal.category).toLowerCase()} by ${reveal.margin}.`}
+                        : `${reveal.winner === "you" ? "You take" : "The house takes"} ${reveal.modifier === "lowball" ? "the lowball on " : ""}${categoryLabel(reveal.category).toLowerCase()} by ${reveal.margin}${reveal.weight === 2 ? " — twice over" : ""}.`}
                     </motion.p>
                   ) : activeCategory ? (
                     <motion.p
@@ -413,9 +528,12 @@ export default function CardGamePage() {
                     >
                       {leader === "you" ? "You lead" : "The house leads"}{" "}
                       <span className="font-bold" style={{ color: ACCENT }}>
-                        {categoryLabel(activeCategory)}
+                        {youAreBlind ? "???" : categoryLabel(activeCategory)}
                       </span>
-                      {leader === "them" && " — answer with a card."}
+                      {leader === "them" &&
+                        (youAreBlind
+                          ? " — blind. Commit before the mood is revealed."
+                          : " — answer with a card.")}
                     </motion.p>
                   ) : (
                     <motion.p
@@ -434,7 +552,7 @@ export default function CardGamePage() {
                 <TableSlot
                   label="You"
                   card={yourPlayed ?? (reveal?.yourCard ?? null)}
-                  category={reveal ? reveal.category : activeCategory}
+                  category={reveal ? reveal.category : youAreBlind ? null : activeCategory}
                   highlight={reveal?.winner === "you"}
                   faceDown={false}
                   reduceMotion={!!reduceMotion}
@@ -497,7 +615,7 @@ export default function CardGamePage() {
                         style={{ borderColor: playable ? `${ACCENT}66` : "oklch(0.25 0 0)" }}
                       >
                         <CardFace card={card} sizes="72px" />
-                        {activeCategory && !reveal && (
+                        {activeCategory && !reveal && !youAreBlind && (
                           <span
                             className="absolute top-1 right-1 rounded-[2px] px-1 py-0.5 text-[10px] font-bold tabular-nums text-black"
                             style={{ backgroundColor: ACCENT }}
@@ -516,6 +634,44 @@ export default function CardGamePage() {
               <p className="text-[10px] text-muted-foreground/40 mt-1">
                 The house holds {theirHand.length} card{theirHand.length === 1 ? "" : "s"}.
               </p>
+            </div>
+
+            {/* table talk */}
+            <div className="mt-4 flex items-end justify-between gap-3">
+              <div className="min-h-[3.5rem] flex-1 space-y-1" aria-live="polite">
+                <AnimatePresence initial={false}>
+                  {chat.map((m) => (
+                    <motion.p
+                      key={m.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      className="text-xs text-muted-foreground/70 leading-snug"
+                    >
+                      <span
+                        className="mr-1.5 rounded-[2px] px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider text-black"
+                        style={{ backgroundColor: `${ACCENT}CC` }}
+                      >
+                        House
+                      </span>
+                      <span className="italic">{m.text}</span>
+                    </motion.p>
+                  ))}
+                </AnimatePresence>
+              </div>
+              <div className="flex shrink-0 gap-1">
+                {["🔥", "😂", "😤", "👏", "🫠"].map((e) => (
+                  <button
+                    key={e}
+                    onClick={() => react(e, "you")}
+                    aria-label={`react ${e}`}
+                    className="flex h-11 w-11 items-center justify-center rounded-[4px] border border-[oklch(0.22_0_0)] text-base transition-colors hover:bg-white/[0.04] cursor-pointer"
+                  >
+                    {e}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

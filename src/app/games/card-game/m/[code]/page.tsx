@@ -373,6 +373,8 @@ function toRelativeTricks(
       winner:
         r.winnerSeat === 0 ? ("draw" as const) : r.winnerSeat === yourSeat ? ("you" as const) : ("them" as const),
       margin: r.margin,
+      modifier: "standard" as const,
+      weight: 1,
     };
   });
 }

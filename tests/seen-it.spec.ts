@@ -44,6 +44,8 @@ test("Seen It: twelve posters, honest answers, known-set persists", async ({ pag
 
   await page.goto("/games/seen-it");
   await expect(page.getByRole("heading", { name: "Seen It" })).toBeVisible({ timeout: 30_000 });
+  // dev server: don't click before hydration attaches the handler
+  await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: /ROLL THE REEL/i }).click();
 
   await expect(page.getByText("Poster 1 of 12")).toBeVisible({ timeout: 10_000 });

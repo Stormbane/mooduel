@@ -44,6 +44,34 @@ export function toCardScore(c: Category, raw: number | null): number {
   return Math.round(((raw - lo) / (hi - lo)) * 100);
 }
 
+/**
+ * Round types v2. Standard: high score takes it. Lowball: LOW score
+ * takes it. Double: the trick counts twice. Blind: the follower commits
+ * without seeing the category. PvP stays on standard tricks
+ * (mooduel-v1-pvp) — modifiers are a solo-table feature for now.
+ */
+export type TrickModifier = "standard" | "lowball" | "double" | "blind";
+
+export const MODIFIER_COPY: Record<TrickModifier, { name: string; announce: string }> = {
+  standard: { name: "", announce: "" },
+  lowball: { name: "Lowball", announce: "Weakest card takes it." },
+  double: { name: "Double stakes", announce: "This trick counts twice." },
+  blind: { name: "Blind", announce: "The follower answers without seeing the mood." },
+};
+
+/** Per-match schedule: five straight tricks, one of each twist, shuffled. */
+export function buildModifierSchedule(rand: () => number = Math.random): TrickModifier[] {
+  const schedule: TrickModifier[] = [
+    "standard", "standard", "standard", "standard", "standard",
+    "lowball", "double", "blind",
+  ];
+  for (let i = schedule.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [schedule[i], schedule[j]] = [schedule[j], schedule[i]];
+  }
+  return schedule;
+}
+
 export interface TrickRecord {
   category: Category;
   leader: "you" | "them";
@@ -51,6 +79,9 @@ export interface TrickRecord {
   theirCard: Card;
   winner: "you" | "them" | "draw";
   margin: number;
+  modifier: TrickModifier;
+  /** Tricks this round is worth (2 for double stakes). */
+  weight: number;
 }
 
 export interface MatchScore {
@@ -65,16 +96,20 @@ export function scoreTrick(
   leader: "you" | "them",
   yourCard: Card,
   theirCard: Card,
+  modifier: TrickModifier = "standard",
 ): TrickRecord {
   const a = yourCard.scores[category];
   const b = theirCard.scores[category];
+  const youWin = modifier === "lowball" ? a < b : a > b;
   return {
     category,
     leader,
     yourCard,
     theirCard,
-    winner: a === b ? "draw" : a > b ? "you" : "them",
+    winner: a === b ? "draw" : youWin ? "you" : "them",
     margin: Math.abs(a - b),
+    modifier,
+    weight: modifier === "double" ? 2 : 1,
   };
 }
 
@@ -82,11 +117,11 @@ export function tallyMatch(tricks: TrickRecord[]): MatchScore {
   const s: MatchScore = { you: 0, them: 0, yourMargin: 0, theirMargin: 0 };
   for (const t of tricks) {
     if (t.winner === "you") {
-      s.you++;
-      s.yourMargin += t.margin;
+      s.you += t.weight;
+      s.yourMargin += t.margin * t.weight;
     } else if (t.winner === "them") {
-      s.them++;
-      s.theirMargin += t.margin;
+      s.them += t.weight;
+      s.theirMargin += t.margin * t.weight;
     }
   }
   return s;
@@ -210,12 +245,46 @@ export function botFollow(
   oppCards: Card[],
   category: Category,
   rand: () => number = Math.random,
+  modifier: TrickModifier = "standard",
 ): Card {
+  if (modifier === "blind") {
+    // it can't see the mood — plays its most middling card and hopes
+    const avg = (c: Card) =>
+      CATEGORIES.reduce((s, cat) => s + c.scores[cat], 0) / CATEGORIES.length;
+    return [...botCards].sort((a, b) => Math.abs(avg(a) - 50) - Math.abs(avg(b) - 50))[0];
+  }
+  if (modifier === "lowball") {
+    if (rand() < 0.2) return worst(botCards, category);
+    const oppMin = Math.min(...oppCards.map((o) => o.scores[category]));
+    const winners = botCards.filter((c) => c.scores[category] < oppMin);
+    if (winners.length > 0) return best(winners, category); // cheapest guaranteed win
+    return worst(botCards, category);
+  }
   if (rand() < 0.2) return best(botCards, category);
   const oppBest = Math.max(...oppCards.map((o) => o.scores[category]));
   const winners = botCards.filter((c) => c.scores[category] > oppBest);
   if (winners.length > 0) return worst(winners, category);
   return worst(botCards, category);
+}
+
+/** Lowball lead: the category where its floor undercuts yours hardest. */
+export function botLeadLowball(
+  botCards: Card[],
+  oppCards: Card[],
+  legal: Category[],
+): { category: Category; card: Card } {
+  let pick: { category: Category; card: Card } | null = null;
+  let bestEdge = -Infinity;
+  for (const c of legal) {
+    const mine = worst(botCards, c);
+    const theirs = Math.min(...oppCards.map((o) => o.scores[c]));
+    const edge = theirs - mine.scores[c];
+    if (edge > bestEdge) {
+      bestEdge = edge;
+      pick = { category: c, card: mine };
+    }
+  }
+  return pick!;
 }
 
 /** Deck payload shape shared by /api/games/deck and match configs. */

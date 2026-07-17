@@ -5,13 +5,14 @@
  * table slots, and the match result screen.
  */
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ResultScreen } from "@/components/game-shell/result-screen";
 import { GAMES } from "@/components/game-shell/types";
 import {
   categoryLabel,
   tallyMatch,
   matchWinner,
+  MODIFIER_COPY,
   type Card,
   type Category,
   type TrickRecord,
@@ -21,6 +22,56 @@ import type { SlimMoodMovie } from "@/lib/mood-data/types";
 const GAME = GAMES["card-game"];
 const ACCENT = GAME.accent.color;
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
+
+/* ------------------------------- Confetti ------------------------------- */
+
+function mulberry32(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const CONFETTI_HUES = ["#9F6EFF", "#FF4A1F", "#4CC2FF", "#FFB224", "#2EBD85", "#E91E8C"];
+const confettiRand = mulberry32(1337);
+const CONFETTI_PIECES = Array.from({ length: 48 }, (_, i) => ({
+  left: confettiRand() * 100,
+  delay: confettiRand() * 0.5,
+  duration: 1.7 + confettiRand() * 1.3,
+  rotate: (confettiRand() - 0.5) * 720,
+  drift: (confettiRand() - 0.5) * 120,
+  size: 6 + confettiRand() * 6,
+  color: CONFETTI_HUES[i % CONFETTI_HUES.length],
+}));
+
+/** One celebratory fall. Unmounts itself into stillness — no loops. */
+export function Confetti() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden" aria-hidden>
+      {CONFETTI_PIECES.map((p, i) => (
+        <motion.span
+          key={i}
+          initial={{ y: -24, x: 0, opacity: 1, rotate: 0 }}
+          animate={{ y: "108vh", x: p.drift, opacity: [1, 1, 0.9, 0], rotate: p.rotate }}
+          transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size * 0.45,
+            backgroundColor: p.color,
+            borderRadius: 1,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function CardFace({ card, sizes }: { card: Card; sizes: string }) {
   if (card.pp) {
@@ -133,6 +184,7 @@ export function MatchResult({
   onPlayAgain: () => void;
   playAgainLabel: string;
 }) {
+  const reduceMotion = useReducedMotion();
   const score = tallyMatch(tricks);
   const winner = matchWinner(score);
   const grid = tricks
@@ -171,10 +223,15 @@ export function MatchResult({
             className="flex items-center gap-3 rounded-[4px] border border-white/5 bg-white/[0.02] px-3 py-2"
           >
             <span
-              className="w-20 shrink-0 text-[10px] font-semibold uppercase tracking-wider"
+              className="w-24 shrink-0 text-[10px] font-semibold uppercase tracking-wider"
               style={{ color: t.winner === "you" ? ACCENT : "rgba(255,255,255,0.45)" }}
             >
               {categoryLabel(t.category)}
+              {t.modifier !== "standard" && (
+                <span className="block text-[8px] font-normal text-muted-foreground/50">
+                  {MODIFIER_COPY[t.modifier].name}
+                </span>
+              )}
             </span>
             <span className="min-w-0 flex-1 text-xs text-foreground/70 truncate">
               {t.yourCard.t} {t.yourCard.scores[t.category]} · {t.theirCard.scores[t.category]}{" "}
@@ -192,6 +249,7 @@ export function MatchResult({
   if (!movie) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-12">
+        {winner === "you" && !reduceMotion && <Confetti />}
         <p className="text-center text-2xl font-[family-name:var(--font-display)] font-bold">
           {eyebrow}. {score.you}–{score.them}.
         </p>
@@ -210,7 +268,9 @@ export function MatchResult({
   }
 
   return (
-    <ResultScreen
+    <>
+      {winner === "you" && !reduceMotion && <Confetti />}
+      <ResultScreen
       game={GAME}
       movie={movie}
       eyebrow={eyebrow}
@@ -230,5 +290,6 @@ export function MatchResult({
     >
       {log}
     </ResultScreen>
+    </>
   );
 }
