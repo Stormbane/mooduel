@@ -3,12 +3,15 @@
 import { apiUrl } from "@/lib/games/client/api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { GamePage } from "@/components/game-shell/game-page";
 import { IntroScreen } from "@/components/game-shell/intro-screen";
 import { GAMES } from "@/components/game-shell/types";
 import { CardFace, TableSlot, MatchResult } from "@/components/card-game/shared";
 import { ensureSession } from "@/lib/games/client/signals";
+import { knownIdsForDealing, KNOWN_SET_KEY } from "@/lib/games/seen-it";
+import { useSyncExternalStore } from "react";
 import {
   TRICKS,
   categoryLabel,
@@ -35,10 +38,20 @@ type Phase = "intro" | "draft" | "tricks" | "result";
 
 const BOT_MS = 750;
 
+const emptySubscribe = () => () => {};
+function readHasKnownSet(): boolean {
+  try {
+    return !!window.localStorage.getItem(KNOWN_SET_KEY);
+  } catch {
+    return false;
+  }
+}
+
 export default function CardGamePage() {
   const router = useRouter();
   const reduceMotion = useReducedMotion();
   const [challenging, setChallenging] = useState(false);
+  const hasKnownSet = useSyncExternalStore(emptySubscribe, readHasKnownSet, () => false);
   const [phase, setPhase] = useState<Phase>("intro");
   const [deckError, setDeckError] = useState(false);
 
@@ -81,7 +94,10 @@ export default function CardGamePage() {
     setTheirPlayed(null);
     setChampion(null);
     try {
-      const res = await fetch(apiUrl("/api/games/deck?count=16"));
+      const prefer = knownIdsForDealing();
+      const res = await fetch(
+        apiUrl(`/api/games/deck?count=16${prefer.length ? `&prefer=${prefer.join(",")}` : ""}`),
+      );
       if (!res.ok) throw new Error();
       const data = await res.json();
       setPool((data.deck as DeckMovieShape[]).map(deckToCard));
@@ -243,6 +259,18 @@ export default function CardGamePage() {
               >
                 {challenging ? "Setting the table…" : "Deal a challenge link for a friend"}
               </button>
+              {!hasKnownSet && (
+                <p className="mt-4 text-xs text-muted-foreground/50">
+                  New to the table?{" "}
+                  <Link
+                    href="/games/seen-it"
+                    className="underline underline-offset-2 hover:text-muted-foreground"
+                  >
+                    Thirty seconds of Seen It
+                  </Link>{" "}
+                  tunes the deck to movies you know.
+                </p>
+              )}
             </div>
           </motion.div>
         )}

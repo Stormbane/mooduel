@@ -150,8 +150,9 @@ export interface DealtSingle {
   dimension: CategoricalDimension;
 }
 
-/** Column holding the model's label, per categorical dimension. */
-const CATEGORICAL_COLUMNS: Record<CategoricalDimension, string> = {
+/** Column holding the model's label, per categorical dimension.
+ * Recognition has no model label — the crowd IS the label. */
+const CATEGORICAL_COLUMNS: Partial<Record<CategoricalDimension, string>> = {
   arc: "emotional_arc",
 };
 
@@ -169,7 +170,11 @@ export async function dealSingle(opts: {
   promptVersion: string;
   ipHash: string;
 }): Promise<DealtSingle> {
-  const ids = await recognizableIds();
+  // Recognition deals must sample beyond the likely-known pool or the
+  // fame measurement only ever confirms itself: 70% recognizable, 30%
+  // full pool. Label-backed dimensions stay on the recognizable pool.
+  const useFullPool = opts.dimension === "recognition" && Math.random() < 0.3;
+  const ids = useFullPool ? await pooledIds() : await recognizableIds();
   const id = ids[Math.floor(Math.random() * ids.length)];
 
   const { data: assignmentId, error } = await serviceClient.rpc("deal_assignment", {
@@ -191,7 +196,7 @@ export async function dealSingle(opts: {
   const column = CATEGORICAL_COLUMNS[opts.dimension];
   const { data: movie, error: mErr } = await serviceClient
     .from("movies")
-    .select(`tmdb_id,title,year,poster_path,genres,${column}`)
+    .select(`tmdb_id,title,year,poster_path,genres${column ? `,${column}` : ""}`)
     .eq("tmdb_id", id)
     .single();
   if (mErr) throw new Error(mErr.message);
@@ -206,10 +211,27 @@ export async function dealSingle(opts: {
       year: m.year,
       poster_path: m.poster_path,
       genres: m.genres,
-      modelLabel: m[column] ?? null,
+      modelLabel: column ? (m[column] ?? null) : null,
     },
     dimension: opts.dimension,
   };
+}
+
+/** Deal several categorical singles concurrently (batch play surfaces). */
+export async function dealSingles(
+  count: number,
+  opts: Parameters<typeof dealSingle>[0],
+): Promise<DealtSingle[]> {
+  const singles = await Promise.all(
+    Array.from({ length: count }, () => dealSingle(opts)),
+  );
+  // de-dupe within the batch (uniform sampling can repeat)
+  const seen = new Set<number>();
+  return singles.filter((s) => {
+    if (seen.has(s.movie.tmdb_id)) return false;
+    seen.add(s.movie.tmdb_id);
+    return true;
+  });
 }
 
 export interface DeckMovie {
@@ -225,9 +247,17 @@ export interface DeckMovie {
  * Deals a face-up deck from the recognizable pool (no assignment — the
  * card game is score-driven, not signal-collecting).
  */
-export async function dealDeck(count: number): Promise<DeckMovie[]> {
+export async function dealDeck(count: number, prefer: number[] = []): Promise<DeckMovie[]> {
   const ids = await recognizableIds();
   const picked = new Set<number>();
+  // Seed the deck with movies the player has marked as known (Seen It),
+  // capped so every draft still deals discovery.
+  const preferCap = Math.min(prefer.length, Math.floor(count * 0.6));
+  const shuffledPrefer = [...prefer].sort(() => Math.random() - 0.5);
+  for (const id of shuffledPrefer) {
+    if (picked.size >= preferCap) break;
+    picked.add(id);
+  }
   while (picked.size < Math.min(count, ids.length)) {
     picked.add(ids[Math.floor(Math.random() * ids.length)]);
   }

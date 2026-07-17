@@ -32,6 +32,12 @@ interface HubTile {
  */
 const HUB_TILES: HubTile[] = [
   {
+    id: "seen-it",
+    status: "live",
+    blurb:
+      "Thirty seconds of posters: seen it, heard of it, or never met it. Teaches the table what you know, so every deal fits your brain.",
+  },
+  {
     id: "card-game",
     status: "live",
     flagship: true,

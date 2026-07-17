@@ -7,6 +7,7 @@
  */
 
 export type GameId =
+  | "seen-it"
   | "hotter"
   | "blind-taste"
   | "shape-of-stories"
@@ -58,6 +59,7 @@ export function accentTextColor(hex: string): "black" | "white" {
 
 /** Accents keyed by GameId. CSS custom properties remain the source of truth. */
 export const GAME_ACCENTS: Record<GameId, GameAccent> = {
+  "seen-it": { color: "#4CC2FF", rgb: "76,194,255" },
   hotter: { color: "#FF4A1F", rgb: "255,74,31" },
   "blind-taste": { color: "#E91E8C", rgb: "233,30,140" },
   "shape-of-stories": { color: "#22D3EE", rgb: "34,211,238" },
@@ -74,6 +76,13 @@ export const GAME_ACCENTS: Record<GameId, GameAccent> = {
 };
 
 export const GAMES: Record<GameId, GameConfig> = {
+  "seen-it": {
+    id: "seen-it",
+    title: "Seen It",
+    tagline: "Thirty seconds of posters. How deep does your movie brain go?",
+    accent: GAME_ACCENTS["seen-it"],
+    path: "/games/seen-it",
+  },
   hotter: {
     id: "hotter",
     title: "Hotter",

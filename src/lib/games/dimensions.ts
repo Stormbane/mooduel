@@ -10,5 +10,5 @@ export const PAIRWISE_DIMENSIONS = [
 export type PairwiseDimension = (typeof PAIRWISE_DIMENSIONS)[number];
 
 /** Dimensions collected as single-movie categorical judgments. */
-export const CATEGORICAL_DIMENSIONS = ["arc"] as const;
+export const CATEGORICAL_DIMENSIONS = ["arc", "recognition"] as const;
 export type CategoricalDimension = (typeof CATEGORICAL_DIMENSIONS)[number];
