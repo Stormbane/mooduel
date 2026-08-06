@@ -1,0 +1,161 @@
+{
+  "note": "Hand-written human pitches for the Ghost seat (spec 7.3). Keyed by the contract's clause A family; generic is the fallback. Written by a person, on purpose, typos included.",
+  "families": {
+    "valence:high": [
+      "the poster alone made me smile. this is the one",
+      "you can tell everyone hugs at the end. trust the font",
+      "looks like sunshine with a plot. easy pick",
+      "found the feel good one, look at those faces",
+      "this has happy dog energy and I stand by it",
+      "warm colors, warm hearts. done deal"
+    ],
+    "valence:low": [
+      "that poster has seen things. it will make you cry",
+      "greyest cover on the table. thats your tears sorted",
+      "somebody definitely dies in the rain in this one",
+      "it looks sad in a fancy way, which is the best sad",
+      "the title basically apologizes in advance. perfect",
+      "misery but make it cinema. this one"
+    ],
+    "arousal:high": [
+      "the title font is literally running. its fast, trust me",
+      "this one looks like it starts mid explosion",
+      "somebody on this poster is sprinting. sold",
+      "pure chaos energy from the cover alone",
+      "87 minutes. no fat on it. heart rate guaranteed",
+      "looks loud. looks sweaty. exactly what you asked"
+    ],
+    "arousal:low": [
+      "nothing on this poster is moving. thats a promise",
+      "this is a movie where people look out windows. calm",
+      "the cover is basically a nap in a good way",
+      "slow lake water vibes. nobody runs anywhere",
+      "you could set soup to this movie",
+      "quietest looking thing in my hand by a mile"
+    ],
+    "dominance:high": [
+      "the guy on this cover has never lost an argument",
+      "somebody in a long coat making decisions. thats power",
+      "this poster is 90 percent jawline. they win, clearly",
+      "looks like competence, the movie",
+      "the title sounds like it owns property",
+      "big someone takes charge energy from this one"
+    ],
+    "dominance:low": [
+      "everyone on the poster looks appropriately doomed",
+      "tiny people, huge sky. exactly the helpless you wanted",
+      "you can tell the weather wins in this one",
+      "nobody in this movie is in control, love it",
+      "little person against a huge grey machine of a world",
+      "swept along like a paper boat. this is it"
+    ],
+    "absorption:high": [
+      "the cover alone pulled me in for a second, real talk",
+      "this looks like a whole world. youd forget your phone",
+      "dense poster, dense movie, you wont come up for air",
+      "the kind that eats an evening whole",
+      "it looks like it swallows you by minute five",
+      "cover promises a rabbit hole and I believe it"
+    ],
+    "absorption:low": [
+      "looks pleasantly ignorable, which is the assignment",
+      "this is folding laundry cinema, ideal",
+      "you can miss ten minutes and lose nothing, guaranteed",
+      "vibe is background music with a plot",
+      "half watch, full enjoy. easy",
+      "light grip movie, lets your brain wander safely"
+    ],
+    "hedonic:high": [
+      "this is pure candy, look at those colors",
+      "the poster is having more fun than we are",
+      "zero homework, all sugar. this one",
+      "you can hear the soundtrack just looking at it",
+      "popcorn font. that never lies",
+      "fun in a can. crack it open"
+    ],
+    "hedonic:low": [
+      "this looks like homework in the best way",
+      "austere cover, zero jokes, exactly the vegetables you asked",
+      "nobody smiles on this poster. respect",
+      "serious grey business. pleasure not included",
+      "it looks like it was made in a cold room on purpose",
+      "the anti fun option, delivered"
+    ],
+    "eudaimonic:high": [
+      "this poster looks like it means something, deeply",
+      "you will walk away a slightly better person, i can tell",
+      "big questions energy from the title alone",
+      "it has that award season sadness that improves you",
+      "the cover is one long meaningful stare. perfect",
+      "this will move you and I dont even know the plot"
+    ],
+    "eudaimonic:low": [
+      "no lessons in this one, i guarantee it from the font",
+      "meaning free, exactly as ordered",
+      "shallow and shiny and proud, look at it",
+      "this movie has never had an epiphany in its life",
+      "the poster promises zero personal growth. delivered",
+      "it looks gloriously pointless. thats the pick"
+    ],
+    "psych_rich:high": [
+      "this cover is a puzzle already. imagine the inside",
+      "strange title, strange faces, your brain will love it",
+      "looks like it rearranges your assumptions by the end",
+      "complicated people doing complicated things, clearly",
+      "the poster alone has three interpretations",
+      "this will make you think in a new shape, or refunds"
+    ],
+    "psych_rich:low": [
+      "the plot fits on the poster. one idea, done well",
+      "simple people, simple wants, big font",
+      "no puzzles here, just a movie shaped movie",
+      "you already know the whole story and thats the charm",
+      "napkin plot, as requested",
+      "straightforward and unashamed about it"
+    ],
+    "conversation_potential:high": [
+      "we will argue about this ending for a week, promise",
+      "this is discussion fuel, look at that tagline",
+      "the poster is already an opinion. imagine the movie",
+      "youll replay this in the car home, guaranteed",
+      "controversial font choice. controversial movie. lets go",
+      "pick this if you want a fight at dinner"
+    ],
+    "conversation_potential:low": [
+      "watch, nod, sleep. this is that movie",
+      "nothing to unpack here and thats beautiful",
+      "we will never speak of it again, perfect",
+      "zero debate club energy, as requested",
+      "it ends when it ends. no homework after",
+      "the forgettable classic youre looking for"
+    ],
+    "comfort_level:high": [
+      "this poster is a blanket. wrap yourself in it",
+      "warm soup energy, look at that kitchen light",
+      "safe hands all the way down, you can tell",
+      "coziest thing in my hand, not even close",
+      "it looks like sunday afternoon at grandmas",
+      "comfort food with subtitles. eat up"
+    ],
+    "comfort_level:low": [
+      "this looks like it bites, which is what you wanted",
+      "no blankets in this one. youll squirm, happily",
+      "the poster refuses to be nice. respect",
+      "prickly little movie, proud of it too",
+      "brace yourself energy from the cover down",
+      "an uncomfortable watch on purpose, exactly so"
+    ],
+    "generic": [
+      "honestly the poster sold me, i cant explain it",
+      "ive got a good feeling about this one, the font is right",
+      "this is exactly what you described, down to the year",
+      "1987 was a great year for whatever this is",
+      "the runtime is perfect and the title slaps. next question",
+      "cant lose with a cover like that",
+      "my gut says this one and my gut has seen 1000 movies",
+      "no notes. this is the one",
+      "it just fits, look at it next to the others",
+      "this is the sleeper hit of tonight, calling it now"
+    ]
+  }
+}
