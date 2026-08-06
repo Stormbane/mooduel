@@ -3,8 +3,10 @@
 *A bluffing card game about movies nobody at the table has watched,
 including the AI pretending to be your friend.*
 
-Version 1.2 — 2026-08-06. Revised through two Codex adversarial review
-rounds (12 findings total, all accepted; dispositions in §16). This document is self-contained.
+Version 1.3 — 2026-08-06. Revised through two Codex adversarial review
+rounds (12 findings total, all accepted; dispositions in §16), then
+extended with the app shell addendum (§17): title screen, local
+profiles, persistent score history, and stubbed online surfaces. This document is self-contained.
 The building agent needs no access to the Mooduel codebase; every data
 shape, rule, and interface it needs is defined here.
 
@@ -642,8 +644,9 @@ interface PitchBrain {
 ```
 
 v1 ships: `MockMovieSource` (mock-movies.json), `StorageSignalSink`
-(§8.4), `TemplatePitchBrain`. Nothing else in the codebase may import
-the mock implementations directly — construction happens once at boot.
+(§8.4), `TemplatePitchBrain`, `LocalAuthProvider`, and
+`LocalScoreStore` (§17). Nothing else in the codebase may import the
+mock implementations directly — construction happens once at boot.
 
 ### 10.4 State machine
 
@@ -739,10 +742,17 @@ the production fallback for movies with missing posters.
 
 ## 13. Out of scope for v1
 
-Real-time online multiplayer, accounts/auth, LLM-backed PitchBrain,
-3-human Replicant mode, the "Prove It" quiz, share cards, HTTP signal
-upload, sound-on-by-default, native mobile wrappers, real-movie
-screening data. Design nothing that blocks these; build none of them.
+Real-time online multiplayer and matchmaking backends, real
+(server-backed) auth, LLM-backed PitchBrain, 3-human Replicant mode,
+the "Prove It" quiz, share cards, HTTP signal upload,
+sound-on-by-default, native mobile wrappers, real-movie screening data.
+Design nothing that blocks these; build none of them.
+
+**In scope** (v1.3 addendum, §17): the full screen shell around the
+game — title/landing, sign-in surface, local profiles, persistent score
+history and stats, lobby with visible-but-stubbed online entry points,
+and the finished results/win screen. Everything renders final-quality;
+the backends behind them are local mocks behind adapter seams.
 
 ## 14. Definition of done
 
@@ -766,6 +776,14 @@ screening data. Design nothing that blocks these; build none of them.
 - [ ] 300-movie mock dataset + ≥120-pitch ghost corpus + procedural
       posters generating offline
 - [ ] Bundle ≤400KB gzipped JS excluding movie data (CI check)
+- [ ] Full screen flow of §17: title → profile gate → lobby → match →
+      results → title, with local profiles, saved match history, and
+      stats rendering on the profile screen
+- [ ] Stubbed online tiles ("Find a table", "Challenge a friend")
+      render in costume with honest coming-soon copy and are
+      keyboard/touch reachable but inert
+- [ ] Results screen writes a MatchSummary via ScoreStore; history
+      survives reload
 - [ ] Copy pass: every player-facing string obeys §12
 
 ## 15. Playtest questions (answer these after first playable)
@@ -846,3 +864,110 @@ accepted and fixed in v1.2:
    instance id.
 
 Per protocol, plan review is closed after this round.
+
+## 17. App shell, identity, and persistence (v1.3 addendum)
+
+Added after review close as a scope amendment: the game gets its full
+surrounding shell now, running entirely locally, so that real accounts
+and online play later are adapter swaps, not rebuilds. Everything in
+this section renders at final visual quality; only the backends are
+local.
+
+### 17.1 Screen map
+
+```
+BOOT → TITLE → PROFILE GATE → LOBBY → [match states, §10.4] → RESULTS
+                                 ↑__________________________________|
+```
+
+- **TITLE (landing).** The video store frontage at night: neon logo
+  buzzing, rain, the CRT glowing in the window. One primary action
+  ("Open the store"), a profile chip for the signed-in profile (avatar
+  + handle + win count), settings, and a data-export entry (§8.4).
+  This is the game's face — give it the full costume.
+- **PROFILE GATE.** Shown when no profile is active. Renders as a
+  membership-card signup at the counter: pick a handle, pick a pixel
+  portrait from the persona kit, "Get your card". A visually complete
+  sign-in panel (email field + "Send me a sign-in link" button) is
+  present but inert, styled normally, with honest copy underneath:
+  "Online membership opens with the full release. For now your card
+  lives on this device." Multiple local profiles per device; switching
+  happens here.
+- **LOBBY.** Mode select in costume: three active tiles (Solo,
+  Hotseat, Replicant) plus two rendered-but-inert online tiles: "Find
+  a table" (matchmaking) and "Challenge a friend" (async links), each
+  with a small "coming soon" tape label. Seat setup (who's playing,
+  bot fill preview), then deal.
+- **RESULTS (win screen).** Already specced in part (§9); finalized
+  here: final standings with lane stats for the match, the Critic's
+  closing verdict, Replicant reveal ceremony when applicable, each
+  player's mood-readout receipt, "Tonight's Screening" recap, then
+  "Run it back" (rematch, same seats, new seed) and "Back to the
+  store". On entry the reducer emits one `MatchSummary` per human
+  profile through `ScoreStore.recordMatch`.
+- **PROFILE screen** (from the TITLE chip): the membership card,
+  all-time stats, match history (scrolling receipt list, most recent
+  first), and an all-time mood tendency line rendered like the §9
+  readout ("Lifetime: slow, devastating, no regrets").
+
+### 17.2 Identity and score seams
+
+```ts
+interface Profile {
+  id: string;            // host-entropy uuid, like match_id (§8.1)
+  handle: string;        // 3–16 chars, player-chosen
+  portraitSeed: number;  // pixel-portrait kit index
+  createdAt: number;
+}
+
+interface AuthProvider {
+  current(): Promise<Profile | null>;
+  profiles(): Promise<Profile[]>;               // local multi-profile
+  create(handle: string, portraitSeed: number): Promise<Profile>;
+  activate(profileId: string): Promise<Profile>;
+  signOut(): Promise<void>;                     // clears active only
+}
+
+interface MatchSummary {
+  matchId: string;       // = §8.1 match_id
+  endedAt: number;
+  mode: "solo" | "hotseat" | "replicant";
+  seats: { handle: string; kind: "human" | "bot" | "machine" | "ghost";
+           score: number }[];
+  profileSeat: number;   // which seat this summary's profile held
+  won: boolean;
+  laneStats: { straight: number; balderdash: number;
+               fullBalderdash: number; failedBalderdash: number };
+  seenItUsed: boolean;
+  accusation?: { made: boolean; correct: boolean };
+  tonightVector: number[];   // §9, normalized [0,1] dims
+}
+
+interface ScoreStore {
+  recordMatch(profileId: string, s: MatchSummary): Promise<void>;
+  history(profileId: string, limit: number): Promise<MatchSummary[]>;
+  stats(profileId: string): Promise<ProfileStats>;  // derived, cached
+}
+```
+
+`ProfileStats` (derived from history): matches, wins, total points,
+Full Balderdash count, failed-Balderdash count, Seen It plays,
+Replicant unmasking accuracy, favorite lane, and the all-time mean
+tonight-vector.
+
+v1 implementations: `LocalAuthProvider` and `LocalScoreStore`, both on
+the `storage.ts` abstraction (§10.1), history capped at 200 summaries
+per profile (FIFO). The future swap is a Supabase-backed pair speaking
+the same interfaces; nothing outside boot may know which is live.
+Profiles are not identity for calibration purposes — signal envelopes
+(§8.1) keep their own actor model and never embed handles.
+
+### 17.3 Rules for the stubs
+
+- Inert online tiles must be honest: no fake spinners, no fake queues,
+  no dead-end modals. One tap → tape label wiggles + one Critic line
+  ("Online? Patience. The lines are not installed yet.").
+- The sign-in panel must be real layout, real fields, disabled submit —
+  so wiring it later is backend work only.
+- All §12 voice rules apply to every string above (no em dashes in
+  player-facing copy).
