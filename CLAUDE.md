@@ -29,6 +29,10 @@ These are textbooks. Look things up, don't pre-load.
 - .ai/knowledge/conventions.md
 - .ai/knowledge/calibration-replatform-plan.md — calibration platform design
   (reviewed), foundation status, and the Phase 4 game slate
+- .ai/knowledge/mood-space-factor-structure.md — the mood-space collapses to
+  Warmth × Depth × Intensity (2026-08-16 factor analysis); duel/triad game
+  design implications; Narada's mood engine consumes this space (cross-project
+  link to prana's presence roadmap)
 
 ## Memory
 

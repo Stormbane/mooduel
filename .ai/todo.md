@@ -185,6 +185,25 @@ build, including a live two-context PvP match over real Supabase).
       a real trap; worst-violated need writes the reaction line
 - [x] Model's counter-pick revealed each party. Signal-free by design.
 
+### 6. Cleavage Duels — factor calibration (planned 2026-08-16)
+See .ai/knowledge/mood-space-factor-structure.md for the finding driving
+this: the space collapses to Warmth × Depth × Intensity, but that
+structure is an LLM prior that human duels must test.
+- [ ] Named-axis duels: felt questions per factor ("which would you put
+      on when you're fragile?" = Warmth), per-axis Bradley-Terry through
+      the existing bt.mjs pipeline; uncertainty-sampled pairs (close
+      calls are both the fun ones and the informative ones)
+- [ ] Anchor duels: factor-extreme exemplars as fixed poles for absolute
+      placement of uncertain movies
+- [ ] Odd-one-out triads: "which two feel most alike?" — no axis named;
+      new signal type in the append-only log; embedding (t-STE) in a
+      separate aggregation job; the instrument that can break LLM halo
+- [ ] Mood-conditioned preference: "tonight, which one?" from the
+      detected mood — Zillmann desire lines across the space
+- [ ] Cross-modal probes (later): "which film feels like this sky /
+      painting / song?" — shared currency with Narada's mood engine
+      (prana presence-roadmap F8)
+
 ### Hub + platform ✅
 - [x] /games marquee hub (costume tiles), games.mooduel.com host rewrite
       in src/proxy.ts, per-game metadata + OG cards (accent spine)

@@ -94,6 +94,16 @@ fields against the lists above if your use case is strict.
 
 > *"Seductive darkness wrapped in silk and blood, power's slow poison."* (The Godfather)
 
+### The Shape of the Space
+
+The 18 dimensions are not 18 independent facts about a movie. Factor analysis across all 30,611 films shows that three axes carry about 90% of the numeric variance:
+
+- **Warmth**: how gentle or brutal the experience is. Valence, comfort, dominance and hedonic value move together. *Little Forest* sits at one end, extreme horror at the other, and ending types line up along it from uplifting to unsettling.
+- **Depth**: how much the film asks of you and leaves in you. Eudaimonic value, psychological richness, absorption and conversation potential travel as a group. *My Dinner with Andre* and *Stalker* at one pole, disposable shovelware at the other. Slow-burn pacing scores high, relentless pacing low.
+- **Intensity**: arousal, which turns out to be nearly independent of everything else. A film can be warm and intense, or cold and quiet.
+
+Two honest caveats. First, these are correlations in one LLM's scores, so part of the structure may be the classifier's own habits rather than the movies. Second, that is exactly what the community calibration and the upcoming duel games are for: human judgments will test which of these groupings are real and which hide finer distinctions. Reproduce the analysis with `python scripts/mood-factors.py`.
+
 ## The Games
 
 Mooduel ships with the core **Mooduel** game: full mood detection (colour, art, emotion prompts) feeding a tournament bracket that narrows 30K movies down to one pick.

@@ -21,6 +21,16 @@ Movie Picker is a **research prototype for Beautiful Tree's recommendation engin
    (pick, compare, bracket) is transferable to any domain where you need to surface latent
    preferences without interrogation.
 
+4. **Maintain an open mood coordinate system** (added 2026-08-16) — the dataset's deeper
+   product is the mood-space itself, not the movie metadata. Factor analysis shows the 18
+   dimensions collapse to ~3 axes (Warmth × Depth × Intensity — see
+   mood-space-factor-structure.md); the games are the calibration instrument that refines
+   this space with human judgment, and non-movie things can live in the same coordinates.
+   First non-movie citizen: **Narada's mood engine** (prana presence roadmap F8) represents
+   Narada's mood as a point in this space, driven by Brisbane weather/sun/time, expressed
+   on the BOX-3 face. Cross-modal duels ("which film feels like this sky?") calibrate
+   external stimuli into the same currency.
+
 Everything built here — the mood engine, the Zillmann mix, the implicit profiling, the mood
 dataset — is dual-purpose: it makes Movie Picker work as a product, AND it feeds directly into
 Beautiful Tree's matching and question-serving architecture.
@@ -69,7 +79,9 @@ adapts accordingly:
 ### Movie Mood Dataset
 
 Per-movie mood classification using LLM analysis of plot summaries and critic reviews.
-50K movies classified across 10 dimensions:
+30,611 movies classified across 18 dimensions (v1.0 shipped; schema in root README).
+Known low-dimensional structure: Warmth × Depth × Intensity explain ~90% of numeric
+variance (mood-space-factor-structure.md). Original dimension families:
 - **Core affect:** valence, arousal, dominance (circumplex model + PAD)
 - **Absorption potential:** cognitive consumption level (Zillmann's third property)
 - **Three experience valences:** hedonic, eudaimonic, psychologically rich (Oliver & Bartsch + Wirz & Eden)

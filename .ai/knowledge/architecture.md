@@ -235,3 +235,29 @@ Core idea: games are calibration engines — every play is a label.
   forfeit) / `forfeit_match`
 - Game rules (dealing, trick resolution, scoring) intentionally NOT here —
   they belong to the Phase 4 game build
+
+## Mood-Space Structure (added 2026-08-16)
+
+Factor analysis over the full v1.0 dataset (30,611 movies, PCA + varimax;
+`scripts/mood-factors.py`) shows the numeric dimensions collapse to
+**Warmth × Depth × Intensity** (~90% of variance). Full finding, factor
+loadings, anchor exemplars, and the calibration-game implications:
+`.ai/knowledge/mood-space-factor-structure.md`. Design consequences for
+this codebase:
+
+- **Duel questions should target factors, not raw dimensions** — felt
+  questions ("which would you put on when you're fragile?") map to F1/F2/F3;
+  per-axis Bradley-Terry updates plug into the existing `bt.mjs` pipeline
+  unchanged.
+- **Anchor duels**: factor-extreme exemplars serve as fixed poles for
+  absolute placement of uncertain movies.
+- **Odd-one-out triads** are the axis-discovery instrument (no axis named;
+  embedding from aggregated triads) — new signal type for the append-only
+  event log, aggregation stays a separate batch job per replatform
+  principle 3.
+- **The factor structure is a prior, not truth**: it is computed from LLM
+  scores and may partly reflect classifier halo. Human duels test whether
+  the fused dimensions actually separate.
+- **Cross-project consumer**: Narada's mood engine (prana roadmap F8) uses
+  this space as its native mood representation; cross-modal probes
+  (weather/art/music vs movies) land in the same signal log.
